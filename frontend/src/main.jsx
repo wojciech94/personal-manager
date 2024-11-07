@@ -1,7 +1,6 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import ReactDOM from 'react-dom/client'
 import { Login } from './components/Login/Login'
-import { ProtectedData } from './components/ProtectedData/ProtectedData'
 import { ProtectedRoute } from './components/ProtectedRoute/ProtectedRoute.jsx'
 import { Home } from './components/Home/Home.jsx'
 import { Dashboard } from './components/Dashboard/Dashboard.jsx'
@@ -49,10 +48,6 @@ const Main = () => {
 		{
 			path: '/login',
 			element: <Login />,
-		},
-		{
-			path: '/protected',
-			element: <ProtectedData />,
 		},
 	])
 

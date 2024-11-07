@@ -4,10 +4,35 @@ import { Dashboards } from '../Dashboards/Dashboards'
 import { Modal } from '../Modal/Modal'
 import { Dropdown } from '../Dropdown/Dropdown'
 import { ModalContext } from '../../contexts/ModalContext'
+import { Plus } from 'react-feather'
+import { getTokenExpiration } from '../../utils/helpers'
 
 export const Home = () => {
 	const [dashboards, setDashboards] = useState([])
 	const [activeModal, setActiveModal] = useState(false)
+
+	useEffect(() => {
+		fetchUserDashboards()
+	}, [])
+
+	useEffect(() => {
+		let tokenTimeout
+		const checkToken = () => {
+			const token = localStorage.getItem('token')
+			if (token) {
+				const remainingTime = getTokenExpiration(token) - new Date().getTime()
+				if (remainingTime < 60 * 1000) {
+					logout()
+				}
+				tokenTimeout = setTimeout(checkToken, remainingTime)
+				console.log(`Remaining time: ${Math.floor(remainingTime / 60000)} min`)
+			}
+		}
+
+		checkToken()
+
+		return () => clearTimeout(tokenTimeout)
+	}, [])
 
 	const fetchUserDashboards = async () => {
 		const token = localStorage.getItem('token') // Upewnij się, że token jest przechowywany po zalogowaniu
@@ -59,10 +84,6 @@ export const Home = () => {
 		}
 	}
 
-	useEffect(() => {
-		fetchUserDashboards()
-	}, [])
-
 	const navigate = useNavigate()
 
 	const goToSettings = () => {
@@ -87,8 +108,8 @@ export const Home = () => {
 			<div className='topbar'>
 				<div className='d-flex flex-1 justify-center'>
 					<Dashboards dashboards={dashboards}></Dashboards>
-					<button className='btn btn-primary' onClick={openModal}>
-						+ Add dashboard
+					<button className='btn btn-primary d-flex gap-2 align-center' onClick={openModal}>
+						<Plus size={16} /> Add dashboard
 					</button>
 				</div>
 				<Dropdown title='User' items={dropdownItems}></Dropdown>

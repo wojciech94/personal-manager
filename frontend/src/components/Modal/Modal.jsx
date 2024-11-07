@@ -1,7 +1,8 @@
 import { useContext } from 'react'
 import { ModalContext } from '../../contexts/ModalContext'
-import { ModalDashboardContent } from './DashboardContent'
-import { ModalNoteContent } from './NoteContent'
+import { ModalDashboardContent } from './ModalDashboardContent'
+import { ModalNoteContent } from './ModalNoteContent'
+import { X } from 'react-feather'
 
 export const Modal = ({ modalName, modalData }) => {
 	const [, setActiveModal] = useContext(ModalContext)
@@ -13,6 +14,7 @@ export const Modal = ({ modalName, modalData }) => {
 			modalContent = <ModalDashboardContent modalData={modalData} />
 			break
 		case 'createNote':
+		case 'editNote':
 			modalContent = <ModalNoteContent modalData={modalData} />
 			break
 		default:
@@ -27,7 +29,7 @@ export const Modal = ({ modalName, modalData }) => {
 		<div className='modal-backdrop'>
 			<div className='modal'>
 				<div className='d-flex justify-end'>
-					<button onClick={() => setActiveModal(null)}>x</button>
+					<button onClick={() => setActiveModal(null)}><X size={20}/></button>
 				</div>
 				{modalContent}
 			</div>

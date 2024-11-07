@@ -254,6 +254,7 @@ app.patch('/dashboards/:dashboardId/remove', async (req, res) => {
 	}
 })
 
+//Dodawanie notatki
 app.post('/dashboards/:dashboardId/add-note', async (req, res) => {
 	try {
 		const authHeader = req.headers.authorization
@@ -284,7 +285,16 @@ app.post('/dashboards/:dashboardId/add-note', async (req, res) => {
 			return res.status(404).json({ message: 'Dashboard not found' })
 		}
 
-		const newNote = await Note.create({ title, content, category, tags, is_favourite, expired_at })
+		const newNote = new Note({
+			title,
+			content,
+			category: category || 'Other',
+			is_favourite: is_favourite || false,
+			tags: tags || [],
+			expired_at: expired_at || null,
+		})
+
+		await newNote.save()
 
 		dashboard.notesIds.push(newNote._id)
 		await dashboard.save()
@@ -305,7 +315,6 @@ app.get('/dashboards/:dashboardId/notes', async (req, res) => {
 			return res.status(401).json({ message: 'No token provided' })
 		}
 
-		// Weryfikacja tokenu
 		try {
 			jwt.verify(token, process.env.JWT_SECRET)
 		} catch (error) {
@@ -314,23 +323,161 @@ app.get('/dashboards/:dashboardId/notes', async (req, res) => {
 
 		const { dashboardId } = req.params
 
-		// Znajdź dashboard po ID
 		const dashboard = await Dashboard.findById(dashboardId)
 
 		if (!dashboard) {
 			return res.status(404).json({ message: 'Dashboard not found' })
 		}
 
-		// Pobierz notatki na podstawie ID zapisanych w dashboardzie
 		const notes = await Note.find({ _id: { $in: dashboard.notesIds } })
+		const now = new Date()
+		const expiredNotes = notes.filter(note => {
+			if (note.expired_at) {
+				return note.expired_at < now
+			}
+			return false
+		})
 
-		// Zwróć notatki jako odpowiedź
-		res.json(notes)
+		if (expiredNotes.length > 0) {
+			const expiredIds = expiredNotes.map(note => note._id)
+			dashboard.notesIds = dashboard.notesIds.filter(n => !expiredNotes.includes(n))
+			await dashboard.save()
+			await Note.deleteMany({ _id: { $in: expiredIds } })
+		}
+
+		const validNotes = notes.filter(note => {
+			if (note.expired_at) {
+				return note.expired_at > now
+			}
+			return true
+		})
+
+		res.json(validNotes)
 	} catch (error) {
 		console.error(error)
 		if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
 			return res.status(401).json({ message: 'Invalid or expired token' })
 		}
+		res.status(500).json({ message: error.message })
+	}
+})
+
+//Pobieranie konkretnej notatki
+app.get('/notes/:noteId', async (req, res) => {
+	try {
+		const authHeader = req.headers.authorization
+		if (!authHeader) {
+			return res.status(401).json({ message: 'No token provided' })
+		}
+
+		const token = authHeader.split(' ')[1]
+		if (!token) {
+			return res.status(401).json({ message: 'No token provided' })
+		}
+
+		try {
+			jwt.verify(token, process.env.JWT_SECRET)
+		} catch (error) {
+			return res.status(401).json({ message: 'Invalid or expired token' })
+		}
+
+		const { noteId } = req.params
+
+		const note = await Note.findById(noteId)
+
+		if (!note) {
+			return res.status(404).json({ message: 'Note not found' })
+		}
+
+		res.json(note)
+	} catch (error) {
+		res.status(500).json({ message: error.message })
+	}
+})
+
+//Aktualizacja notatki
+app.patch('/notes/:noteId', async (req, res) => {
+	try {
+		const authHeader = req.headers.authorization
+		if (!authHeader) {
+			return res.status(401).json({ message: 'No token provided' })
+		}
+
+		const token = authHeader.split(' ')[1]
+		if (!token) {
+			return res.status(401).json({ message: 'No token provided' })
+		}
+
+		let userId
+		try {
+			const decoded = jwt.verify(token, process.env.JWT_SECRET)
+			userId = decoded.userId
+		} catch (error) {
+			return res.status(401).json({ message: 'Invalid or expired token' })
+		}
+
+		const { noteId } = req.params
+		const note = await Note.findById(noteId)
+
+		if (!note) {
+			return res.status(404).json({ message: 'Note not found' })
+		}
+		console.log(note)
+
+		const { title, content, category, is_favourite, expired_at } = req.body
+		if (title) note.title = title
+		if (content) note.content = content
+		if (category) note.category = category
+		if (typeof is_favourite !== 'undefined') note.is_favourite = is_favourite
+		if (expired_at) note.expired_at = expired_at
+
+		console.log(expired_at)
+
+		await note.save()
+
+		return res.status(200).json({ message: 'Note updated successfully', note })
+	} catch (error) {
+		res.status(500).json({ message: error.message })
+	}
+})
+
+//Usuwanie notatek
+app.delete('/dashboards/:dashboardId/notes/remove', async (req, res) => {
+	try {
+		const { dashboardId } = req.params
+		const { id } = req.body
+
+		console.log(id)
+
+		const token = req.headers.authorization.split(' ')[1]
+		if (!token) {
+			return res.status(401).json({ message: 'No token provided' })
+		}
+
+		const decoded = jwt.verify(token, process.env.JWT_SECRET)
+		const userId = new mongoose.Types.ObjectId(decoded.userId)
+
+		if (!userId) {
+			return res.status(401).json({ message: 'Token validation failed' })
+		}
+
+		const dashboard = await Dashboard.findById(dashboardId)
+		if (!dashboard) {
+			return res.status(404).json({ message: 'Dashboard not found' })
+		}
+
+		if (!dashboard.notesIds.includes(id)) {
+			return res.status(400).json({ message: `Note not found in ${dashboard.name}` })
+		}
+
+		dashboard.notesIds = dashboard.notesIds.filter(noteId => !noteId.equals(id))
+
+		await dashboard.save()
+
+		await Note.deleteOne({ _id: id })
+
+		return res.status(200).json({ message: 'Note removed successfully from dashboard' })
+	} catch (error) {
 		res.status(500).json({ message: error.message })
 	}
 })
