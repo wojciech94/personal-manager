@@ -1,14 +1,17 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useContext } from 'react'
-import { useParams } from 'react-router-dom'
+import { useLoaderData, useParams } from 'react-router-dom'
 import { ModalContext } from '../../contexts/ModalContext'
-import { Plus, Edit, Clock, X } from 'react-feather'
+import { MoreVertical, Plus } from 'react-feather'
 import { debounce } from '../../utils/helpers'
 import { ToggleBox } from '../ToggleBox/ToggleBox'
+import { Note } from '../Note/Note'
+import { ExpandableMenu } from '../ExpandableMenu.jsx/ExpandableMenu'
 
 export const Notes = () => {
+	const data = useLoaderData()
 	const [, setActiveModal] = useContext(ModalContext)
-	const [notes, setNotes] = useState([])
+	const [notes, setNotes] = useState(data)
 	const [filteredNotes, setFilteredNotes] = useState([])
 	const [categoryNames, setCategoryNames] = useState([])
 	const [filterCategory, setFilterCategory] = useState('')
@@ -16,11 +19,11 @@ export const Notes = () => {
 	const [sortBy, setSortBy] = useState('')
 	const [filterOrRule, setFilterOrRule] = useState(true)
 	const [searchValue, setSearchValue] = useState('')
-	const { dashboardId } = useParams()
+	const { dashboardId, folderId } = useParams()
 
 	const debouncedSearchFilter = useCallback(
 		debounce(val => searchFilter(val), 500),
-		[]
+		[notes]
 	)
 
 	useEffect(() => {
@@ -28,11 +31,12 @@ export const Notes = () => {
 	}, [])
 
 	useEffect(() => {
-		fetchNotes()
-	}, [])
+		setNotes(data)
+		setFilteredNotes(data)
+	}, [data])
 
 	async function fetchNotesCategories() {
-		const token = localStorage.getItem('token') // Upewnij się, że token jest przechowywany po zalogowaniu
+		const token = localStorage.getItem('token')
 
 		const response = await fetch(`http://localhost:5000/dashboards/${dashboardId}/note-categories`, {
 			method: 'GET',
@@ -53,7 +57,11 @@ export const Notes = () => {
 	async function fetchNotes() {
 		const token = localStorage.getItem('token')
 
-		const response = await fetch(`http://localhost:5000/dashboards/${dashboardId}/notes`, {
+		let url = `http://localhost:5000/dashboards/${dashboardId}/folders/notes`
+		if (folderId) {
+			url = url + `/${folderId}`
+		}
+		const response = await fetch(url, {
 			method: 'GET',
 			headers: {
 				Authorization: `Bearer ${token}`,
@@ -71,7 +79,11 @@ export const Notes = () => {
 	}
 
 	//Dodawanie lub aktualizacja notatki
-	const updateNote = async (title, content, category, is_favourite, expired_at, noteId) => {
+	const updateNote = async (title, content, category, tags, folder_id, is_favourite, expired_at, noteId) => {
+		tags = tags
+			.split(/[\s,]+/)
+			.map(tag => tag.trim())
+			.filter(tag => tag.length > 0)
 		const url = !noteId
 			? `http://localhost:5000/dashboards/${dashboardId}/add-note`
 			: `http://localhost:5000/notes/${noteId}`
@@ -81,7 +93,7 @@ export const Notes = () => {
 				'Content-Type': 'application/json',
 				Authorization: `Bearer ${localStorage.getItem('token')}`,
 			},
-			body: JSON.stringify({ title, content, category, is_favourite, expired_at }),
+			body: JSON.stringify({ title, content, category, tags, folder_id, is_favourite, expired_at }),
 		})
 		if (response.ok) {
 			const updatedNote = await response.json()
@@ -91,47 +103,18 @@ export const Notes = () => {
 		setActiveModal(null)
 	}
 
-	const removeNote = async id => {
-		if (id) {
-			const response = await fetch(`http://localhost:5000/dashboards/${dashboardId}/notes/remove`, {
-				method: 'DELETE',
-				headers: {
-					'Content-Type': 'application/json',
-					Authorization: `Bearer ${localStorage.getItem('token')}`, // Dodaj token w nagłówkach
-				},
-				body: JSON.stringify({ id }),
-			})
-
-			if (response.ok) {
-				const data = await response.json()
-				console.log(data.message)
-				fetchNotes()
-			} else {
-				const errorData = await response.json()
-				console.error('Note removal failed:', errorData.message)
-			}
-		} else {
-			console.error('Id not provided')
-		}
-	}
-
 	const newModal = {
 		name: 'createNote',
 		data: {
 			action: updateNote,
 			actionName: 'Create note',
 		},
+		title: 'Add note',
 	}
 
-	const editModal = id => {
-		return {
-			name: 'editNote',
-			data: {
-				action: updateNote,
-				actionName: 'Update note',
-				id: id,
-			},
-		}
+	const categoryModal = {
+		name: 'addNoteCategory',
+		title: 'Add note category',
 	}
 
 	const searchFilter = val => {
@@ -141,7 +124,6 @@ export const Notes = () => {
 
 	const onSearchInputChange = e => {
 		const value = e.target.value
-		console.log(value)
 		setSearchValue(value)
 		debouncedSearchFilter(value)
 	}
@@ -175,13 +157,13 @@ export const Notes = () => {
 					/>
 					<ToggleBox>
 						<div className='d-flex justify-between align-center gap-2'>
-							<div>Settings</div>
-							<button className='btn' onClick={handleChangeOptions}>
+							<div className='toggle-subtitle'>Settings</div>
+							<button className='btn btn-link' onClick={handleChangeOptions}>
 								Save
 							</button>
 						</div>
-						<div>Filter</div>
-						<div>Filter rule</div>
+						<div className='toggle-title'>Filter</div>
+						<div className='toggle-subtitle'>Filter rule</div>
 						<div className='d-flex gap-4 align-center'>
 							<div className='d-flex gap-2 align-center'>
 								<input
@@ -204,7 +186,8 @@ export const Notes = () => {
 								<label htmlFor='filterRuleAnd'>AND</label>
 							</div>
 						</div>
-						<div>Category</div>
+						<div className='toggle-separator'></div>
+						<div className='toggle-subtitle'>Category</div>
 						<select
 							name='filterCategory'
 							id='filterCategory'
@@ -213,8 +196,13 @@ export const Notes = () => {
 							<option value=''>Choose category...</option>
 							{categoryNames &&
 								categoryNames.length > 0 &&
-								categoryNames.map(cat => <option value={cat}>{cat}</option>)}
+								categoryNames.map(cat => (
+									<option key={cat} value={cat}>
+										{cat}
+									</option>
+								))}
 						</select>
+						<div className='toggle-separator'></div>
 						<div className='d-flex gap-2 align-center'>
 							<input
 								type='checkbox'
@@ -225,8 +213,8 @@ export const Notes = () => {
 							/>
 							<label htmlFor='isFav'>Is favourite</label>
 						</div>
-						<div>Sorting</div>
-						<div>Sort by</div>
+						<div className='toggle-title'>Sorting</div>
+						<div className='toggle-subtitle'>Sort by</div>
 						<select name='sortBy' id='sortBy' value={sortBy} onChange={e => setSortBy(e.target.value)}>
 							<option value=''>Sort by...</option>
 							<option value='Creation date'>Creation date</option>
@@ -235,46 +223,24 @@ export const Notes = () => {
 						</select>
 					</ToggleBox>
 				</div>
-				<button className='btn btn-primary d-flex align-center gap-2' onClick={() => setActiveModal(newModal)}>
-					<Plus size={16} />
-					<span>Add note</span>
-				</button>
+				<div className='d-flex gap-2'>
+					<button className='btn btn-primary d-flex align-center gap-2' onClick={() => setActiveModal(newModal)}>
+						<Plus size={16} />
+						<span>Add note</span>
+					</button>
+					<ExpandableMenu
+						items={[
+							{
+								label: 'Add note category',
+								action: () => setActiveModal(categoryModal),
+							},
+						]}></ExpandableMenu>
+				</div>
 			</div>
 			{filteredNotes && filteredNotes.length > 0 && (
 				<div className='d-flex flex-column gap-4'>
 					{filteredNotes.map(n => (
-						<div key={n._id} className={`note ${n.is_favourite ? 'favourite' : ''}`}>
-							<div className='d-flex justify-between gap-3'>
-								<div className='d-flex gap-3 align-center'>
-									<div className='note-title'>{n.title}</div>
-									<div className='badge'>{n.category}</div>
-								</div>
-								<div className='d-flex gap-2 align-center'>
-									<button className='btn btn-icon btn-primary' onClick={() => setActiveModal(() => editModal(n._id))}>
-										<Edit size={16} />
-									</button>
-									<button className='btn btn-icon btn-light' onClick={() => removeNote(n._id)}>
-										<X size={16} />
-									</button>
-								</div>
-							</div>
-							{n.tags && n.tags.length > 0 && (
-								<div className='d-flex gap-2'>{n.tags && n.tags.map(t => <div className='tag'>{t}</div>)}</div>
-							)}
-							<div>{n.content}</div>
-							<div className='d-flex gap-3 justify-between border-top mx-n3 px-3 pt-2'>
-								<div className='d-flex gap-2 align-center'>
-									<Edit size={20} /> {n.updated_at.replace('T', ' ').replace('Z', '')}
-								</div>
-								{n.expired_at ? (
-									<div className='d-flex gap-2 align-center text-gray'>
-										<Clock size={20} /> {n.expired_at.split('T')[0]}
-									</div>
-								) : (
-									''
-								)}
-							</div>
-						</div>
+						<Note key={n._id} note={n} updateNote={updateNote} />
 					))}
 				</div>
 			)}

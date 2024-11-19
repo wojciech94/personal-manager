@@ -22,6 +22,10 @@ const noteSchema = new mongoose.Schema({
 		type: Boolean,
 		default: false,
 	},
+	folder_id: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'Folder',
+	},
 	created_at: {
 		type: Date,
 		default: Date.now,

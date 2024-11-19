@@ -7,22 +7,32 @@ export const Menu = () => {
 		<div className='menu'>
 			<NavLink
 				className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}
-				to={`/dashboard/${dashboardId}/todo`}>
+				to={`/dashboards/${dashboardId}`} end>
+				Details
+			</NavLink>
+			<NavLink
+				className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}
+				to={`/dashboards/${dashboardId}/calendar`}>
+				Calendar
+			</NavLink>
+			<NavLink
+				className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}
+				to={`/dashboards/${dashboardId}/todo`}>
 				To do list
 			</NavLink>
 			<NavLink
 				className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}
-				to={`/dashboard/${dashboardId}/notes`}>
+				to={`/dashboards/${dashboardId}/folders/notes`}>
 				Notes
 			</NavLink>
 			<NavLink
 				className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}
-				to={`/dashboard/${dashboardId}/shoppinglist`}>
+				to={`/dashboards/${dashboardId}/shoppinglist`}>
 				Shopping list
 			</NavLink>
 			<NavLink
 				className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}
-				to={`/dashboard/${dashboardId}/linktree`}>
+				to={`/dashboards/${dashboardId}/linktree`}>
 				linktree
 			</NavLink>
 		</div>

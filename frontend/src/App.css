@@ -4,7 +4,7 @@
 }
 
 html {
-	font-family: 'Trebuchet MS', 'Helvetica', sans-serif;
+	font-family: 'Poppins', 'Trebuchet MS', 'Helvetica', sans-serif;
 }
 
 .mx-auto {
@@ -64,12 +64,20 @@ a.active {
 .btn {
 	padding: 0.5rem 0.75rem;
 	border-radius: 0.5rem;
-	transition: background-color ease-in-out 0.2s;
+	transition: background-color ease-in-out 0.2s, color ease-in-out 0.2s;
 }
 
 .btn-icon {
 	display: flex;
 	padding: 0.5rem;
+}
+
+.btn-link {
+	padding: 0;
+}
+
+.btn-link:hover {
+	color: dodgerblue;
 }
 
 .btn-primary {
@@ -82,12 +90,36 @@ a.active {
 	color: #f8f8f8;
 }
 
+.btn-success {
+	background-color: hsl(120, 64%, 46%);
+	color: #f8f8f8;
+}
+
+.btn-success:hover {
+	background-color: hsl(120, 64%, 36%);
+	color: #f8f8f8;
+}
+
+.btn-danger {
+	background-color: hsl(0, 85%, 52%);
+	color: #f8f8f8;
+}
+
+.btn-danger:hover {
+	background-color: hsl(0, 85%, 42%);
+	color: #f8f8f8;
+}
+
 .btn-light {
 	background-color: hsl(0, 0%, 83%);
 }
 
 .btn-light:hover {
 	background-color: hsl(0, 0%, 75%);
+}
+
+.bg-light {
+	background-color: lightgray;
 }
 
 .badge {
@@ -124,8 +156,8 @@ a.active {
 	position: absolute;
 	top: 3.25rem;
 	right: 0;
-	border: 1px solid black;
-	border-radius: 1.5rem;
+	border: 1px solid gray;
+	border-radius: 1rem;
 	background-color: #fff;
 	overflow: hidden;
 }
@@ -186,19 +218,23 @@ a.active {
 }
 
 .px-1 {
-	padding: 0 0.25rem;
+	padding-left: 0.25rem;
+	padding-right: 0.25rem;
 }
 
 .px-2 {
-	padding: 0 0.5rem;
+	padding-left: 0.5rem;
+	padding-right: 0.5rem;
 }
 
 .px-3 {
-	padding: 0 0.75rem;
+	padding-left: 0.75rem;
+	padding-right: 0.75rem;
 }
 
 .px-4 {
-	padding: 0 1rem;
+	padding-left: 1rem;
+	padding-right: 1rem;
 }
 
 .pt-1 {
@@ -332,6 +368,10 @@ a.active {
 	gap: 2rem;
 }
 
+.text-bold {
+	font-weight: bold;
+}
+
 .text-gray {
 	color: rgb(92, 92, 92);
 }
@@ -453,6 +493,61 @@ a.active {
 	border-radius: 1rem;
 }
 
+.modal-title {
+	font-weight: bold;
+	font-size: 1.15rem;
+}
+
+.card {
+	display: flex;
+	flex-direction: column;
+	border: 1px solid lightgray;
+	border-radius: 1rem;
+	box-shadow: 0 0 5px rgb(192, 192, 192);
+}
+
+.card-title {
+	font-weight: bold;
+	font-size: 1.15rem;
+	padding: 1rem;
+	border-bottom: 1px solid lightgray;
+}
+
+.card-subtitle {
+	background-color: rgb(236, 236, 236);
+	margin-left: -1rem;
+	margin-right: -1rem;
+	padding: 0.75rem 1rem;
+	border-top: 1px solid lightgray;
+	border-bottom: 1px solid lightgray;
+}
+
+.card-content {
+	padding: 1rem;
+}
+
+.card-footer {
+	padding: 1rem;
+	border-top: 1px solid lightgray;
+}
+
+.form-row {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.form-row-label {
+	width: calc(4 / 12 * 100%);
+	padding: 0 0.5rem;
+	text-align: end;
+}
+
+.form-row-content {
+	width: calc(8 / 12 * 100%);
+	padding: 0 0.5rem;
+	font-weight: bold;
+}
+
 .toggle-box {
 	position: relative;
 }
@@ -461,10 +556,33 @@ a.active {
 	position: absolute;
 	top: calc(100% + 0.25rem);
 	right: 0;
-	padding: 0.5rem;
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	padding: 0.5rem 1rem;
 	border: 1px solid lightgray;
 	border-radius: 0.25rem;
 	background-color: white;
+	box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.5);
+}
+
+.toggle-title {
+	font-weight: bold;
+	margin: 0 -1rem;
+	padding: 0.25rem 1rem;
+	background-color: rgb(242, 242, 242);
+	border-top: 1px solid lightgray;
+	border-bottom: 1px solid lightgray;
+}
+
+.toggle-subtitle {
+	font-weight: bold;
+}
+
+.toggle-separator {
+	margin: 0.25rem -1rem;
+	padding: 0 1rem;
+	border-bottom: 1px solid lightgray;
 }
 
 .note {

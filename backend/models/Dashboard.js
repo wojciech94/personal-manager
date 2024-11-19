@@ -19,7 +19,13 @@ const dashboardSchema = new mongoose.Schema({
 		{
 			type: mongoose.Schema.Types.ObjectId,
 			ref: 'Note',
-		}
+		},
+	],
+	foldersIds: [
+		{
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'Folder',
+		},
 	],
 	created_at: {
 		type: Date,

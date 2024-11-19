@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Outlet, useNavigate } from 'react-router-dom'
+import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { Dashboards } from '../Dashboards/Dashboards'
 import { Modal } from '../Modal/Modal'
 import { Dropdown } from '../Dropdown/Dropdown'
@@ -10,10 +10,12 @@ import { getTokenExpiration } from '../../utils/helpers'
 export const Home = () => {
 	const [dashboards, setDashboards] = useState([])
 	const [activeModal, setActiveModal] = useState(false)
+	const navigate = useNavigate()
+	const location = useLocation()
 
 	useEffect(() => {
 		fetchUserDashboards()
-	}, [])
+	}, [location.pathname])
 
 	useEffect(() => {
 		let tokenTimeout
@@ -60,6 +62,7 @@ export const Home = () => {
 				action: createDashboard,
 				actionName: 'Create dashboard',
 			},
+			title: 'Create dashboard',
 		})
 	}
 
@@ -83,8 +86,6 @@ export const Home = () => {
 			console.error(errorData.message)
 		}
 	}
-
-	const navigate = useNavigate()
 
 	const goToSettings = () => {
 		navigate('/settings')
@@ -117,7 +118,9 @@ export const Home = () => {
 			<div>
 				<Outlet />
 			</div>
-			{activeModal && <Modal modalName={activeModal.name} modalData={activeModal.data} />}
+			{activeModal && (
+				<Modal modalName={activeModal.name} modalTitle={activeModal.title} modalData={activeModal.data} />
+			)}
 		</ModalContext.Provider>
 	)
 }
