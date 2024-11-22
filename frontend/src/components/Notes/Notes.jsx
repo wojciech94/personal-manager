@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { useContext } from 'react'
 import { useLoaderData, useParams } from 'react-router-dom'
 import { ModalContext } from '../../contexts/ModalContext'
-import { MoreVertical, Plus } from 'react-feather'
+import { Plus } from 'react-feather'
 import { debounce } from '../../utils/helpers'
 import { ToggleBox } from '../ToggleBox/ToggleBox'
 import { Note } from '../Note/Note'
@@ -129,18 +129,34 @@ export const Notes = () => {
 	}
 
 	const handleChangeOptions = () => {
-		const newNotes = notes.filter(n => {
+		let newNotes = notes.filter(n => {
 			let condition
 			switch (filterOrRule) {
 				case true:
-					condition = n.category === filterCategory || n.is_favourite === isFavourite
+					condition = filterCategory === '' || n.category === filterCategory || n.is_favourite === isFavourite
 					break
 				case false:
-					condition = n.category === filterCategory && n.is_favourite === isFavourite
+					condition = (filterCategory === '' || n.category === filterCategory) && n.is_favourite === isFavourite
 					break
 			}
 			return condition
 		})
+		if (sortBy !== '') {
+			switch (sortBy) {
+				case 'updateDate':
+					newNotes.sort((a, b) => {
+						const val = new Date(b.updated_at) - new Date(a.updated_at)
+						return val
+					})
+					break
+				case 'deadlineDate':
+					newNotes.sort((a, b) => new Date(b.expired_at) - new Date(a.expired_at))
+					break
+				case 'creationDate':
+				default:
+					newNotes.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+			}
+		}
 		setFilteredNotes(newNotes)
 	}
 
@@ -217,9 +233,9 @@ export const Notes = () => {
 						<div className='toggle-subtitle'>Sort by</div>
 						<select name='sortBy' id='sortBy' value={sortBy} onChange={e => setSortBy(e.target.value)}>
 							<option value=''>Sort by...</option>
-							<option value='Creation date'>Creation date</option>
-							<option value='Update date'>Update date</option>
-							<option value='Deadline date'>Deadline date</option>
+							<option value='creationate'>Creation date</option>
+							<option value='updateDate'>Update date</option>
+							<option value='deadlineDate'>Deadline date</option>
 						</select>
 					</ToggleBox>
 				</div>
@@ -240,7 +256,7 @@ export const Notes = () => {
 			{filteredNotes && filteredNotes.length > 0 && (
 				<div className='d-flex flex-column gap-4'>
 					{filteredNotes.map(n => (
-						<Note key={n._id} note={n} updateNote={updateNote} />
+						<Note key={n._id} note={n} updateNote={updateNote} fetchNotes={fetchNotes} />
 					))}
 				</div>
 			)}

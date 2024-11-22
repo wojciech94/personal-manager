@@ -12,8 +12,32 @@ html {
 	margin-right: auto;
 }
 
+.wrapper {
+	width: 95%;
+	max-width: 1400px;
+	margin: 0 auto;
+}
+
+.position-absolute {
+	position: absolute;
+}
+
+.position-relative {
+	position: relative;
+}
+
+.absolute-centered {
+	top: 50%;
+	left: 50%;
+	translate: -50% -50%;
+}
+
 .h-70px {
 	height: 70px;
+}
+
+.h-300px {
+	height: 300px;
 }
 
 .w-50 {
@@ -29,7 +53,19 @@ html {
 }
 
 .max-w-1200px {
-	max-width: 1200px;
+	max-width: 1200px !important;
+}
+
+.max-w-100 {
+	max-width: 100% !important;
+}
+
+.max-w-95 {
+	max-width: 95% !important;
+}
+
+.overflow-hidden {
+	overflow: hidden;
 }
 
 button {
@@ -51,6 +87,10 @@ textarea {
 	border-radius: 0.25rem;
 }
 
+.transition-none {
+	transition: none !important;
+}
+
 a {
 	color: black;
 	text-decoration: none;
@@ -59,6 +99,10 @@ a {
 a.active {
 	font-weight: bold;
 	color: dodgerblue;
+}
+
+.link {
+	font-weight: bold;
 }
 
 .btn {
@@ -118,8 +162,26 @@ a.active {
 	background-color: hsl(0, 0%, 75%);
 }
 
+.bg-white {
+	background-color: white;
+}
+
 .bg-light {
 	background-color: lightgray;
+}
+
+.bg-dark-transparent {
+	background-color: rgba(0, 0, 0, 0.75);
+}
+
+.bg-welcome {
+	background-image: url('../public/personal-manager-welcome-v2.jpg');
+	background-position: center;
+	background-size: cover;
+}
+
+.shadow {
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 .badge {
@@ -253,6 +315,50 @@ a.active {
 	padding-top: 1rem;
 }
 
+.m-0 {
+	margin: 0rem;
+}
+
+.m-1 {
+	margin: 0.25rem;
+}
+
+.m-2 {
+	margin: 0.5rem;
+}
+
+.m-3 {
+	margin: 0.75rem;
+}
+
+.m-4 {
+	margin: 1rem;
+}
+
+.m-5 {
+	margin: 1.25rem;
+}
+
+.m-6 {
+	margin: 1.5rem;
+}
+
+.m-7 {
+	margin: 1.75rem;
+}
+
+.m-8 {
+	margin: 2rem;
+}
+
+.m-9 {
+	margin: 2.25rem;
+}
+
+.m-10 {
+	margin: 2.5rem;
+}
+
 .mb-1 {
 	margin-bottom: 0.25rem;
 }
@@ -284,6 +390,37 @@ a.active {
 	margin-bottom: 2.5rem;
 }
 
+.mt-1 {
+	margin-top: 0.25rem;
+}
+.mt-2 {
+	margin-top: 0.5rem;
+}
+.mt-3 {
+	margin-top: 0.75rem;
+}
+.mt-4 {
+	margin-top: 1rem;
+}
+.mt-5 {
+	margin-top: 1.25rem;
+}
+.mt-6 {
+	margin-top: 1.5rem;
+}
+.mt-7 {
+	margin-top: 1.75rem;
+}
+.mt-8 {
+	margin-top: 2rem;
+}
+.mt-9 {
+	margin-top: 2.25rem;
+}
+.mt-10 {
+	margin-top: 2.5rem;
+}
+
 .mx-n1 {
 	margin-left: -0.25rem;
 	margin-right: -0.25rem;
@@ -312,6 +449,11 @@ a.active {
 	flex-direction: column;
 }
 
+.flex-center {
+	justify-content: center;
+	align-items: center;
+}
+
 .flex-1 {
 	flex: 1;
 }
@@ -326,6 +468,10 @@ a.active {
 
 .justify-between {
 	justify-content: space-between;
+}
+
+.justify-evenly {
+	justify-content: space-evenly;
 }
 
 .justify-center {
@@ -372,8 +518,21 @@ a.active {
 	font-weight: bold;
 }
 
+.text-center {
+	text-align: center;
+}
+
+.text-fill {
+	width: max-content;
+	max-width: 100%;
+}
+
 .text-gray {
 	color: rgb(92, 92, 92);
+}
+
+.text-white {
+	color: white;
 }
 
 .text-primary {
@@ -388,8 +547,61 @@ a.active {
 	color: firebrick;
 }
 
+.gradient-0 {
+	background: linear-gradient(125deg, #efa8a888, #ebbea688);
+}
+
+.gradient-1 {
+	background: linear-gradient(125deg, #a8efa888, #beeba688);
+}
+
+.gradient-2 {
+	background: linear-gradient(125deg, #a8a8ef88, #bea6eb88);
+}
+
+.gradient-3 {
+	background: linear-gradient(125deg, #ebbea688, #a6ebbe88);
+}
+
+.gradient-4 {
+	background: linear-gradient(125deg, #bea6eb88, #a6beeb88);
+}
+
+.fs-sm {
+	font-size: 0.9rem;
+}
+
+.fs-lg {
+	font-size: 1.25rem;
+}
+
+.fs-xl {
+	font-size: 1.4rem;
+}
+
+.border {
+	border: 1px solid gray;
+}
+
 .border-top {
 	border-top: 1px solid gray;
+}
+
+.rounded,
+.rounded-1 {
+	border-radius: 0.25rem;
+}
+
+.rounded-2 {
+	border-radius: 0.5rem;
+}
+
+.rounded-3 {
+	border-radius: 0.75rem;
+}
+
+.rounded-4 {
+	border-radius: 1rem;
 }
 
 .topbar {
@@ -399,9 +611,10 @@ a.active {
 	justify-content: space-between;
 	align-items: center;
 	margin: 1rem;
-	padding: 1rem;
+	padding: 0.5rem 1rem;
 	background-color: rgba(224, 240, 248, 0.5);
 	border-radius: 2rem;
+	box-shadow: 0 0 5px rgba(0, 0, 36, 0.5);
 }
 
 .menu {
@@ -504,6 +717,13 @@ a.active {
 	border: 1px solid lightgray;
 	border-radius: 1rem;
 	box-shadow: 0 0 5px rgb(192, 192, 192);
+}
+
+.card-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 1rem;
 }
 
 .card-title {
@@ -611,4 +831,21 @@ a.active {
 	background-color: lightgray;
 	border-radius: 0.75rem;
 	font-size: 0.875rem;
+}
+
+.carousel {
+	display: flex;
+	position: relative;
+	overflow: hidden;
+}
+
+.carousel-track {
+	display: flex;
+	transition: transform ease-in-out 1s;
+}
+
+.carousel-item {
+	min-width: 100%;
+	display: flex;
+	justify-content: center;
 }

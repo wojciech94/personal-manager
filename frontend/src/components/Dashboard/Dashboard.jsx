@@ -1,6 +1,6 @@
 import { Menu } from '../Menu/Menu'
 import { Outlet, useMatch, useNavigate, useParams } from 'react-router-dom'
-import { Card } from '../Card/Card'
+import { Card, CardHeader } from '../Card/Card'
 import { useEffect, useState } from 'react'
 import { FormRow } from '../FormRow/FormRow'
 import { Edit, Plus, User, X } from 'react-feather'
@@ -14,7 +14,7 @@ export const Dashboard = () => {
 			<Menu />
 			<div className='flex-1 max-w-1200px mx-auto p-5'>
 				{isExactMatch ? (
-					<Card title='Dashboard details'>
+					<Card>
 						<DashboardDetails />
 					</Card>
 				) : (

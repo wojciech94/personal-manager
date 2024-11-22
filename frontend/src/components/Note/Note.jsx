@@ -1,9 +1,11 @@
 import { useContext } from 'react'
 import { Edit, X, Clock } from 'react-feather'
+import { useParams } from 'react-router-dom'
 import { ModalContext } from '../../contexts/ModalContext'
 
-export const Note = ({ note, updateNote }) => {
+export const Note = ({ note, updateNote, fetchNotes }) => {
 	const [, setActiveModal] = useContext(ModalContext)
+	const { dashboardId } = useParams()
 	const removeNote = async id => {
 		if (id) {
 			const response = await fetch(`http://localhost:5000/dashboards/${dashboardId}/notes/remove`, {

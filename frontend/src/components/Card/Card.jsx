@@ -7,3 +7,18 @@ export const Card = ({ title, footer, children }) => {
 		</div>
 	)
 }
+
+export const CardHeader = ({ title, data, className }) => {
+	return (
+		<div className={`card-header ${className ? className : ''}`}>
+			<div className='card-title flex-1'>{title}</div>
+			{data &&
+				data.length > 0 &&
+				data.map(d => (
+					<button className='btn btn-primary' onClick={d.action}>
+						{d.label}
+					</button>
+				))}
+		</div>
+	)
+}
