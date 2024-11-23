@@ -4,6 +4,7 @@ import { Dashboards } from '../Dashboards/Dashboards'
 import { Modal } from '../Modal/Modal'
 import { Dropdown } from '../Dropdown/Dropdown'
 import { ModalContext } from '../../contexts/ModalContext'
+import { FetchDashboardsContext } from '../../contexts/FetchDashboardsContext'
 import { Plus } from 'react-feather'
 import { getTokenExpiration } from '../../utils/helpers'
 
@@ -107,24 +108,26 @@ export const Home = () => {
 
 	return (
 		<ModalContext.Provider value={[activeModal, setActiveModal]}>
-			<div className='d-flex flex-column'>
-				<div className='topbar'>
-					<Link to={'/'}>
-						<img src='/logo.png' width={40} alt='' />
-					</Link>
-					<div className='d-flex flex-1 justify-center'>
-						<Dashboards dashboards={dashboards}></Dashboards>
-						<button className='btn btn-primary d-flex gap-2 align-center' onClick={openModal}>
-							<Plus size={16} /> Add dashboard
-						</button>
+			<FetchDashboardsContext.Provider value={[fetchUserDashboards]}>
+				<div className='d-flex flex-column'>
+					<div className='topbar'>
+						<Link to={'/'}>
+							<img src='/logo.png' width={40} alt='' />
+						</Link>
+						<div className='d-flex flex-1 justify-center'>
+							<Dashboards dashboards={dashboards}></Dashboards>
+							<button className='btn btn-primary d-flex gap-2 align-center' onClick={openModal}>
+								<Plus size={16} /> Add dashboard
+							</button>
+						</div>
+						<Dropdown title='User' items={dropdownItems}></Dropdown>
 					</div>
-					<Dropdown title='User' items={dropdownItems}></Dropdown>
+					<div className='flex-1'>{isExactMatch ? <WelcomeScreen isNew={dashboards.length === 0} /> : <Outlet />}</div>
+					{activeModal && (
+						<Modal modalName={activeModal.name} modalTitle={activeModal.title} modalData={activeModal.data} />
+					)}
 				</div>
-				<div className='flex-1'>{isExactMatch ? <WelcomeScreen isNew={dashboards.length === 0} /> : <Outlet />}</div>
-				{activeModal && (
-					<Modal modalName={activeModal.name} modalTitle={activeModal.title} modalData={activeModal.data} />
-				)}
-			</div>
+			</FetchDashboardsContext.Provider>
 		</ModalContext.Provider>
 	)
 }

@@ -1,6 +1,7 @@
-export const Card = ({ title, footer, children }) => {
+export const Card = ({ title, footer, children, headerComponent }) => {
 	return (
 		<div className='card'>
+			{headerComponent && headerComponent}
 			{title && <div className='card-title'>{title}</div>}
 			{children && <div className='card-content'>{children}</div>}
 			{footer && <div className='card-footer'>{footer}</div>}
@@ -15,7 +16,8 @@ export const CardHeader = ({ title, data, className }) => {
 			{data &&
 				data.length > 0 &&
 				data.map(d => (
-					<button className='btn btn-primary' onClick={d.action}>
+					<button className={`btn d-flex gap-2 align-center ${d.btnClass}`} onClick={d.action}>
+						{d.icon}
 						{d.label}
 					</button>
 				))}

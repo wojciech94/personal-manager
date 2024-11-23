@@ -17,6 +17,7 @@ export const Notes = () => {
 	const [filterCategory, setFilterCategory] = useState('')
 	const [isFavourite, setIsFavourite] = useState(false)
 	const [sortBy, setSortBy] = useState('')
+	const [sortOrder, setSortOrder] = useState('asc')
 	const [filterOrRule, setFilterOrRule] = useState(true)
 	const [searchValue, setSearchValue] = useState('')
 	const { dashboardId, folderId } = useParams()
@@ -145,16 +146,37 @@ export const Notes = () => {
 			switch (sortBy) {
 				case 'updateDate':
 					newNotes.sort((a, b) => {
-						const val = new Date(b.updated_at) - new Date(a.updated_at)
+						let val
+						if (sortOrder === 'desc') {
+							val = new Date(b.updated_at) - new Date(a.updated_at)
+						} else {
+							val = new Date(a.updated_at) - new Date(b.updated_at)
+						}
 						return val
 					})
 					break
 				case 'deadlineDate':
-					newNotes.sort((a, b) => new Date(b.expired_at) - new Date(a.expired_at))
+					newNotes.sort((a, b) => {
+						let val
+						if (sortOrder === 'desc') {
+							val = new Date(b.expired_at) - new Date(a.expired_at)
+						} else {
+							val = new Date(a.expired_at) - new Date(b.expired_at)
+						}
+						return val
+					})
 					break
 				case 'creationDate':
 				default:
-					newNotes.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+					newNotes.sort((a, b) => {
+						let val
+						if (sortOrder === 'desc') {
+							val = new Date(b.created_at) - new Date(a.created_at)
+						} else {
+							val = new Date(a.created_at) - new Date(b.created_at)
+						}
+						return val
+					})
 			}
 		}
 		setFilteredNotes(newNotes)
@@ -236,6 +258,11 @@ export const Notes = () => {
 							<option value='creationate'>Creation date</option>
 							<option value='updateDate'>Update date</option>
 							<option value='deadlineDate'>Deadline date</option>
+						</select>
+						<div className='toggle-subtitle'>Sort by</div>
+						<select name='sortOrder' id='sortOrder' value={sortOrder} onChange={e => setSortOrder(e.target.value)}>
+							<option value='asc'>Ascending</option>
+							<option value='desc'>Descending</option>
 						</select>
 					</ToggleBox>
 				</div>

@@ -7,7 +7,7 @@ export const Dashboards = ({ dashboards }) => {
 				dashboards.length > 0 &&
 				dashboards.map(d => (
 					<NavLink
-						className={({ isActive }) => `text-bold fs-lg ${isActive ? 'active' : ''}`}
+						className={({ isActive }) => `link text-bold fs-lg ${isActive ? 'active' : ''}`}
 						key={d._id}
 						to={`/dashboards/${d._id}`}>
 						{d.name}

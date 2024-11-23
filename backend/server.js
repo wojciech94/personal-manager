@@ -224,6 +224,36 @@ app.post('/dashboards/:dashboardId/add-user', async (req, res) => {
 	}
 })
 
+//Edytowanie dashboardu
+app.patch('/dashboards/:dashboardId', async (req, res) => {
+	try {
+		const { dashboardId } = req.params
+		const { name } = req.body
+		const token = req.headers.authorization.split(' ')[1]
+		if (!token) {
+			return res.status(401).json({ message: 'No token provided' })
+		}
+
+		const decoded = jwt.verify(token, process.env.JWT_SECRET)
+		const userId = new mongoose.Types.ObjectId(decoded.userId)
+
+		if (!userId) {
+			return res.status(401).json({ message: 'Token validation failed' })
+		}
+
+		const dashboard = await Dashboard.findById(dashboardId)
+		if (!dashboard) {
+			return res.status(404).json({ message: 'Dashboard not found' })
+		}
+
+		dashboard.name = name
+		await dashboard.save()
+		res.status(200).json({ message: 'Dashboard updated', name: name })
+	} catch (error) {
+		res.status(500).json({ message: error.message })
+	}
+})
+
 //Usuwanie użytkownika z dashboardu
 app.patch('/dashboards/:dashboardId/remove', async (req, res) => {
 	try {
