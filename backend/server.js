@@ -57,6 +57,27 @@ app.post('/login', async (req, res) => {
 	}
 })
 
+app.get('/userId', async (req, res) => {
+	try {
+		const token = req.headers.authorization?.split(' ')[1]
+		console.log('Token received:', token) // Logowanie tokenu
+
+		if (!token) {
+			return res.status(401).json({ message: 'No token provided' })
+		}
+
+		const decoded = jwt.verify(token, process.env.JWT_SECRET)
+		const userId = decoded.userId
+		if (!userId) {
+			throw new Error('Cannot decode user for provided token')
+		}
+
+		res.status(200).json({ userId: userId })
+	} catch (error) {
+		res.status(500).json({ error: error.message })
+	}
+})
+
 app.post('/register', async (req, res) => {
 	try {
 		const { name, password } = req.body
@@ -228,7 +249,7 @@ app.post('/dashboards/:dashboardId/add-user', async (req, res) => {
 app.patch('/dashboards/:dashboardId', async (req, res) => {
 	try {
 		const { dashboardId } = req.params
-		const { name } = req.body
+		const { name, creatorId } = req.body
 		const token = req.headers.authorization.split(' ')[1]
 		if (!token) {
 			return res.status(401).json({ message: 'No token provided' })
@@ -247,8 +268,12 @@ app.patch('/dashboards/:dashboardId', async (req, res) => {
 		}
 
 		dashboard.name = name
+		if (creatorId) {
+			dashboard.creatorId = creatorId
+		}
+
 		await dashboard.save()
-		res.status(200).json({ message: 'Dashboard updated', name: name })
+		res.status(200).json({ message: 'Dashboard updated', name: name, creatorId: creatorId || dashboard.creatorId })
 	} catch (error) {
 		res.status(500).json({ message: error.message })
 	}

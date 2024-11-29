@@ -112,13 +112,21 @@ export const Dashboard = () => {
 const DashboardDetails = ({ dashboardId, dashboard, editMode, getDetails, removeUser }) => {
 	const [, setActiveModal] = useContext(ModalContext)
 	const [fetchUserDashboards] = useContext(FetchDashboardsContext)
-	const [nameValue, setNameValue] = useState(dashboard?.name || '')
+	const [nameValue, setNameValue] = useState('')
+	const [selectedOwner, setSelectedOwner] = useState('')
 
 	useEffect(() => {
 		if (editMode) {
 			setNameValue(dashboard.name)
 		}
 	}, [editMode])
+
+	useEffect(() => {
+		if (dashboard) {
+			setNameValue(dashboard.name || '')
+			setSelectedOwner(dashboard.creatorId || '')
+		}
+	}, [dashboard])
 
 	const updateDashboard = async () => {
 		const token = localStorage.getItem('token')
@@ -128,13 +136,16 @@ const DashboardDetails = ({ dashboardId, dashboard, editMode, getDetails, remove
 				Authorization: `Bearer ${token}`,
 				'Content-Type': 'application/json',
 			},
-			body: JSON.stringify({ name: nameValue }),
+			body: JSON.stringify({ name: nameValue, creatorId: selectedOwner }),
 		})
 		if (res.ok) {
 			const data = await res.json()
+			console.log(data)
+			if (data?.creatorId) {
+				setSelectedOwner(data.creatorId)
+			}
 			getDetails()
 			fetchUserDashboards()
-			console.log(data)
 		} else {
 			const error = await res.json()
 			console.log(error.message)
@@ -170,14 +181,27 @@ const DashboardDetails = ({ dashboardId, dashboard, editMode, getDetails, remove
 	}
 
 	const nameInput = <input type='text' value={nameValue} onChange={e => setNameValue(e.target.value)} />
-	const content = editMode ? nameInput : dashboard?.name
-
+	const ownerSelect = dashboard?.userIds ? (
+		<select
+			name='ownerSelect'
+			id='ownerSelectId'
+			value={selectedOwner}
+			onChange={e => setSelectedOwner(e.target.value)}>
+			{dashboard.userIds.map(u => (
+				<option value={u._id}>{u.name}</option>
+			))}
+		</select>
+	) : (
+		''
+	)
+	const nameContent = editMode ? nameInput : dashboard?.name
+	const ownerContent = editMode && dashboard.isOwner ? ownerSelect : dashboard?.creatorId.name
 	return (
 		<>
 			{dashboard && (
 				<div className='d-flex flex-column gap-2'>
-					<FormRow label={'Name'} content={content} />
-					<FormRow label={'Owner'} content={dashboard.creatorId.name} />
+					<FormRow label={'Name'} content={nameContent} />
+					<FormRow label={'Owner'} content={ownerContent} />
 					<FormRow className='mb-2' label={'Creation date'} content={dashboard.created_at?.split('T')[0]} />
 					{dashboard.userIds && dashboard.userIds.length > 0 && (
 						<div className='d-flex flex-column gap-2'>
