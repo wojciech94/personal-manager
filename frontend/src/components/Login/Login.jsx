@@ -1,9 +1,12 @@
 import { useState } from 'react'
+import { Eye, EyeOff } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
+import { Card } from '../Card/Card'
 
 export const Login = () => {
 	const [username, setUsername] = useState('')
 	const [password, setPassword] = useState('')
+	const [showPassword, setShowPassword] = useState(false)
 	const [mode, setMode] = useState('signIn')
 	const [message, setMessage] = useState('')
 
@@ -30,9 +33,9 @@ export const Login = () => {
 
 			const data = await response.json()
 			if (mode === 'signIn') {
-				localStorage.setItem('token', data.token) // Zapisz token
+				localStorage.setItem('token', data.token)
 				setMessage('Login successful')
-				navigate('/') // Zmiana trasy po udanym logowaniu
+				navigate('/')
 			} else {
 				setMessage('Register successful')
 				setMode('signIn')
@@ -45,31 +48,56 @@ export const Login = () => {
 	}
 
 	return (
-		<div>
-			<div className='d-flex gap-2 align-center justify-between w-300px'>
-				<h3>{mode === 'signIn' ? 'Sign In' : 'Sign Up'}</h3>
-				<button onClick={() => setMode(prevMode => (prevMode === 'signIn' ? 'signUp' : 'signIn'))}>
-					{mode === 'signIn' ? 'Sign Up' : 'Sign In'}
-				</button>
-			</div>
-			<form onSubmit={handleSubmit}>
-				<input
-					type='text'
-					value={username}
-					onChange={e => setUsername(e.target.value)}
-					placeholder='Username'
-					required
-				/>
-				<input
-					type='password'
-					value={password}
-					onChange={e => setPassword(e.target.value)}
-					placeholder='Password'
-					required
-				/>
-				<button type='submit'>Login</button>
-				{message && <div>{message}</div>}
-			</form>
+		<div className='d-flex flex-column flex-1 flex-center'>
+			<Card className={'w-300px'}>
+				<div className='d-flex flex-column gap-2'>
+					<div className='d-flex gap-2 align-center justify-center'>
+						<h3 className='mb-2'>{mode === 'signIn' ? 'Login' : 'Sign Up'}</h3>
+					</div>
+					<form className='d-flex flex-column gap-4' onSubmit={handleSubmit}>
+						<input
+							type='text'
+							value={username}
+							onChange={e => setUsername(e.target.value)}
+							placeholder='Username'
+							required
+						/>
+						<div className='d-flex position-relative'>
+							<input
+								className='flex-1 pr-4'
+								type={`${showPassword ? 'text' : 'password'}`}
+								value={password}
+								onChange={e => setPassword(e.target.value)}
+								placeholder='Password'
+								required
+							/>
+							<button
+								type='button'
+								className='btn btn-icon position-absolute absolute-right-centered'
+								onClick={() => setShowPassword(prevState => !prevState)}>
+								{showPassword ? <Eye size={12} /> : <EyeOff size={12} />}
+							</button>
+						</div>
+						<button className='btn btn-primary' type='submit'>
+							{mode === 'signIn' ? 'Login' : 'Sign up'}
+						</button>
+						<div className='d-flex gap-2 align-center'>
+							<span className='text-sm text-gray'>
+								{' '}
+								{mode === 'signIn' ? `Don't have an account?` : `Already have an account?`}
+							</span>
+
+							<button
+								type='button'
+								className='btn btn-link link'
+								onClick={() => setMode(prevMode => (prevMode === 'signIn' ? 'signUp' : 'signIn'))}>
+								{mode === 'signIn' ? 'Sign Up' : 'Login'}
+							</button>
+						</div>
+						{message && <div>{message}</div>}
+					</form>
+				</div>
+			</Card>
 		</div>
 	)
 }

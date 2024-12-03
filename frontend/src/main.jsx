@@ -7,6 +7,7 @@ import { Dashboard } from './components/Dashboard/Dashboard.jsx'
 import './App.css'
 import { Notes } from './components/Notes/Notes'
 import { Folders } from './components/Folders/Folders'
+import { Todos } from './components/Todos/Todos'
 
 const Main = () => {
 	const router = createBrowserRouter([
@@ -32,7 +33,7 @@ const Main = () => {
 						},
 						{
 							path: 'todo',
-							element: <>ToDo content</>,
+							element: <Todos />,
 						},
 						{
 							path: 'folders',

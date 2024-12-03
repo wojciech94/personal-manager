@@ -3,6 +3,12 @@
 	margin: 0;
 }
 
+#root {
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+}
+
 html {
 	font-family: 'Poppins', 'Trebuchet MS', 'Helvetica', sans-serif;
 }
@@ -55,6 +61,12 @@ nav .link:not(.active):hover::after {
 	top: 50%;
 	left: 50%;
 	translate: -50% -50%;
+}
+
+.absolute-right-centered {
+	top: 50%;
+	right: 0;
+	transform: translateY(-50%);
 }
 
 .h-70px {
@@ -110,6 +122,11 @@ textarea {
 	min-height: calc(2.5rem + 4px);
 	padding: 0.25rem;
 	border-radius: 0.25rem;
+}
+
+input:focus,
+textarea:focus {
+	box-shadow: 0 0 8px rgba(128, 128, 128, 0.5);
 }
 
 .transition-none {
@@ -340,6 +357,22 @@ a.active {
 	padding-top: 1rem;
 }
 
+.pr-1 {
+	padding-right: 0.25rem;
+}
+
+.pr-2 {
+	padding-right: 0.5rem;
+}
+
+.pr-3 {
+	padding-right: 0.75rem;
+}
+
+.pr-4 {
+	padding-right: 1rem;
+}
+
 .m-0 {
 	margin: 0rem;
 }
@@ -489,6 +522,10 @@ a.active {
 
 .align-start {
 	align-items: start;
+}
+
+.align-self-center {
+	align-self: center;
 }
 
 .justify-between {

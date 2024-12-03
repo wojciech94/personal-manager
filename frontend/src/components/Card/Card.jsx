@@ -1,6 +1,6 @@
-export const Card = ({ title, footer, children, headerComponent }) => {
+export const Card = ({ title, footer, children, headerComponent, className }) => {
 	return (
-		<div className='card'>
+		<div className={`card ${className ? className : ''}`}>
 			{headerComponent && headerComponent}
 			{title && <div className='card-title'>{title}</div>}
 			{children && <div className='card-content'>{children}</div>}
