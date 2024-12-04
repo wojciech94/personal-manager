@@ -12,6 +12,8 @@ const User = require('./models/User')
 const Dashboard = require('./models/Dashboard')
 const NoteCategory = require('./models/NoteCategory')
 const Folder = require('./models/Folder')
+const TaskGroup = require('./models/TaskGroup')
+const Task = require('./models/Task')
 
 const app = express()
 const PORT = process.env.PORT || 5000
@@ -19,7 +21,7 @@ const PORT = process.env.PORT || 5000
 app.use(cors())
 app.use(express.json())
 
-const dbUrl = process.env.DB_URL // Użycie zmiennej środowiskowej
+const dbUrl = process.env.DB_URL
 
 mongoose
 	.connect(dbUrl)
@@ -96,10 +98,6 @@ app.get('/users', async (req, res) => {
 	} catch (error) {
 		res.status(500).json({ error: error.message })
 	}
-})
-
-app.get('/protected', authMiddleware, (req, res) => {
-	res.json({ message: 'This is a protected route', user: req.user })
 })
 
 app.get('/dashboards', async (req, res) => {
@@ -657,7 +655,6 @@ app.get('/dashboards/:dashboardId/folders', async (req, res) => {
 
 	const { dashboardId } = req.params
 
-	// Najpierw sprawdzamy, czy dashboardId jest poprawne
 	if (!mongoose.Types.ObjectId.isValid(dashboardId)) {
 		return res.status(400).json({ message: 'Invalid dashboard ID format' })
 	}
@@ -806,6 +803,204 @@ app.patch('/folders/:folderId', async (req, res) => {
 		await folder.save()
 
 		return res.status(200).json({ message: 'Folder updated', folder })
+	} catch (error) {
+		res.status(500).json({ message: error.message })
+	}
+})
+
+//Get tasks groups
+app.get('/dashboards/:dashboardId/tasks-groups', authMiddleware, async (req, res) => {
+	try {
+		const { dashboardId } = req.params
+
+		if (!mongoose.Types.ObjectId.isValid(dashboardId)) {
+			return res.status(400).json({ message: 'Invalid dashboard ID format' })
+		}
+
+		const dashboard = await Dashboard.findById(dashboardId)
+
+		if (!dashboard) {
+			return res.status(404).json({ message: 'Dashboard not found' })
+		}
+
+		const todoGroupsIds = dashboard.todoGroupIds
+		if (!todoGroupsIds || todoGroupsIds.length === 0) {
+			return res.status(200).json({ message: 'No task groups found' })
+		}
+
+		const todoGroups = await TaskGroup.find({ _id: { $in: todoGroupsIds } })
+
+		res.status(200).json({ todoGroups })
+	} catch (error) {
+		res.status(500).json({ message: error.message })
+	}
+})
+
+app.post('/dashboards/:dashboardId/add-todo-group', authMiddleware, async (req, res) => {
+	try {
+		const { dashboardId } = req.params
+		const { name } = req.body
+
+		if (!name) {
+			return res.status(500).json({ message: 'No name provided in the request body' })
+		}
+
+		const dashboard = await Dashboard.findById(dashboardId)
+		if (!dashboard) {
+			return res.status(404).json({ message: 'Dashboard not found' })
+		}
+
+		const existingTodoGroup = await TaskGroup.findOne({ name, _id: { $in: dashboard.todoGroupIds } })
+
+		if (existingTodoGroup) {
+			return res.status(409).json({ message: 'A group with this name allready exist on the dashboard.' })
+		}
+
+		let newGroup = await TaskGroup.create({ name })
+
+		dashboard.todoGroupIds.push(newGroup._id)
+		await dashboard.save()
+		res.status(200).json(newGroup)
+	} catch (error) {
+		res.status(500).json({ message: error.message })
+	}
+})
+
+app.patch('/dashboards/:dashboardId/tasks-groups', authMiddleware, async (req, res) => {
+	try {
+		const { dashboardId } = req.params
+		const { id, name } = req.body
+
+		if (!name || !id) {
+			return res.status(400).json({ message: 'No name or id were provided in the request body' })
+		}
+
+		const groupToEdit = await TaskGroup.findById(id)
+
+		if (!groupToEdit) {
+			return res.status(409).json({ message: 'A group with this id not exist.' })
+		}
+
+		groupToEdit.name = name
+
+		await groupToEdit.save()
+
+		const dashboard = await Dashboard.findById(dashboardId).populate('todoGroupIds')
+		if (!dashboard) {
+			return res.status(404).json({ message: 'Dashboard not found' })
+		}
+
+		res.status(200).json(dashboard.todoGroupIds)
+	} catch (error) {
+		res.status(500).json({ message: error.message })
+	}
+})
+
+app.delete('/dashboards/:dashboardId/tasks-groups', authMiddleware, async (req, res) => {
+	try {
+		const { dashboardId } = req.params
+		const { id } = req.body
+
+		if (!mongoose.Types.ObjectId.isValid(dashboardId)) {
+			return res.status(400).json({ message: 'Invalid dashboard ID format' })
+		}
+
+		const dashboard = await Dashboard.findById(dashboardId)
+
+		if (!dashboard) {
+			return res.status(404).json({ message: 'Dashboard not found' })
+		}
+
+		if (!id) {
+			return res.status(400).json({ message: 'No id provided in the body request' })
+		}
+
+		if (!dashboard.todoGroupIds.some(g => g.toString() === id)) {
+			return res.status(404).json({ message: 'Task group not associated with this dashboard' })
+		}
+
+		const todoGroup = await TaskGroup.findByIdAndDelete(id)
+		if (!todoGroup) {
+			return res.status(404).json({ message: 'Task group not found' })
+		}
+
+		dashboard.todoGroupIds = dashboard.todoGroupIds.filter(g => g.toString() !== id)
+		await dashboard.save()
+
+		await dashboard.populate('todoGroupIds')
+
+		res.status(200).json(dashboard.todoGroupIds)
+	} catch (error) {
+		res.status(500).json({ message: error.message })
+	}
+})
+
+//get tasks by groupId
+app.get('/dashboards/:dashboardId/tasks/:groupId?', authMiddleware, async (req, res) => {
+	try {
+		const { dashboardId, groupId } = req.params
+
+		if (!mongoose.Types.ObjectId.isValid(dashboardId)) {
+			return res.status(400).json({ message: 'Invalid dashboard ID format' })
+		}
+
+		const dashboard = await Dashboard.findById(dashboardId)
+
+		if (!dashboard) {
+			return res.status(404).json({ message: 'Dashboard not found' })
+		}
+
+		const todoGroupsIds = dashboard.todoGroupIds
+		if (!todoGroupsIds || todoGroupsIds.length === 0) {
+			return res.status(200).json({ message: 'No task groups found' })
+		}
+
+		let tasks = []
+
+		if (groupId) {
+			const group = await TaskGroup.findOne({ _id: groupId }).populate('tasks')
+			if (!group) {
+				return res.status(404).json({ message: 'Group not found for specific Id' })
+			}
+			tasks = group.tasks
+		} else {
+			const groups = await TaskGroup.find({ _id: { $in: todoGroupsIds } }).populate('tasks')
+			groups.forEach(group => {
+				tasks = tasks.concat(group.tasks)
+			})
+		}
+
+		if (tasks.length === 0) {
+			return res.status(404).json({ message: 'No tasks found in any group' })
+		}
+
+		res.status(200).json({ tasks })
+	} catch (error) {
+		res.status(500).json({ message: error.message })
+	}
+})
+
+app.post('/dashboards/:dashboardId/add-task', authMiddleware, async (req, res) => {
+	try {
+		const { content, priority, groupId, expirationDate } = req.body
+
+		if (!content) {
+			return res.status(400).json({ message: 'No content provided in the request body' })
+		}
+
+		console.log(groupId)
+
+		const taskGroup = await TaskGroup.findById(groupId)
+		if (!taskGroup) {
+			return res.status(404).json({ message: 'Task group not found for provided id' })
+		}
+
+		const task = await Task.create({ content, priority, expired_at: expirationDate })
+
+		taskGroup.tasks.push(task)
+		await taskGroup.save()
+
+		res.status(201).json(task)
 	} catch (error) {
 		res.status(500).json({ message: error.message })
 	}

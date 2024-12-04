@@ -16,7 +16,7 @@ export const CardHeader = ({ title, data, className }) => {
 			{data &&
 				data.length > 0 &&
 				data.map(d => (
-					<button className={`btn d-flex gap-2 align-center ${d.btnClass}`} onClick={d.action}>
+					<button key={d.label} className={`btn d-flex gap-2 align-center ${d.btnClass}`} onClick={d.action}>
 						{d.icon}
 						{d.label}
 					</button>

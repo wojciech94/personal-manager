@@ -27,6 +27,12 @@ const dashboardSchema = new mongoose.Schema({
 			ref: 'Folder',
 		},
 	],
+	todoGroupIds: [
+		{
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'TaskGroup',
+		},
+	],
 	created_at: {
 		type: Date,
 		default: Date.now(),

@@ -6,6 +6,8 @@ import { ModalNoteContent } from './ModalNoteContent'
 import { ModalFolderContent } from './ModalFolderContent'
 import { ModalAddUserContent } from './ModalAddUserContent'
 import { ModalAddCategoryContent } from './ModalAddCategoryContent'
+import { ModalModifyTodoGroup } from './ModalModifyTodoGroup'
+import { ModalAddTask } from './ModalAddTask'
 
 export const Modal = ({ modalName, modalTitle, modalData }) => {
 	const [, setActiveModal] = useContext(ModalContext)
@@ -28,6 +30,12 @@ export const Modal = ({ modalName, modalTitle, modalData }) => {
 			break
 		case 'editFolder':
 			modalContent = <ModalFolderContent modalData={modalData} />
+			break
+		case 'modifyTodoGroup':
+			modalContent = <ModalModifyTodoGroup modalData={modalData} />
+			break
+		case 'addTask':
+			modalContent = <ModalAddTask modalData={modalData} />
 			break
 		default:
 			modalContent = <>Alert</>

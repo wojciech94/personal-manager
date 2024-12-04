@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react'
 import { Check, Plus, MoreVertical, X } from 'react-feather'
-import { Link, NavLink, Outlet, useLoaderData, useParams } from 'react-router-dom'
+import { NavLink, Outlet, useLoaderData, useParams } from 'react-router-dom'
 import { ModalContext } from '../../contexts/ModalContext'
 
 export const Folders = () => {
