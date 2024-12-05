@@ -5,6 +5,7 @@ import { Plus, Settings } from 'react-feather'
 import { useParams } from 'react-router-dom'
 import { ModalContext } from '../../contexts/ModalContext'
 import { Card, CardHeader } from '../Card/Card'
+import { Task } from '../Task/Task'
 
 export const Todos = () => {
 	const { dashboardId } = useParams()
@@ -115,8 +116,8 @@ export const Todos = () => {
 	}
 
 	return (
-		<Card headerComponent={<CardHeader title='Tasks to do' data={headerActions()}></CardHeader>}>
-			<div className='card-subtitle mt-n4 border-top-0'>
+		<Card className='card-p0' headerComponent={<CardHeader title='Tasks to do' data={headerActions()}></CardHeader>}>
+			<div className='card-subtitle border-top-0'>
 				<div className='d-flex gap-2'>
 					<button onClick={() => fetchTasks('')} className={`btn btn-link link ${activeGroup === '' ? 'active' : ''}`}>
 						All tasks
@@ -133,9 +134,9 @@ export const Todos = () => {
 				</div>
 			</div>
 			{tasks && tasks.length > 0 && (
-				<div className='p-4'>
+				<div className='task-container rounded-bottom-4 overflow-hidden'>
 					{tasks.map(t => (
-						<div>{t.content}</div>
+						<Task task={t} />
 					))}
 				</div>
 			)}

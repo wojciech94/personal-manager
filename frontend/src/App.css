@@ -329,10 +329,17 @@ a.active,
 	border-bottom: 1px solid lightgray;
 }
 
+.card.card-p0 .card-subtitle {
+	margin: 0;
+}
+
 .card-content {
 	padding: 1rem;
 }
 
+.card.card-p0 .card-content {
+	padding: 0;
+}
 .card-footer {
 	padding: 1rem;
 	border-top: 1px solid lightgray;
@@ -493,6 +500,55 @@ a.active,
 .dropdown-item:hover {
 	background-color: rgb(224, 240, 248);
 	color: dodgerblue;
+}
+
+.task-container {
+	display: flex;
+	flex-direction: column;
+}
+
+.task {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 2rem;
+	border-bottom: 1px solid lightgray;
+	padding: 0.5rem 1rem;
+}
+
+.task:last-child {
+	border-bottom: none;
+}
+
+.task:nth-child(2n) {
+	background-color: rgb(245, 245, 245);
+}
+
+.task input[type='checkbox'] {
+	width: 16px;
+}
+
+.task label.done {
+	text-decoration: line-through;
+	color: gray;
+}
+
+.task-priority {
+	width: 5px;
+	height: 20px;
+	border-radius: 4px;
+}
+
+.task-priority.low {
+	background-color: green;
+}
+
+.task-priority.medium {
+	background-color: gold;
+}
+
+.task-priority.high {
+	background-color: firebrick;
 }
 
 .p-0 {
@@ -907,4 +963,25 @@ a.active,
 
 .rounded-4 {
 	border-radius: 1rem;
+}
+
+.rounded-bottom,
+.rounded-bottom-1 {
+	border-bottom-left-radius: 0.25rem;
+	border-bottom-right-radius: 0.25rem;
+}
+
+.rounded-bottom-2 {
+	border-bottom-left-radius: 0.5rem;
+	border-bottom-right-radius: 0.5rem;
+}
+
+.rounded-bottom-3 {
+	border-bottom-left-radius: 0.75rem;
+	border-bottom-right-radius: 0.75rem;
+}
+
+.rounded-bottom-4 {
+	border-bottom-left-radius: 1rem;
+	border-bottom-right-radius: 1rem;
 }

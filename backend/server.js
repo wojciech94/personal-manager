@@ -836,6 +836,7 @@ app.get('/dashboards/:dashboardId/tasks-groups', authMiddleware, async (req, res
 	}
 })
 
+//add task group
 app.post('/dashboards/:dashboardId/add-todo-group', authMiddleware, async (req, res) => {
 	try {
 		const { dashboardId } = req.params
@@ -866,6 +867,7 @@ app.post('/dashboards/:dashboardId/add-todo-group', authMiddleware, async (req, 
 	}
 })
 
+//update task group
 app.patch('/dashboards/:dashboardId/tasks-groups', authMiddleware, async (req, res) => {
 	try {
 		const { dashboardId } = req.params
@@ -896,6 +898,7 @@ app.patch('/dashboards/:dashboardId/tasks-groups', authMiddleware, async (req, r
 	}
 })
 
+//remove task group
 app.delete('/dashboards/:dashboardId/tasks-groups', authMiddleware, async (req, res) => {
 	try {
 		const { dashboardId } = req.params
@@ -980,6 +983,7 @@ app.get('/dashboards/:dashboardId/tasks/:groupId?', authMiddleware, async (req, 
 	}
 })
 
+//add task
 app.post('/dashboards/:dashboardId/add-task', authMiddleware, async (req, res) => {
 	try {
 		const { content, priority, groupId, expirationDate } = req.body
@@ -1001,6 +1005,35 @@ app.post('/dashboards/:dashboardId/add-task', authMiddleware, async (req, res) =
 		await taskGroup.save()
 
 		res.status(201).json(task)
+	} catch (error) {
+		res.status(500).json({ message: error.message })
+	}
+})
+
+//update task
+app.patch('/dashboards/:dashboardId/task/:id', authMiddleware, async (req, res) => {
+	try {
+		const { content, is_done, priority, expired_at } = req.body
+		const { id } = req.params
+
+		if (!mongoose.Types.ObjectId.isValid(id)) {
+			return res.status(400).json({ message: 'Invalid task ID format' })
+		}
+
+		const task = await Task.findById(id)
+
+		if (!task) {
+			return res.status(404).json({ message: 'Task not found for provided id' })
+		}
+
+		if (content !== undefined) task.content = content
+		if (typeof is_done === 'boolean') task.is_done = is_done
+		if (priority !== undefined) task.priority = priority
+		if (expired_at !== undefined) task.expired_at = expired_at
+
+		await task.save()
+
+		res.status(200).json(task)
 	} catch (error) {
 		res.status(500).json({ message: error.message })
 	}
