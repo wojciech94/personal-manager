@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Check, Edit, Trash2 } from 'react-feather'
 import { useParams } from 'react-router-dom'
 
-export function Task({ task }) {
+export function Task({ task, fetchTasks }) {
 	const [taskData, setTaskData] = useState(task)
 	const [contentValue, setContentValue] = useState(task.content)
 	const [priorityValue, setPriorityValue] = useState(task.priority)
@@ -12,6 +12,8 @@ export function Task({ task }) {
 
 	useEffect(() => {
 		setTaskData(task)
+		setContentValue(task.content)
+		setPriorityValue(task.priority)
 	}, [task])
 
 	const updateTask = async action => {
@@ -20,26 +22,38 @@ export function Task({ task }) {
 			case 'toggle':
 				updatedTask = { ...taskData, is_done: !taskData.is_done }
 				break
+			case 'delete':
+				break
 			case 'update':
 			default:
 				updatedTask = { ...taskData, content: contentValue, priority: priorityValue }
 				break
 		}
-		const res = await fetch(`http://localhost:5000/dashboards/${dashboardId}/task/${taskData._id}`, {
-			method: 'PATCH',
+		const config = {
+			method: action === 'delete' ? 'DELETE' : 'PATCH',
 			headers: {
 				Authorization: `Bearer ${token}`,
 				'Content-Type': 'application/json',
 			},
-			body: JSON.stringify(updatedTask),
-		})
+		}
+
+		if (action !== 'delete') {
+			config.body = JSON.stringify(updatedTask)
+		}
+
+		const res = await fetch(`http://localhost:5000/dashboards/${dashboardId}/task/${taskData._id}`, config)
 		if (res.ok) {
-			const data = await res.json()
-			if (data) {
-				console.log(data)
-				setTaskData(data)
+			if (action === 'delete') {
+				console.log('fetch')
+				fetchTasks()
+			} else {
+				const data = await res.json()
+				if (data) {
+					console.log(data)
+					setTaskData(data)
+				}
 			}
-            setIsEdit(false)
+			setIsEdit(false)
 		}
 	}
 
@@ -94,7 +108,7 @@ export function Task({ task }) {
 						<Edit size={16} />
 					</button>
 				)}
-				<button className='btn btn-danger btn-icon'>
+				<button className='btn btn-danger btn-icon' onClick={() => updateTask('delete')}>
 					<Trash2 size={16} />
 				</button>
 			</div>

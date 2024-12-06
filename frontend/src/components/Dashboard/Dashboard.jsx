@@ -88,9 +88,9 @@ export const Dashboard = () => {
 	const cardHeader = <CardHeader title='Dashboard details' data={headerActions()} />
 
 	return (
-		<div className='d-flex justify-between align-start gap-5'>
+		<div className='d-flex justify-between align-start gap-5 p-5'>
 			<Menu />
-			<div className='flex-1 max-w-1200px mx-auto p-5'>
+			<div className='flex-1 content-container mx-auto overflow-hidden'>
 				{isExactMatch ? (
 					<Card headerComponent={cardHeader}>
 						<DashboardDetails

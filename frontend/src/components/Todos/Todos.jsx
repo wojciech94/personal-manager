@@ -44,6 +44,7 @@ export const Todos = () => {
 		setActiveGroup(id)
 		if (res.ok) {
 			const data = await res.json()
+			console.log(data.tasks)
 			setTasks(data.tasks)
 		} else {
 			const errorData = await res.json()
@@ -89,7 +90,7 @@ export const Todos = () => {
 	const addTaskModal = {
 		name: 'addTask',
 		data: {
-			action: () => console.log('Save task'),
+			action: () => fetchTasks(activeGroup),
 			actionName: 'Save task',
 			initValue: activeGroup,
 			groups: todoGroups,
@@ -118,7 +119,7 @@ export const Todos = () => {
 	return (
 		<Card className='card-p0' headerComponent={<CardHeader title='Tasks to do' data={headerActions()}></CardHeader>}>
 			<div className='card-subtitle border-top-0'>
-				<div className='d-flex gap-2'>
+				<div className='d-flex gap-3 scroll-x-auto'>
 					<button onClick={() => fetchTasks('')} className={`btn btn-link link ${activeGroup === '' ? 'active' : ''}`}>
 						All tasks
 					</button>
@@ -136,7 +137,7 @@ export const Todos = () => {
 			{tasks && tasks.length > 0 && (
 				<div className='task-container rounded-bottom-4 overflow-hidden'>
 					{tasks.map(t => (
-						<Task task={t} />
+						<Task task={t} fetchTasks={() => fetchTasks(activeGroup)} />
 					))}
 				</div>
 			)}

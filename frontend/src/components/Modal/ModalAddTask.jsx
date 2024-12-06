@@ -21,7 +21,6 @@ export function ModalAddTask({ modalData }) {
 	}, [modalData])
 
 	const handleAddTask = async () => {
-		console.log(taskGroup)
 		const res = await fetch(`http://localhost:5000/dashboards/${dashboardId}/add-task`, {
 			method: 'POST',
 			headers: {
@@ -36,8 +35,10 @@ export function ModalAddTask({ modalData }) {
 			}),
 		})
 		if (res.ok) {
-			const data = await res.json()
-			console.log(data)
+			await res.json()
+			if (modalData.action) {
+				modalData.action()
+			}
 		} else {
 			const errorData = await res.json()
 			console.error(errorData.message)

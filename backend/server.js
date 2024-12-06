@@ -14,6 +14,7 @@ const NoteCategory = require('./models/NoteCategory')
 const Folder = require('./models/Folder')
 const TaskGroup = require('./models/TaskGroup')
 const Task = require('./models/Task')
+const { deleteOne } = require('./models/Task')
 
 const app = express()
 const PORT = process.env.PORT || 5000
@@ -992,8 +993,6 @@ app.post('/dashboards/:dashboardId/add-task', authMiddleware, async (req, res) =
 			return res.status(400).json({ message: 'No content provided in the request body' })
 		}
 
-		console.log(groupId)
-
 		const taskGroup = await TaskGroup.findById(groupId)
 		if (!taskGroup) {
 			return res.status(404).json({ message: 'Task group not found for provided id' })
@@ -1034,6 +1033,35 @@ app.patch('/dashboards/:dashboardId/task/:id', authMiddleware, async (req, res) 
 		await task.save()
 
 		res.status(200).json(task)
+	} catch (error) {
+		res.status(500).json({ message: error.message })
+	}
+})
+
+app.delete('/dashboards/:dashboardId/task/:id', authMiddleware, async (req, res) => {
+	try {
+		const { id } = req.params
+
+		if (!mongoose.Types.ObjectId.isValid(id)) {
+			return res.status(400).json({ message: 'Invalid ID format' })
+		}
+
+		const task = await Task.findById(id)
+
+		if (!task) {
+			return res.status(404).json({ message: 'Task not found for provided Id' })
+		}
+
+		const taskGroup = await TaskGroup.findOne({ tasks: id })
+		if (!taskGroup) {
+			return res.status(404).json({ message: 'No tasks group containing this task was found' })
+		}
+		taskGroup.tasks = taskGroup.tasks.filter(t => t._id !== id)
+		await taskGroup.save()
+
+		await Task.deleteOne({ _id: id })
+
+		res.status(204).send()
 	} catch (error) {
 		res.status(500).json({ message: error.message })
 	}
