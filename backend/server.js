@@ -943,6 +943,7 @@ app.delete('/dashboards/:dashboardId/tasks-groups', authMiddleware, async (req, 
 app.get('/dashboards/:dashboardId/tasks/:groupId?', authMiddleware, async (req, res) => {
 	try {
 		const { dashboardId, groupId } = req.params
+		const { sortBy = 'created_at', order = 'asc' } = req.query
 
 		if (!mongoose.Types.ObjectId.isValid(dashboardId)) {
 			return res.status(400).json({ message: 'Invalid dashboard ID format' })
@@ -975,8 +976,36 @@ app.get('/dashboards/:dashboardId/tasks/:groupId?', authMiddleware, async (req, 
 		}
 
 		if (tasks.length === 0) {
-			return res.status(404).json({ message: 'No tasks found in any group' })
+			return res.status(200).json({ tasks, message: 'No tasks found in any group' })
 		}
+
+		const validSortFields = ['created_at', 'expired_at', 'priority']
+		if (!validSortFields.includes(sortBy)) {
+			return res.status(400).json({ message: `Invalid sort field: ${sortBy}` })
+		}
+
+		const priorityMap = {
+			low: 0,
+			medium: 1,
+			high: 2,
+		}
+
+		const mapPriority = priority => priorityMap[priority] ?? -1
+
+		const sortOrder = order === 'desc' ? -1 : 1
+
+		tasks.sort((a, b) => {
+			const aValue = a[sortBy] ?? (sortOrder === 1 ? Infinity : -Infinity)
+			const bValue = b[sortBy] ?? (sortOrder === 1 ? Infinity : -Infinity)
+
+			if (sortBy === 'priority') {
+				return (mapPriority(a.priority) - mapPriority(b.priority)) * sortOrder
+			}
+
+			if (aValue < bValue) return -sortOrder
+			if (aValue > bValue) return sortOrder
+			return 0
+		})
 
 		res.status(200).json({ tasks })
 	} catch (error) {

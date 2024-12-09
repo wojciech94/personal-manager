@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
-import { Check, Edit, Trash2 } from 'react-feather'
+import { Check, Clock, Edit, Trash2, Watch } from 'react-feather'
 import { useParams } from 'react-router-dom'
 
-export function Task({ task, fetchTasks }) {
+export function Task({ task, fetchTasks, showDeadline }) {
 	const [taskData, setTaskData] = useState(task)
 	const [contentValue, setContentValue] = useState(task.content)
 	const [priorityValue, setPriorityValue] = useState(task.priority)
@@ -98,6 +98,12 @@ export function Task({ task, fetchTasks }) {
 					</>
 				)}
 			</div>
+			{showDeadline && task.expired_at && (
+				<div className='d-flex gap-2 align-center text-gray'>
+					<Clock size={16} />
+					{task.expired_at.split('T')[0]}
+				</div>
+			)}
 			<div className='d-flex gap-2 align-center'>
 				{isEdit ? (
 					<button className='btn btn-success btn-icon' onClick={() => updateTask('update')}>

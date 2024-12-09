@@ -8,6 +8,7 @@ import { ModalAddUserContent } from './ModalAddUserContent'
 import { ModalAddCategoryContent } from './ModalAddCategoryContent'
 import { ModalModifyTodoGroup } from './ModalModifyTodoGroup'
 import { ModalAddTask } from './ModalAddTask'
+import { ModalTasksSettingsContent } from './ModalTasksSettingsContent'
 
 export const Modal = ({ modalName, modalTitle, modalData }) => {
 	const [, setActiveModal] = useContext(ModalContext)
@@ -37,6 +38,9 @@ export const Modal = ({ modalName, modalTitle, modalData }) => {
 		case 'addTask':
 			modalContent = <ModalAddTask modalData={modalData} />
 			break
+		case 'tasksSettings':
+			modalContent = <ModalTasksSettingsContent modalData={modalData} />
+			break
 		default:
 			modalContent = <>Alert</>
 	}
@@ -49,7 +53,7 @@ export const Modal = ({ modalName, modalTitle, modalData }) => {
 		<div className='modal-backdrop'>
 			<div className='modal'>
 				<div className='d-flex gap-4 justify-end'>
-					{modalTitle && <div className='flex-1 modal-title p-2 px-4'>{modalTitle}</div>}
+					{modalTitle && <div className='flex-1 modal-title p-2'>{modalTitle}</div>}
 					<button onClick={() => setActiveModal(null)}>
 						<X size={20} />
 					</button>

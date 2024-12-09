@@ -85,6 +85,14 @@ nav .link:not(.active):hover::after {
 	width: 100%;
 }
 
+.w-75px {
+	width: 75px;
+}
+
+.w-125px {
+	width: 125px;
+}
+
 .w-300px {
 	width: 300px;
 }
@@ -117,11 +125,15 @@ button {
 
 input:not([type='checkbox']),
 select {
-	min-width: 125px;
 	padding: 0.25rem;
 	border: 1px solid gray;
 	border-radius: 0.25rem;
 	outline: none;
+}
+
+input[type='text'],
+select {
+	min-width: 125px;
 }
 
 textarea {
@@ -269,7 +281,7 @@ a.active,
 }
 
 .content-container {
-	width: calc(100% - (200px+1.25rem));
+	width: calc(100% - (200px + 1.25rem));
 	max-width: 1200px;
 }
 
@@ -329,7 +341,7 @@ a.active,
 	background-color: rgb(236, 236, 236);
 	margin-left: -1rem;
 	margin-right: -1rem;
-	padding: 0.75rem 1rem;
+	padding: 0.75rem 1.5rem;
 	border-top: 1px solid lightgray;
 	border-bottom: 1px solid lightgray;
 }
@@ -345,9 +357,11 @@ a.active,
 .card.card-p0 .card-content {
 	padding: 0;
 }
+
 .card-footer {
-	padding: 1rem;
+	padding: 1rem 1.5rem;
 	border-top: 1px solid lightgray;
+	background-color: rgb(236, 236, 236);
 }
 
 .form-row {
@@ -366,6 +380,7 @@ a.active,
 	width: calc(8 / 12 * 100%);
 	display: flex;
 	flex-direction: column;
+	align-items: flex-start;
 	padding: 0 0.5rem;
 	font-weight: bold;
 }
@@ -504,6 +519,22 @@ a.active,
 
 .dropdown-item:hover {
 	background-color: rgb(224, 240, 248);
+	color: dodgerblue;
+}
+
+.alert {
+	display: flex;
+	gap: 0.75rem;
+	align-items: center;
+	margin: 1rem;
+	padding: 1rem;
+	border-left: 4px solid lightgray;
+	border-radius: 1rem;
+}
+
+.alert-primary {
+	border-color: dodgerblue;
+	background-color: rgb(224, 240, 246);
 	color: dodgerblue;
 }
 
@@ -791,6 +822,19 @@ a.active,
 	margin-bottom: 2.5rem;
 }
 
+.mb-n1 {
+	margin-bottom: -0.25rem;
+}
+.mb-n2 {
+	margin-bottom: -0.5rem;
+}
+.mb-n3 {
+	margin-bottom: -0.75rem;
+}
+.mb-n4 {
+	margin-bottom: -1rem;
+}
+
 .mr-1 {
 	margin-right: 0.25rem;
 }
@@ -826,6 +870,10 @@ a.active,
 	display: flex;
 }
 
+.d-block {
+	display: block;
+}
+
 .flex-column {
 	flex-direction: column;
 }
@@ -833,6 +881,10 @@ a.active,
 .flex-center {
 	justify-content: center;
 	align-items: center;
+}
+
+.flex-wrap {
+	flex-wrap: wrap;
 }
 
 .flex-1 {
@@ -905,6 +957,10 @@ a.active,
 
 .text-bold {
 	font-weight: bold;
+}
+
+.text-normal {
+	font-weight: normal;
 }
 
 .text-nowrap {
@@ -986,6 +1042,10 @@ a.active,
 
 .border-light {
 	border-color: lightgray;
+}
+
+.border-primary {
+	border-color: dodgerblue;
 }
 
 .rounded,

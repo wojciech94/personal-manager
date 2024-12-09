@@ -12,6 +12,10 @@ const taskSchema = new mongoose.Schema({
 		type: Boolean,
 		default: false,
 	},
+	created_at: {
+		type: Date,
+		default: () => new Date(),
+	},
 	expired_at: {
 		type: Date,
 		validate: {

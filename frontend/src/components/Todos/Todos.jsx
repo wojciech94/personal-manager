@@ -1,24 +1,34 @@
 import { useContext } from 'react'
 import { useEffect } from 'react'
 import { useState } from 'react'
-import { Plus, Settings } from 'react-feather'
+import { Edit, Plus, Settings } from 'react-feather'
 import { useParams } from 'react-router-dom'
 import { ModalContext } from '../../contexts/ModalContext'
+import { Alert } from '../Alert/Alert'
 import { Card, CardHeader } from '../Card/Card'
 import { Task } from '../Task/Task'
+
+const tasksSettingsConfig = {
+	showDeadline: true,
+	archivizationTime: 24,
+	removeTime: 30,
+	sortMethod: 'expired_at',
+	sortDirection: 'desc',
+}
 
 export const Todos = () => {
 	const { dashboardId } = useParams()
 	const token = localStorage.getItem('token')
 	const [todoGroups, setTodoGroups] = useState(null)
 	const [tasks, setTasks] = useState(null)
+	const [tasksSettings, setTasksSettings] = useState(tasksSettingsConfig)
 	const [activeGroup, setActiveGroup] = useState('')
 	const [, setActiveModal] = useContext(ModalContext)
 
 	useEffect(() => {
 		fetchTodoGroups()
-		fetchTasks('')
-	}, [])
+		fetchTasks(activeGroup)
+	}, [tasksSettings])
 
 	const fetchTodoGroups = async () => {
 		const res = await fetch(`http://localhost:5000/dashboards/${dashboardId}/tasks-groups`, {
@@ -36,15 +46,17 @@ export const Todos = () => {
 	}
 
 	const fetchTasks = async id => {
-		const res = await fetch(`http://localhost:5000/dashboards/${dashboardId}/tasks/${id}`, {
-			headers: {
-				Authorization: `Bearer ${token}`,
-			},
-		})
+		const res = await fetch(
+			`http://localhost:5000/dashboards/${dashboardId}/tasks/${id}?sortBy=${tasksSettings.sortMethod}&order=${tasksSettings.sortDirection}`,
+			{
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			}
+		)
 		setActiveGroup(id)
 		if (res.ok) {
 			const data = await res.json()
-			console.log(data.tasks)
 			setTasks(data.tasks)
 		} else {
 			const errorData = await res.json()
@@ -68,7 +80,6 @@ export const Todos = () => {
 			if (res.ok) {
 				const data = await res.json()
 				await fetchTodoGroups()
-				console.log(data)
 			} else {
 				const errorData = await res.json()
 				console.error(errorData.message)
@@ -98,6 +109,16 @@ export const Todos = () => {
 		title: 'Add task',
 	}
 
+	const tasksSettingsModal = {
+		name: 'tasksSettings',
+		data: {
+			action: setTasksSettings,
+			actionName: 'Save settings',
+			initValue: tasksSettings,
+		},
+		title: 'Tasks settings',
+	}
+
 	const headerActions = () => {
 		const actionsArray = [
 			{
@@ -107,9 +128,9 @@ export const Todos = () => {
 				btnClass: 'btn-primary',
 			},
 			{
-				action: () => setActiveModal(modifyTodoGroupCategoryModal),
+				action: () => setActiveModal(tasksSettingsModal),
 				icon: <Settings size={16} />,
-				label: 'Manage groups',
+				label: 'Settings',
 				btnClass: 'btn-light',
 			},
 		]
@@ -118,7 +139,7 @@ export const Todos = () => {
 
 	return (
 		<Card className='card-p0' headerComponent={<CardHeader title='Tasks to do' data={headerActions()}></CardHeader>}>
-			<div className='card-subtitle border-top-0'>
+			<div className='card-subtitle border-top-0 flex-wrap'>
 				<div className='d-flex gap-3 scroll-x-auto'>
 					<button onClick={() => fetchTasks('')} className={`btn btn-link link ${activeGroup === '' ? 'active' : ''}`}>
 						All tasks
@@ -133,13 +154,21 @@ export const Todos = () => {
 							</button>
 						))}
 				</div>
+				<button
+					className='d-flex gap-2 align-center btn btn-light border'
+					onClick={() => setActiveModal(modifyTodoGroupCategoryModal)}>
+					<Edit size={16} />
+					Manage groups
+				</button>
 			</div>
-			{tasks && tasks.length > 0 && (
+			{tasks && tasks.length > 0 ? (
 				<div className='task-container rounded-bottom-4 overflow-hidden'>
 					{tasks.map(t => (
-						<Task task={t} fetchTasks={() => fetchTasks(activeGroup)} />
+						<Task task={t} fetchTasks={() => fetchTasks(activeGroup)} showDeadline={tasksSettings.showDeadline} />
 					))}
 				</div>
+			) : (
+				<Alert variant='primary'>The list of tasks is empty</Alert>
 			)}
 		</Card>
 	)

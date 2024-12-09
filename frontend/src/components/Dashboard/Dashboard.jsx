@@ -90,7 +90,7 @@ export const Dashboard = () => {
 	return (
 		<div className='d-flex justify-between align-start gap-5 p-5'>
 			<Menu />
-			<div className='flex-1 content-container mx-auto overflow-hidden'>
+			<div className='flex-1 content-container mx-auto'>
 				{isExactMatch ? (
 					<Card headerComponent={cardHeader}>
 						<DashboardDetails
