@@ -1,16 +1,15 @@
 import { useContext, useState } from 'react'
-import { Check, Plus, MoreVertical, X } from 'react-feather'
+import { Settings } from 'react-feather'
 import { NavLink, Outlet, useLoaderData, useParams } from 'react-router-dom'
 import { ModalContext } from '../../contexts/ModalContext'
 
 export const Folders = () => {
 	const [, setActiveModal] = useContext(ModalContext)
-	const [showAddFolder, setShowAddFolder] = useState(false)
-	const [folderName, setFolderName] = useState('')
 	const [data, setData] = useState(useLoaderData())
-	const { dashboardId, folderId } = useParams()
+	const { dashboardId } = useParams()
 
-	const handleAddFolder = async () => {
+	const handleAddFolder = async val => {
+		console.log(val)
 		const token = localStorage.getItem('token')
 		const res = await fetch(`http://localhost:5000/dashboards/${dashboardId}/add-folder`, {
 			method: 'POST',
@@ -18,7 +17,7 @@ export const Folders = () => {
 				'Content-Type': 'application/json',
 				Authorization: `Bearer ${token}`,
 			},
-			body: JSON.stringify({ name: folderName }),
+			body: JSON.stringify({ name: val }),
 		})
 
 		if (res.ok) {
@@ -27,14 +26,8 @@ export const Folders = () => {
 		} else {
 			console.log(`Couldn't create folder`)
 		}
-		setShowAddFolder(false)
-		setFolderName('')
 		fetchFolders()
-	}
-
-	const handleCloseAddFolder = () => {
-		setFolderName('')
-		setShowAddFolder(false)
+		setActiveModal(null)
 	}
 
 	const fetchFolders = async () => {
@@ -66,39 +59,21 @@ export const Folders = () => {
 							</NavLink>
 						))}
 				</div>
-				<div className='d-flex gap-2 align-center'>
-					{!showAddFolder ? (
-						<button
-							className='btn btn-primary btn-icon d-flex align-center gap-2'
-							onClick={() => setShowAddFolder(true)}>
-							<Plus size={16} />
-							<span>Add folder</span>
-						</button>
-					) : (
-						<div className='d-flex gap-2'>
-							<input type='text' value={folderName} onChange={e => setFolderName(e.target.value)} />
-							<button className='btn btn-icon btn-success' onClick={handleAddFolder}>
-								<Check size={16} />
-							</button>
-							<button className='btn btn-icon btn-danger' onClick={handleCloseAddFolder}>
-								<X size={16} />
-							</button>
-						</div>
-					)}
-					<button
-						className='btn btn-icon btn-light'
-						onClick={() =>
-							setActiveModal({
-								name: 'editFolder',
-								title: 'Update folders',
-								data: {
-									action: fetchFolders,
-								},
-							})
-						}>
-						<MoreVertical size={16} />
-					</button>
-				</div>
+				<button
+					className='btn btn-light d-flex align-center gap-2'
+					onClick={() =>
+						setActiveModal({
+							name: 'editFolder',
+							title: 'Update folders',
+							data: {
+								action: fetchFolders,
+								addAction: handleAddFolder,
+							},
+						})
+					}>
+					<Settings size={16} />
+					Modify folders
+				</button>
 			</div>
 			<Outlet />
 		</div>

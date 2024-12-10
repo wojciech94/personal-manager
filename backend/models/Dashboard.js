@@ -37,6 +37,10 @@ const dashboardSchema = new mongoose.Schema({
 		type: Date,
 		default: Date.now(),
 	},
+	tasksSettingsId: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'TasksSettings',
+	},
 })
 
 const Dashboard = mongoose.model('Dashboard', dashboardSchema)

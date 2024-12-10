@@ -1,6 +1,7 @@
 import { useContext } from 'react'
 import { useState } from 'react'
 import { ModalContext } from '../../contexts/ModalContext'
+import { FormRow } from '../FormRow/FormRow'
 
 export const ModalAddCategoryContent = () => {
 	const [nameValue, setNameValue] = useState('')
@@ -30,16 +31,17 @@ export const ModalAddCategoryContent = () => {
 	}
 
 	return (
-		<div className='d-flex flex-column gap-2 p-4'>
-			<input
-				type='text'
-				value={nameValue}
-				placeholder='Type category name'
-				onChange={e => setNameValue(e.target.value)}
-			/>
-			<button className='btn btn-success' onClick={addCategory}>
-				Add category
-			</button>
-		</div>
+		<>
+			<div className='card-content'>
+				<FormRow label='Category name'>
+					<input type='text' value={nameValue} onChange={e => setNameValue(e.target.value)} />
+				</FormRow>
+			</div>
+			<div className='card-footer'>
+				<button className='btn btn-success d-block w-100' onClick={addCategory}>
+					Add category
+				</button>
+			</div>
+		</>
 	)
 }

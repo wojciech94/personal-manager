@@ -26,6 +26,14 @@ const taskSchema = new mongoose.Schema({
 		},
 		default: null,
 	},
+	archived_at: {
+		type: Date,
+		default: null,
+	},
+	removed_at: {
+		type: Date,
+		default: null,
+	},
 })
 
 const Task = mongoose.model('Task', taskSchema)

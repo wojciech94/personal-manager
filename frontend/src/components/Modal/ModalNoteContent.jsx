@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
+import { FormRow } from '../FormRow/FormRow'
 
 export const ModalNoteContent = ({ modalData }) => {
 	const [noteName, setNoteName] = useState('')
@@ -130,92 +131,89 @@ export const ModalNoteContent = ({ modalData }) => {
 	}
 
 	return (
-		<div className={`d-flex flex-column p-3 gap-2`}>
-			<div className='d-flex gap-2'>
-				<label htmlFor='noteName'>Title</label>
-				<input
-					className='w-100'
-					type='text'
-					name='noteName'
-					id='noteName'
-					value={noteName}
-					onChange={e => setNoteName(e.target.value)}
-				/>
+		<>
+			<div className='card-content d-flex flex-column gap-3'>
+				<FormRow label='Title'>
+					<input
+						className='w-100'
+						type='text'
+						name='noteName'
+						id='noteName'
+						value={noteName}
+						onChange={e => setNoteName(e.target.value)}
+					/>
+				</FormRow>
+				<FormRow label='Content'>
+					<textarea
+						className='w-100'
+						type='text'
+						name='noteContent'
+						id='noteContent'
+						value={noteContent}
+						onChange={e => setNoteContent(e.target.value)}
+					/>
+				</FormRow>
+				<FormRow label='Category'>
+					<select
+						name='noteCategory'
+						id='noteCategory'
+						value={selectedCategory}
+						onChange={e => handleCategoryChange(e.target.value)}>
+						{categoryNames.map(category => (
+							<option key={category} value={category}>
+								{category}
+							</option>
+						))}
+					</select>
+				</FormRow>
+				<FormRow label='Tags'>
+					<input
+						className='w-100'
+						type='text'
+						name='noteTags'
+						id='noteTags'
+						value={noteTags}
+						onChange={handleNoteTagsChanged}
+					/>
+				</FormRow>
+				<FormRow label='folder'>
+					<select
+						name='noteFolder'
+						id='noteFolder'
+						value={selectedFolder}
+						onChange={e => handleFolderChange(e.target.value)}>
+						<option value=''>-</option>
+						{folderNames.map(folder => (
+							<option key={folder._id} value={folder._id}>
+								{folder.name}
+							</option>
+						))}
+					</select>
+				</FormRow>
+				<FormRow label='Is favourite'>
+					<input
+						checked={isFavourite}
+						type='checkbox'
+						name='isFavourite'
+						id='isFavourite'
+						onChange={() => setIsFavourite(prevFav => !prevFav)}
+					/>
+				</FormRow>
+				<FormRow label='Expired at'>
+					<input
+						type='date'
+						name='expiredDate'
+						id='expiredDate'
+						value={expiredDate}
+						onChange={e => setExpiredDate(e.target.value)}
+					/>
+				</FormRow>
 			</div>
-			<div className='d-flex gap-2'>
-				<label htmlFor='noteContent'>Content</label>
-				<textarea
-					className='w-100'
-					type='text'
-					name='noteContent'
-					id='noteContent'
-					value={noteContent}
-					onChange={e => setNoteContent(e.target.value)}
-				/>
+			<div className='card-footer'>
+				<button className='btn btn-success d-block w-100' onClick={handleUpdateNote}>
+					{modalData.actionName}
+				</button>
 			</div>
-			<div className='d-flex gap-2'>
-				<label htmlFor='noteCategory'>Category</label>
-				<select
-					name='noteCategory'
-					id='noteCategory'
-					value={selectedCategory}
-					onChange={e => handleCategoryChange(e.target.value)}>
-					{categoryNames.map(category => (
-						<option key={category} value={category}>
-							{category}
-						</option>
-					))}
-				</select>
-			</div>
-			<div className='d-flex gap-2'>
-				<label htmlFor='noteTags'>Tags</label>
-				<input
-					className='w-100'
-					type='text'
-					name='noteTags'
-					id='noteTags'
-					value={noteTags}
-					onChange={handleNoteTagsChanged}
-				/>
-			</div>
-			<div className='d-flex gap-2'>
-				<label htmlFor='noteFolder'>Folder</label>
-				<select
-					name='noteFolder'
-					id='noteFolder'
-					value={selectedFolder}
-					onChange={e => handleFolderChange(e.target.value)}>
-					<option value=''>-</option>
-					{folderNames.map(folder => (
-						<option key={folder._id} value={folder._id}>
-							{folder.name}
-						</option>
-					))}
-				</select>
-			</div>
-			<div className='d-flex gap-2'>
-				<label htmlFor='isFavourite'>Is favourite</label>
-				<input
-					checked={isFavourite}
-					type='checkbox'
-					name='isFavourite'
-					id='isFavourite'
-					onChange={() => setIsFavourite(prevFav => !prevFav)}
-				/>
-			</div>
-			<div className='d-flex gap-2 mb-4'>
-				<label htmlFor='expiredDate'>Expired at</label>
-				<input
-					type='date'
-					name='expiredDate'
-					id='expiredDate'
-					value={expiredDate}
-					onChange={e => setExpiredDate(e.target.value)}
-				/>
-			</div>
-			<button className='btn btn-primary' onClick={handleUpdateNote}>
-				{modalData.actionName}
-			</button>
-		</div>
+		</>
 	)
 }

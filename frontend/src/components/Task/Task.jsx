@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
-import { Check, Clock, Edit, Trash2, Watch } from 'react-feather'
+import { Check, Clock, Edit, Trash2 } from 'react-feather'
 import { useParams } from 'react-router-dom'
 
-export function Task({ task, fetchTasks, showDeadline }) {
+export function Task({ task, fetchTasks, tasksSettings }) {
 	const [taskData, setTaskData] = useState(task)
 	const [contentValue, setContentValue] = useState(task.content)
 	const [priorityValue, setPriorityValue] = useState(task.priority)
+	const [expirationValue, setExpirationValue] = useState(task.expired_at)
 	const [isEdit, setIsEdit] = useState(false)
 	const token = localStorage.getItem('token')
 	const { dashboardId } = useParams()
@@ -14,21 +15,35 @@ export function Task({ task, fetchTasks, showDeadline }) {
 		setTaskData(task)
 		setContentValue(task.content)
 		setPriorityValue(task.priority)
+		if (task.expired_at) {
+			const date = new Date(task.expired_at).toISOString().split('T')[0]
+			setExpirationValue(date)
+		}
 	}, [task])
 
 	const updateTask = async action => {
 		let updatedTask
 		switch (action) {
 			case 'toggle':
-				updatedTask = { ...taskData, is_done: !taskData.is_done }
+				let dataParams
+				if (!taskData.is_done) {
+					const now = new Date()
+					const archivedAt = new Date(now.getTime() + tasksSettings.archivizationTime * 60 * 60 * 1000).toISOString()
+					const removedAt = new Date(now.getTime() + tasksSettings.removeTime * 60 * 60 * 1000).toISOString()
+					dataParams = { archived_at: archivedAt, removed_at: removedAt }
+				} else {
+					dataParams = { archived_at: null, removed_at: null }
+				}
+				updatedTask = { ...taskData, is_done: !taskData.is_done, ...dataParams }
 				break
 			case 'delete':
 				break
 			case 'update':
 			default:
-				updatedTask = { ...taskData, content: contentValue, priority: priorityValue }
+				updatedTask = { ...taskData, content: contentValue, priority: priorityValue, expired_at: expirationValue }
 				break
 		}
+		console.log(updatedTask)
 		const config = {
 			method: action === 'delete' ? 'DELETE' : 'PATCH',
 			headers: {
@@ -49,7 +64,6 @@ export function Task({ task, fetchTasks, showDeadline }) {
 			} else {
 				const data = await res.json()
 				if (data) {
-					console.log(data)
 					setTaskData(data)
 				}
 			}
@@ -80,6 +94,10 @@ export function Task({ task, fetchTasks, showDeadline }) {
 								<option value='high'>High</option>
 							</select>
 						</div>
+						<div className='d-flex flex-column gap-1 text-gray'>
+							<label htmlFor='expirationDate'>Expire at</label>
+							<input type='date' value={expirationValue} onChange={e => setExpirationValue(e.target.value)} />
+						</div>
 					</div>
 				) : (
 					<>
@@ -98,10 +116,10 @@ export function Task({ task, fetchTasks, showDeadline }) {
 					</>
 				)}
 			</div>
-			{showDeadline && task.expired_at && (
+			{tasksSettings.showDeadline && expirationValue && !isEdit && (
 				<div className='d-flex gap-2 align-center text-gray'>
 					<Clock size={16} />
-					{task.expired_at.split('T')[0]}
+					{expirationValue}
 				</div>
 			)}
 			<div className='d-flex gap-2 align-center'>

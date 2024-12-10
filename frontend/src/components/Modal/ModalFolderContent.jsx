@@ -3,9 +3,11 @@ import { useEffect, useState } from 'react'
 import { Check, Edit, X } from 'react-feather'
 import { useParams } from 'react-router-dom'
 import { ModalContext } from '../../contexts/ModalContext'
+import { FormRow } from '../FormRow/FormRow'
 
 export function ModalFolderContent({ modalData }) {
 	const [folders, setFolders] = useState([])
+	const [addInputValue, setAddInputValue] = useState('')
 	const { dashboardId } = useParams()
 	const [, setActiveModal] = useContext(ModalContext)
 
@@ -33,9 +35,33 @@ export function ModalFolderContent({ modalData }) {
 	}
 
 	return (
-		<div className='d-flex flex-column gap-2 p-4'>
-			{folders && folders.map(f => <FolderRow key={f.name} folder={f} action={action} dashboardId={dashboardId} />)}
-		</div>
+		<>
+			<div className='card-content d-flex flex-column gap-3'>
+				{folders && folders.length > 0 && (
+					<>
+						<div className='card-subtitle border-top-none mt-n4'>Modify folders</div>
+						{folders.map(f => (
+							<FolderRow key={f.name} folder={f} action={action} dashboardId={dashboardId} />
+						))}
+					</>
+				)}
+				{modalData?.addAction && (
+					<>
+						<div className='card-subtitle'>Add folder</div>
+						<FormRow label='Folder name'>
+							<input type='text' value={addInputValue} onChange={e => setAddInputValue(e.target.value)} />
+						</FormRow>
+					</>
+				)}
+			</div>
+			{modalData?.addAction && (
+				<div className='card-footer border-light'>
+					<button className='btn btn-success d-block w-100' onClick={() => modalData.addAction(addInputValue)}>
+						Add folder
+					</button>
+				</div>
+			)}
+		</>
 	)
 }
 
@@ -81,7 +107,7 @@ function FolderRow({ folder, action, dashboardId }) {
 	}
 
 	return (
-		<div className='d-flex justify-between gap-2'>
+		<div className='d-flex justify-between align-center gap-2 px-2'>
 			{isEdit ? (
 				<div className='d-flex gap-2'>
 					<input type={'text'} value={inputValue} onChange={e => setInputValue(e.target.value)} />

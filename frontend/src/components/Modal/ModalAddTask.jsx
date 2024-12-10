@@ -47,48 +47,55 @@ export function ModalAddTask({ modalData }) {
 	}
 
 	return (
-		<div className='p-4 d-flex flex-column gap-2'>
-			<FormRow label='Content'>
-				<input required className='' type='text' value={contentValue} onChange={e => setContentValue(e.target.value)} />
-			</FormRow>
-			<FormRow label='Priority'>
-				<select
-					className='align-self-start'
-					name='prioritySelect'
-					value={priorityValue}
-					id='prioritySelect'
-					onChange={e => setPriorityValue(e.target.value)}>
-					<option value='low'>Low</option>
-					<option value='medium'>Medium</option>
-					<option value='high'>Heigh</option>
-				</select>
-			</FormRow>
-			<FormRow label='Group'>
-				<select
-					className='align-self-start'
-					name='taskSelect'
-					id='taskSelect'
-					value={taskGroup}
-					onChange={e => setTaskGroup(e.target.value)}>
-					{groups && groups.length > 0 && groups.map(g => <option value={g._id}>{g.name}</option>)}
-				</select>
-			</FormRow>
-			<FormRow label='Deadline' className='mb-2'>
-				<input
-					className='align-self-start'
-					type='date'
-					value={expiredDate}
-					onChange={e => setExpiredDate(e.target.value)}
-				/>
-			</FormRow>
+		<>
+			<div className='card-content d-flex flex-column gap-3'>
+				<FormRow label='Content'>
+					<input
+						required
+						className=''
+						type='text'
+						value={contentValue}
+						onChange={e => setContentValue(e.target.value)}
+					/>
+				</FormRow>
+				<FormRow label='Priority'>
+					<select
+						className='align-self-start'
+						name='prioritySelect'
+						value={priorityValue}
+						id='prioritySelect'
+						onChange={e => setPriorityValue(e.target.value)}>
+						<option value='low'>Low</option>
+						<option value='medium'>Medium</option>
+						<option value='high'>Heigh</option>
+					</select>
+				</FormRow>
+				<FormRow label='Group'>
+					<select
+						className='align-self-start'
+						name='taskSelect'
+						id='taskSelect'
+						value={taskGroup}
+						onChange={e => setTaskGroup(e.target.value)}>
+						{groups && groups.length > 0 && groups.map(g => <option value={g._id}>{g.name}</option>)}
+					</select>
+				</FormRow>
+				<FormRow label='Deadline' className='mb-2'>
+					<input
+						className='align-self-start'
+						type='date'
+						value={expiredDate}
+						onChange={e => setExpiredDate(e.target.value)}
+					/>
+				</FormRow>
+			</div>
 			{modalData?.actionName && (
-				<>
-					<hr />{' '}
-					<button className='btn btn-success mt-2' onClick={handleAddTask}>
+				<div className='card-footer'>
+					<button className='btn btn-success d-block w-100' onClick={handleAddTask}>
 						{modalData.actionName}
 					</button>
-				</>
+				</div>
 			)}
-		</div>
+		</>
 	)
 }

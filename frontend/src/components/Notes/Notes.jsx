@@ -7,6 +7,7 @@ import { debounce } from '../../utils/helpers'
 import { ToggleBox } from '../ToggleBox/ToggleBox'
 import { Note } from '../Note/Note'
 import { ExpandableMenu } from '../ExpandableMenu.jsx/ExpandableMenu'
+import { Alert } from '../Alert/Alert'
 
 export const Notes = () => {
 	const data = useLoaderData()
@@ -184,7 +185,7 @@ export const Notes = () => {
 
 	return (
 		<>
-			<div className='w-100 d-flex justify-between mb-4'>
+			<div className='w-100 d-flex justify-between'>
 				<div className='d-flex gap-2 flex-1'>
 					<input
 						className='w-50'
@@ -280,12 +281,16 @@ export const Notes = () => {
 						]}></ExpandableMenu>
 				</div>
 			</div>
-			{filteredNotes && filteredNotes.length > 0 && (
+			{filteredNotes && filteredNotes.length > 0 ? (
 				<div className='d-flex flex-column gap-4'>
 					{filteredNotes.map(n => (
 						<Note key={n._id} note={n} updateNote={updateNote} fetchNotes={fetchNotes} />
 					))}
 				</div>
+			) : (
+				<Alert className='m-0' variant='primary'>{`You don't have any notes${
+					folderId ? ' in this folder' : ''
+				}.`}</Alert>
 			)}
 		</>
 	)

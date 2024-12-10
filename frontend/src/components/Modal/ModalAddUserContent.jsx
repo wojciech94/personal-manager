@@ -1,6 +1,7 @@
 import { useContext } from 'react'
 import { useState } from 'react'
 import { ModalContext } from '../../contexts/ModalContext'
+import { FormRow } from '../FormRow/FormRow'
 
 export const ModalAddUserContent = ({ modalData }) => {
 	const [userInput, setUserInput] = useState('')
@@ -14,11 +15,17 @@ export const ModalAddUserContent = ({ modalData }) => {
 	}
 
 	return (
-		<div className='d-flex flex-column gap-2 p-4'>
-			<input type='text' value={userInput} onChange={e => setUserInput(e.target.value)} />
-			<button className='btn btn-success d-flex gap-2 justify-center' onClick={handleAddUser}>
-				<span>Add user to dashboard</span>
-			</button>
-		</div>
+		<>
+			<div className='card-content'>
+				<FormRow label='Name'>
+					<input type='text' value={userInput} onChange={e => setUserInput(e.target.value)} />
+				</FormRow>
+			</div>
+			<div className='card-footer'>
+				<button className='btn btn-success d-block w-100' onClick={handleAddUser}>
+					Add user to dashboard
+				</button>
+			</div>
+		</>
 	)
 }

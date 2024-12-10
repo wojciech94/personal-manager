@@ -52,7 +52,7 @@ export const Modal = ({ modalName, modalTitle, modalData }) => {
 	return (
 		<div className='modal-backdrop'>
 			<div className='modal'>
-				<div className='d-flex gap-4 justify-end'>
+				<div className='d-flex gap-4 justify-end p-4'>
 					{modalTitle && <div className='flex-1 modal-title p-2'>{modalTitle}</div>}
 					<button onClick={() => setActiveModal(null)}>
 						<X size={20} />

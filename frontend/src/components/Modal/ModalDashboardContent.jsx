@@ -1,6 +1,7 @@
 import { useState } from 'react'
+import { FormRow } from '../FormRow/FormRow'
 
-export const ModalDashboardContent = ({modalData}) => {
+export const ModalDashboardContent = ({ modalData }) => {
 	const [dashboardName, setDashboardName] = useState('')
 
 	const handleCreateDashboard = () => {
@@ -10,18 +11,23 @@ export const ModalDashboardContent = ({modalData}) => {
 	}
 
 	return (
-		<div className={`d-flex flex-column p-3 gap-2`}>
-			<div className='d-flex gap-2 mb-4'>
-				<label htmlFor='dshb'>Dashboard name</label>
-				<input
-					type='text'
-					name='dshb'
-					id='dshb'
-					value={dashboardName}
-					onChange={e => setDashboardName(e.target.value)}
-				/>
+		<>
+			<div className='card-content'>
+				<FormRow label='Dashboard name'>
+					<input
+						type='text'
+						name='dshb'
+						id='dshb'
+						value={dashboardName}
+						onChange={e => setDashboardName(e.target.value)}
+					/>
+				</FormRow>
 			</div>
-			<button className='btn btn-primary' onClick={handleCreateDashboard}>{modalData.actionName}</button>
-		</div>
+			<div className='card-footer'>
+				<button className='btn btn-success d-block w-100' onClick={handleCreateDashboard}>
+					{modalData.actionName}
+				</button>
+			</div>
+		</>
 	)
 }

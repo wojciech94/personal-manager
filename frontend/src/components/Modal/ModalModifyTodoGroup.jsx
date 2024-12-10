@@ -104,44 +104,53 @@ export function ModalModifyTodoGroup({ modalData }) {
 	}
 
 	return (
-		<div className='p-4 d-flex flex-column gap-2'>
-			{groups && groups.length > 0 && (
-				<>
-					<div className='text-bold mb-2'>Update groups</div>
-					{groups.map(g => (
-						<div key={g._id} className='d-flex justify-between align-center gap-2'>
-							{g.isEdit ? (
-								<input
-									type='text'
-									value={inputValues[g._id] || ''}
-									onChange={e => handleInputChange(g._id, e.target.value)}
-								/>
-							) : (
-								<div>{g.name}</div>
-							)}
-							<div className='d-flex gap-2 align-center'>
+		<>
+			<div className='card-content d-flex flex-column gap-3 pt-0'>
+				{groups && groups.length > 0 && (
+					<>
+						<div className='card-subtitle border-top-none'>Update groups</div>
+						{groups.map(g => (
+							<div key={g._id} className='d-flex justify-between align-center gap-2'>
 								{g.isEdit ? (
-									<button className='btn btn-icon btn-success' onClick={() => saveInput(g._id, inputValues[g._id])}>
-										<Check size={16} />
-									</button>
+									<input
+										type='text'
+										value={inputValues[g._id] || ''}
+										onChange={e => handleInputChange(g._id, e.target.value)}
+									/>
 								) : (
-									<button className='btn btn-icon btn-primary' onClick={() => setEdit(g._id, g.name)}>
-										<Edit size={16} />
-									</button>
+									<div>{g.name}</div>
 								)}
-								<button className='btn btn-icon btn-danger' onClick={() => removeTodoGroup(g._id)}>
-									<Trash size={16} />
-								</button>
+								<div className='d-flex gap-2 align-center'>
+									{g.isEdit ? (
+										<button className='btn btn-icon btn-success' onClick={() => saveInput(g._id, inputValues[g._id])}>
+											<Check size={16} />
+										</button>
+									) : (
+										<button className='btn btn-icon btn-primary' onClick={() => setEdit(g._id, g.name)}>
+											<Edit size={16} />
+										</button>
+									)}
+									<button className='btn btn-icon btn-danger' onClick={() => removeTodoGroup(g._id)}>
+										<Trash size={16} />
+									</button>
+								</div>
 							</div>
-						</div>
-					))}
-				</>
-			)}
-			<div className='text-bold mt-2'>Add new group</div>
-			<input type='text' value={inputVal} onChange={e => setInputVal(e.target.value)} />
-			<button className='btn btn-success' onClick={addTodoGroup}>
-				{modalData.actionName}
-			</button>
-		</div>
+						))}
+					</>
+				)}
+				<div className='card-subtitle'>Add new group</div>
+				<input
+					type='text'
+					value={inputVal}
+					placeholder='Type group name...'
+					onChange={e => setInputVal(e.target.value)}
+				/>
+			</div>
+			<div className='card-footer'>
+				<button className='btn btn-success d-block w-100' onClick={addTodoGroup}>
+					{modalData.actionName}
+				</button>
+			</div>
+		</>
 	)
 }

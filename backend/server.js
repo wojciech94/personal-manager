@@ -14,7 +14,7 @@ const NoteCategory = require('./models/NoteCategory')
 const Folder = require('./models/Folder')
 const TaskGroup = require('./models/TaskGroup')
 const Task = require('./models/Task')
-const { deleteOne } = require('./models/Task')
+const TasksSettings = require('./models/TasksSettings')
 
 const app = express()
 const PORT = process.env.PORT || 5000
@@ -127,34 +127,28 @@ app.get('/dashboards', async (req, res) => {
 	}
 })
 
-app.post('/dashboards', async (req, res) => {
+app.post('/dashboards', authMiddleware, async (req, res) => {
 	try {
-		const token = req.headers.authorization?.split(' ')[1]
-		if (!token) {
-			return res.status(401).json({ message: 'No token provided' })
-		}
-
-		let userId
-		try {
-			const decoded = jwt.verify(token, process.env.JWT_SECRET)
-			userId = decoded.userId
-		} catch (error) {
-			return res.status(401).json({ message: 'Invalid or expired token' })
-		}
-
 		const { name } = req.body
 		if (!name) {
 			return res.status(400).json({ message: 'Dashboard name is required' })
 		}
+
+		const userId = req.user.userId
+
+		const newTasksSettings = new TasksSettings()
+		await newTasksSettings.save()
 
 		const newDashboard = new Dashboard({
 			name,
 			creatorId: userId,
 			userIds: [userId],
 			notesIds: [],
+			tasksSettingsId: newTasksSettings._id,
 		})
 
 		await newDashboard.save()
+
 		res.status(201).json(newDashboard)
 	} catch (error) {
 		res.status(500).json({ message: error.message })
@@ -195,6 +189,77 @@ app.get('/dashboards/:dashboardId', async (req, res) => {
 		dashboard.isOwner = isOwner
 
 		return res.status(200).json(dashboard)
+	} catch (error) {
+		res.status(500).json({ message: error.message })
+	}
+})
+
+//Pobieranie danych taskssettings
+app.get('/dashboards/:dashboardId/tasks-settings', authMiddleware, async (req, res) => {
+	try {
+		const { dashboardId } = req.params
+
+		if (!dashboardId) {
+			return res.status(404).json({ message: 'No DashboardId' })
+		}
+
+		const dashboard = await Dashboard.findById(dashboardId)
+
+		if (!dashboard) {
+			return res.status(404).json({ message: `Dashboard ${dashboardId} not found` })
+		}
+
+		const tasksSettingsId = dashboard.tasksSettingsId
+		if (!tasksSettingsId) {
+			return res.status(404).json({ message: `Tasks settings not found for ${dashboardId}` })
+		}
+
+		const tasksSettings = await TasksSettings.findById(tasksSettingsId)
+		if (!tasksSettings) {
+			return res.status(404).json({ message: `Tasks settings not found` })
+		}
+
+		return res.status(200).json(tasksSettings)
+	} catch (error) {
+		res.status(500).json({ message: error.message })
+	}
+})
+
+//Aktualizacja danych taskssettings
+app.post('/dashboards/:dashboardId/tasks-settings', authMiddleware, async (req, res) => {
+	try {
+		const { dashboardId } = req.params
+		const { showDeadline, archivizationTime, removeTime, sortMethod, sortDirection } = req.body
+
+		if (!dashboardId) {
+			return res.status(404).json({ message: 'No DashboardId' })
+		}
+
+		const dashboard = await Dashboard.findById(dashboardId)
+
+		if (!dashboard) {
+			return res.status(404).json({ message: `Dashboard ${dashboardId} not found` })
+		}
+
+		const tasksSettingsId = dashboard.tasksSettingsId
+		if (!tasksSettingsId) {
+			return res.status(404).json({ message: `Tasks settings not found for ${dashboardId}` })
+		}
+
+		const tasksSettings = await TasksSettings.findById(tasksSettingsId)
+		if (!tasksSettings) {
+			return res.status(404).json({ message: `Tasks settings not found` })
+		}
+
+		if (typeof showDeadline !== 'undefined') tasksSettings.showDeadline = showDeadline
+		if (archivizationTime) tasksSettings.archivizationTime = archivizationTime
+		if (removeTime) tasksSettings.removeTime = removeTime
+		if (sortMethod) tasksSettings.sortMethod = sortMethod
+		if (sortDirection) tasksSettings.sortDirection = sortDirection
+
+		await tasksSettings.save()
+
+		return res.status(200).json(tasksSettings)
 	} catch (error) {
 		res.status(500).json({ message: error.message })
 	}
@@ -248,7 +313,7 @@ app.post('/dashboards/:dashboardId/add-user', async (req, res) => {
 app.patch('/dashboards/:dashboardId', async (req, res) => {
 	try {
 		const { dashboardId } = req.params
-		const { name, creatorId } = req.body
+		const { name, creatorId, tasksArchiveTime, tasksRemoveTime } = req.body
 		const token = req.headers.authorization.split(' ')[1]
 		if (!token) {
 			return res.status(401).json({ message: 'No token provided' })
@@ -266,13 +331,13 @@ app.patch('/dashboards/:dashboardId', async (req, res) => {
 			return res.status(404).json({ message: 'Dashboard not found' })
 		}
 
-		dashboard.name = name
-		if (creatorId) {
-			dashboard.creatorId = creatorId
-		}
+		if (name) dashboard.name = name
+		if (creatorId) dashboard.creatorId = creatorId
+		if (tasksArchiveTime) dashboard.tasksArchiveTime = tasksArchiveTime
+		if (tasksRemoveTime) dashboard.tasksRemoveTime = tasksRemoveTime
 
 		await dashboard.save()
-		res.status(200).json({ message: 'Dashboard updated', name: name, creatorId: creatorId || dashboard.creatorId })
+		res.status(200).json({ message: 'Dashboard updated', dashboard })
 	} catch (error) {
 		res.status(500).json({ message: error.message })
 	}
@@ -1041,7 +1106,7 @@ app.post('/dashboards/:dashboardId/add-task', authMiddleware, async (req, res) =
 //update task
 app.patch('/dashboards/:dashboardId/task/:id', authMiddleware, async (req, res) => {
 	try {
-		const { content, is_done, priority, expired_at } = req.body
+		const { content, is_done, priority, expired_at, archived_at, removed_at } = req.body
 		const { id } = req.params
 
 		if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -1058,6 +1123,8 @@ app.patch('/dashboards/:dashboardId/task/:id', authMiddleware, async (req, res) 
 		if (typeof is_done === 'boolean') task.is_done = is_done
 		if (priority !== undefined) task.priority = priority
 		if (expired_at !== undefined) task.expired_at = expired_at
+		if (archived_at !== undefined) task.archived_at = archived_at
+		if (removed_at !== undefined) task.removed_at = removed_at
 
 		await task.save()
 

@@ -1,34 +1,45 @@
-import { useContext } from 'react'
-import { useEffect } from 'react'
-import { useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { Edit, Plus, Settings } from 'react-feather'
-import { useParams } from 'react-router-dom'
-import { ModalContext } from '../../contexts/ModalContext'
 import { Alert } from '../Alert/Alert'
 import { Card, CardHeader } from '../Card/Card'
 import { Task } from '../Task/Task'
-
-const tasksSettingsConfig = {
-	showDeadline: true,
-	archivizationTime: 24,
-	removeTime: 30,
-	sortMethod: 'expired_at',
-	sortDirection: 'desc',
-}
+import { useParams } from 'react-router-dom'
+import { ModalContext } from '../../contexts/ModalContext'
 
 export const Todos = () => {
 	const { dashboardId } = useParams()
 	const token = localStorage.getItem('token')
 	const [todoGroups, setTodoGroups] = useState(null)
 	const [tasks, setTasks] = useState(null)
-	const [tasksSettings, setTasksSettings] = useState(tasksSettingsConfig)
+	const [tasksSettings, setTasksSettings] = useState(null)
 	const [activeGroup, setActiveGroup] = useState('')
 	const [, setActiveModal] = useContext(ModalContext)
 
 	useEffect(() => {
-		fetchTodoGroups()
-		fetchTasks(activeGroup)
+		fetchTasksSettings()
+	}, [])
+
+	useEffect(() => {
+		if (tasksSettings) {
+			fetchTodoGroups()
+			fetchTasks(activeGroup)
+		}
 	}, [tasksSettings])
+
+	const fetchTasksSettings = async () => {
+		const res = await fetch(`http://localhost:5000/dashboards/${dashboardId}/tasks-settings`, {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		})
+		if (res.ok) {
+			const data = await res.json()
+			setTasksSettings(data)
+		} else {
+			const errorData = await res.json()
+			console.error(errorData.message)
+		}
+	}
 
 	const fetchTodoGroups = async () => {
 		const res = await fetch(`http://localhost:5000/dashboards/${dashboardId}/tasks-groups`, {
@@ -109,10 +120,28 @@ export const Todos = () => {
 		title: 'Add task',
 	}
 
+	const handleSetTasksSettings = async settings => {
+		const res = await fetch(`http://localhost:5000/dashboards/${dashboardId}/tasks-settings`, {
+			method: 'POST',
+			headers: {
+				Authorization: `Bearer ${token}`,
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(settings),
+		})
+		if (res.ok) {
+			const data = await res.json()
+			setTasksSettings(data)
+		} else {
+			const error = await res.json()
+			console.log(error.message)
+		}
+	}
+
 	const tasksSettingsModal = {
 		name: 'tasksSettings',
 		data: {
-			action: setTasksSettings,
+			action: handleSetTasksSettings,
 			actionName: 'Save settings',
 			initValue: tasksSettings,
 		},
@@ -122,18 +151,20 @@ export const Todos = () => {
 	const headerActions = () => {
 		const actionsArray = [
 			{
-				action: () => setActiveModal(addTaskModal),
-				icon: <Plus size={16} />,
-				label: 'Add task',
-				btnClass: 'btn-primary',
-			},
-			{
 				action: () => setActiveModal(tasksSettingsModal),
 				icon: <Settings size={16} />,
 				label: 'Settings',
 				btnClass: 'btn-light',
 			},
 		]
+		if (todoGroups && todoGroups.length > 0) {
+			actionsArray.unshift({
+				action: () => setActiveModal(addTaskModal),
+				icon: <Plus size={16} />,
+				label: 'Add task',
+				btnClass: 'btn-primary',
+			})
+		}
 		return actionsArray
 	}
 
@@ -164,7 +195,7 @@ export const Todos = () => {
 			{tasks && tasks.length > 0 ? (
 				<div className='task-container rounded-bottom-4 overflow-hidden'>
 					{tasks.map(t => (
-						<Task task={t} fetchTasks={() => fetchTasks(activeGroup)} showDeadline={tasksSettings.showDeadline} />
+						<Task task={t} fetchTasks={() => fetchTasks(activeGroup)} tasksSettings={tasksSettings} />
 					))}
 				</div>
 			) : (

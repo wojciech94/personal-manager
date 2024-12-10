@@ -21,7 +21,7 @@ export function ModalTasksSettingsContent({ modalData }) {
 
 	return (
 		<>
-			<div className='card-subtitle mt-2'>Settings</div>
+			<div className='card-subtitle'>Settings</div>
 			<div className='p-4 d-flex flex-column gap-2'>
 				<FormRow label='Show expiration date'>
 					<input type='checkbox' checked={showDeadline} onChange={e => setShowDeadline(e.target.checked)} />
@@ -40,7 +40,7 @@ export function ModalTasksSettingsContent({ modalData }) {
 				<FormRow label='Remove time'>
 					<div className='text-normal'>
 						<input className='w-75px' type='number' value={removeTime} onChange={e => setRemoveTime(e.target.value)} />{' '}
-						days
+						hours
 					</div>
 				</FormRow>
 			</div>
@@ -65,7 +65,7 @@ export function ModalTasksSettingsContent({ modalData }) {
 				</FormRow>
 			</div>
 			{modalData.actionName && (
-				<div className='card-footer mx-n4 mt-4 mb-n4 rounded-bottom-3'>
+				<div className='card-footer mt-4'>
 					<button className='btn btn-success d-block w-100' onClick={handleSetTasksSettings}>
 						{modalData.actionName}
 					</button>
