@@ -192,8 +192,8 @@ const WelcomeScreen = ({ isNew }) => {
 						style={{ transform: `translateX(-${mode * 100}%)` }}>
 						{slides &&
 							slides.length > 0 &&
-							slides.map(s => (
-								<div className='carousel-item'>
+							slides.map((s, index) => (
+								<div key={index} className='carousel-item'>
 									<div
 										className={`d-flex flex-column justify-evenly bg-white shadow w-50 rounded-3 p-8 fs-xl ${s.class}`}>
 										<h2 className='text-center mb-8'>{s.title}</h2>

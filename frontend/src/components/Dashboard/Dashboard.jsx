@@ -188,7 +188,9 @@ const DashboardDetails = ({ dashboardId, dashboard, editMode, getDetails, remove
 			value={selectedOwner}
 			onChange={e => setSelectedOwner(e.target.value)}>
 			{dashboard.userIds.map(u => (
-				<option value={u._id}>{u.name}</option>
+				<option key={u._id} value={u._id}>
+					{u.name}
+				</option>
 			))}
 		</select>
 	) : (

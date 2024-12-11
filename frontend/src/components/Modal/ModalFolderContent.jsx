@@ -36,10 +36,10 @@ export function ModalFolderContent({ modalData }) {
 
 	return (
 		<>
-			<div className='card-content d-flex flex-column gap-3'>
+			<div className='card-content pt-0 d-flex flex-column gap-3'>
 				{folders && folders.length > 0 && (
 					<>
-						<div className='card-subtitle border-top-none mt-n4'>Modify folders</div>
+						<div className='card-subtitle border-top-none'>Modify folders</div>
 						{folders.map(f => (
 							<FolderRow key={f.name} folder={f} action={action} dashboardId={dashboardId} />
 						))}

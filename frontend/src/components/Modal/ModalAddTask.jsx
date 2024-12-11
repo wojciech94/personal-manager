@@ -77,7 +77,13 @@ export function ModalAddTask({ modalData }) {
 						id='taskSelect'
 						value={taskGroup}
 						onChange={e => setTaskGroup(e.target.value)}>
-						{groups && groups.length > 0 && groups.map(g => <option value={g._id}>{g.name}</option>)}
+						{groups &&
+							groups.length > 0 &&
+							groups.map(g => (
+								<option key={g._id} value={g._id}>
+									{g.name}
+								</option>
+							))}
 					</select>
 				</FormRow>
 				<FormRow label='Deadline' className='mb-2'>

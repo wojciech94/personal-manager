@@ -43,7 +43,6 @@ export function Task({ task, fetchTasks, tasksSettings }) {
 				updatedTask = { ...taskData, content: contentValue, priority: priorityValue, expired_at: expirationValue }
 				break
 		}
-		console.log(updatedTask)
 		const config = {
 			method: action === 'delete' ? 'DELETE' : 'PATCH',
 			headers: {
@@ -88,7 +87,11 @@ export function Task({ task, fetchTasks, tasksSettings }) {
 						</div>
 						<div className='d-flex flex-column gap-1 text-gray'>
 							<label htmlFor='prioritySelect'>Priority</label>
-							<select name='prioritySelect' id='prioritySelect' onChange={e => setPriorityValue(e.target.value)}>
+							<select
+								name='prioritySelect'
+								id='prioritySelect'
+								value={taskData.priority}
+								onChange={e => setPriorityValue(e.target.value)}>
 								<option value='low'>Low</option>
 								<option value='medium'>Medium</option>
 								<option value='high'>High</option>

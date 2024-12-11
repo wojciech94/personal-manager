@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react'
-import { Edit, Plus, Settings } from 'react-feather'
+import { Edit, Plus, Repeat, Settings } from 'react-feather'
 import { Alert } from '../Alert/Alert'
 import { Card, CardHeader } from '../Card/Card'
 import { Task } from '../Task/Task'
@@ -11,9 +11,12 @@ export const Todos = () => {
 	const token = localStorage.getItem('token')
 	const [todoGroups, setTodoGroups] = useState(null)
 	const [tasks, setTasks] = useState(null)
+	const [archivedTasks, setArchivedTasks] = useState(null)
 	const [tasksSettings, setTasksSettings] = useState(null)
 	const [activeGroup, setActiveGroup] = useState('')
+	const [showArchive, setShowArchive] = useState(false)
 	const [, setActiveModal] = useContext(ModalContext)
+	const visibleTasks = showArchive ? archivedTasks : tasks
 
 	useEffect(() => {
 		fetchTasksSettings()
@@ -68,7 +71,13 @@ export const Todos = () => {
 		setActiveGroup(id)
 		if (res.ok) {
 			const data = await res.json()
-			setTasks(data.tasks)
+			if (data) {
+				const now = new Date()
+				const activeTasks = data.tasks.filter(t => !t.archived_at || new Date(t.archived_at) > now)
+				const archiveTasks = data.tasks.filter(t => t.archived_at && new Date(t.archived_at) < now)
+				setTasks(activeTasks)
+				setArchivedTasks(archiveTasks)
+			}
 		} else {
 			const errorData = await res.json()
 			console.error(errorData.message)
@@ -151,6 +160,12 @@ export const Todos = () => {
 	const headerActions = () => {
 		const actionsArray = [
 			{
+				action: () => setShowArchive(prevState => !prevState),
+				icon: <Repeat size={16} />,
+				label: showArchive ? 'Show active tasks' : 'Show archive tasks',
+				btnClass: 'btn-light',
+			},
+			{
 				action: () => setActiveModal(tasksSettingsModal),
 				icon: <Settings size={16} />,
 				label: 'Settings',
@@ -179,6 +194,7 @@ export const Todos = () => {
 						todoGroups.length > 0 &&
 						todoGroups.map(tdg => (
 							<button
+								key={tdg._id}
 								className={`btn btn-link link ${tdg._id === activeGroup ? 'active' : ''}`}
 								onClick={() => fetchTasks(tdg._id)}>
 								{tdg.name}
@@ -192,14 +208,17 @@ export const Todos = () => {
 					Manage groups
 				</button>
 			</div>
-			{tasks && tasks.length > 0 ? (
-				<div className='task-container rounded-bottom-4 overflow-hidden'>
-					{tasks.map(t => (
-						<Task task={t} fetchTasks={() => fetchTasks(activeGroup)} tasksSettings={tasksSettings} />
-					))}
-				</div>
+			{showArchive && <div className='p-4 text-bold border-bottom border-light'>Archived tasks</div>}
+			{visibleTasks && visibleTasks.length > 0 ? (
+				<>
+					<div className='task-container rounded-bottom-4 overflow-hidden'>
+						{visibleTasks.map(t => (
+							<Task task={t} fetchTasks={() => fetchTasks(activeGroup)} tasksSettings={tasksSettings} />
+						))}
+					</div>
+				</>
 			) : (
-				<Alert variant='primary'>The list of tasks is empty</Alert>
+				<Alert variant='primary'>{`The list of ${showArchive ? 'archived' : ''} tasks is empty.`}</Alert>
 			)}
 		</Card>
 	)

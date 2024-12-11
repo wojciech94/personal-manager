@@ -1047,6 +1047,10 @@ a.active,
 	border: 1px solid gray;
 }
 
+.border-bottom {
+	border-bottom: 1px solid gray;
+}
+
 .border-top {
 	border-top: 1px solid gray;
 }

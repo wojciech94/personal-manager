@@ -22,7 +22,7 @@ export const Dropdown = ({ title, items }) => {
 				<div className='dropdown-menu'>
 					{items &&
 						items.length > 0 &&
-						items.map(i => <DropdownItem name={i.name} action={() => handleSetAction(i.action)}></DropdownItem>)}
+						items.map((i,idx) => <DropdownItem key={idx} name={i.name} action={() => handleSetAction(i.action)}></DropdownItem>)}
 				</div>
 			)}
 		</div>

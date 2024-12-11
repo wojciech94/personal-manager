@@ -88,7 +88,6 @@ export function ModalModifyTodoGroup({ modalData }) {
 			if (res.ok) {
 				const data = await res.json()
 				initGroups(data)
-				console.log(data)
 				if (modalData.fetchAction) {
 					modalData.fetchAction()
 				}
@@ -110,7 +109,7 @@ export function ModalModifyTodoGroup({ modalData }) {
 					<>
 						<div className='card-subtitle border-top-none'>Update groups</div>
 						{groups.map(g => (
-							<div key={g._id} className='d-flex justify-between align-center gap-2'>
+							<div key={g._id} className='px-2 d-flex justify-between align-center gap-2'>
 								{g.isEdit ? (
 									<input
 										type='text'
@@ -139,12 +138,14 @@ export function ModalModifyTodoGroup({ modalData }) {
 					</>
 				)}
 				<div className='card-subtitle'>Add new group</div>
-				<input
-					type='text'
-					value={inputVal}
-					placeholder='Type group name...'
-					onChange={e => setInputVal(e.target.value)}
-				/>
+				<div className='px-2'>
+					<input
+						type='text'
+						value={inputVal}
+						placeholder='Type group name...'
+						onChange={e => setInputVal(e.target.value)}
+					/>
+				</div>
 			</div>
 			<div className='card-footer'>
 				<button className='btn btn-success d-block w-100' onClick={addTodoGroup}>
