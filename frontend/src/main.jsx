@@ -1,6 +1,6 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import ReactDOM from 'react-dom/client'
-import {API_URL} from './config'
+import { API_URL } from './config'
 import { Login } from './components/Login/Login'
 import { ProtectedRoute } from './components/ProtectedRoute/ProtectedRoute.jsx'
 import { Home } from './components/Home/Home.jsx'

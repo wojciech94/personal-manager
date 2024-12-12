@@ -1,4 +1,4 @@
-require('dotenv').config() // Wczytaj zmienne środowiskowe z pliku .env
+require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
 const bcrypt = require('bcryptjs')
@@ -19,8 +19,7 @@ const TasksSettings = require('./models/TasksSettings')
 const app = express()
 const PORT = process.env.PORT || 5000
 const corsOptions = {
-	origin: 'https://personal-manager-beta.vercel.app', // Adres Twojego frontendu na Vercel
-	methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD'],
+	origin: 'https://personal-manager-beta.vercel.app',
 	allowedHeaders: ['Content-Type', 'Authorization'],
 }
 
