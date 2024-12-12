@@ -20,7 +20,7 @@ const app = express()
 const PORT = process.env.PORT || 5000
 const corsOptions = {
 	origin: 'https://personal-manager-beta.vercel.app', // Adres Twojego frontendu na Vercel
-	methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+	methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD'],
 	allowedHeaders: ['Content-Type', 'Authorization'],
 }
 
