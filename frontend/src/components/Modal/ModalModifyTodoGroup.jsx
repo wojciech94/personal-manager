@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from 'react'
 import { Check, Edit, Trash } from 'react-feather'
 import { useParams } from 'react-router-dom'
+import { API_URL } from '../../config'
 import { ModalContext } from '../../contexts/ModalContext'
 
 export function ModalModifyTodoGroup({ modalData }) {
@@ -38,7 +39,7 @@ export function ModalModifyTodoGroup({ modalData }) {
 			return
 		}
 
-		const res = await fetch(`http://localhost:5000/dashboards/${dashboardId}/tasks-groups`, {
+		const res = await fetch(`${API_URL}dashboards/${dashboardId}/tasks-groups`, {
 			method: 'DELETE',
 			headers: {
 				Authorization: `Bearer ${token}`,
@@ -74,7 +75,7 @@ export function ModalModifyTodoGroup({ modalData }) {
 
 	const saveInput = async (id, val) => {
 		if (id && val && token && dashboardId) {
-			const res = await fetch(`http://localhost:5000/dashboards/${dashboardId}/tasks-groups`, {
+			const res = await fetch(`${API_URL}dashboards/${dashboardId}/tasks-groups`, {
 				method: 'PATCH',
 				headers: {
 					Authorization: `Bearer ${token}`,

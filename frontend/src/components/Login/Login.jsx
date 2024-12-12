@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Eye, EyeOff } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
+import {API_URL} from '../../config'
 import { Card } from '../Card/Card'
 
 export const Login = () => {
@@ -16,7 +17,7 @@ export const Login = () => {
 		e.preventDefault()
 
 		try {
-			const baseUrl = 'http://localhost:5000/'
+			const baseUrl = `${API_URL}`
 			const response = await fetch(`${baseUrl}${mode === 'signIn' ? 'login' : 'register'}`, {
 				method: 'POST',
 				headers: {

@@ -1,6 +1,7 @@
 import { useContext, useState } from 'react'
 import { Settings } from 'react-feather'
 import { NavLink, Outlet, useLoaderData, useParams } from 'react-router-dom'
+import {API_URL} from '../../config'
 import { ModalContext } from '../../contexts/ModalContext'
 
 export const Folders = () => {
@@ -11,7 +12,7 @@ export const Folders = () => {
 	const handleAddFolder = async val => {
 		console.log(val)
 		const token = localStorage.getItem('token')
-		const res = await fetch(`http://localhost:5000/dashboards/${dashboardId}/add-folder`, {
+		const res = await fetch(`${API_URL}dashboards/${dashboardId}/add-folder`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
@@ -32,7 +33,7 @@ export const Folders = () => {
 
 	const fetchFolders = async () => {
 		const token = localStorage.getItem('token')
-		const res = await fetch(`http://localhost:5000/dashboards/${dashboardId}/folders`, {
+		const res = await fetch(`${API_URL}dashboards/${dashboardId}/folders`, {
 			headers: {
 				Authorization: `Bearer ${token}`,
 			},

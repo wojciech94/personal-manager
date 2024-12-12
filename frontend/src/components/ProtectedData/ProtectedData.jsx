@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { API_URL } from '../../config'
 
 export const ProtectedData = () => {
 	const [data, setData] = useState(null)
@@ -8,7 +9,7 @@ export const ProtectedData = () => {
 		// Funkcja do pobierania danych z chronionej trasy
 		const fetchData = async () => {
 			try {
-				const response = await fetch('http://localhost:5000/protected', {
+				const response = await fetch(`${API_URL}protected`, {
 					method: 'GET',
 					headers: {
 						Authorization: `Bearer ${localStorage.getItem('token')}`, // Zdobądź token z localStorage

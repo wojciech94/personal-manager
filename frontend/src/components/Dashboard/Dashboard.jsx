@@ -1,5 +1,6 @@
 import { Menu } from '../Menu/Menu'
 import { Outlet, useMatch, useNavigate, useParams } from 'react-router-dom'
+import {API_URL} from '../../config'
 import { Card, CardHeader } from '../Card/Card'
 import { useEffect, useState } from 'react'
 import { FormRow } from '../FormRow/FormRow'
@@ -17,7 +18,7 @@ export const Dashboard = () => {
 	const token = localStorage.getItem('token')
 
 	const getDetails = async () => {
-		const res = await fetch(`http://localhost:5000/dashboards/${dashboardId}`, {
+		const res = await fetch(`${API_URL}dashboards/${dashboardId}`, {
 			headers: {
 				Authorization: `Bearer ${token}`,
 			},
@@ -39,7 +40,7 @@ export const Dashboard = () => {
 
 	const removeUser = async id => {
 		if (token) {
-			const res = await fetch(`http://localhost:5000/dashboards/${dashboardId}/remove`, {
+			const res = await fetch(`${API_URL}dashboards/${dashboardId}/remove`, {
 				method: 'PATCH',
 				headers: {
 					Authorization: `Bearer ${token}`,
@@ -130,7 +131,7 @@ const DashboardDetails = ({ dashboardId, dashboard, editMode, getDetails, remove
 
 	const updateDashboard = async () => {
 		const token = localStorage.getItem('token')
-		const res = await fetch(`http://localhost:5000/dashboards/${dashboardId}`, {
+		const res = await fetch(`${API_URL}dashboards/${dashboardId}`, {
 			method: 'PATCH',
 			headers: {
 				Authorization: `Bearer ${token}`,
@@ -154,7 +155,7 @@ const DashboardDetails = ({ dashboardId, dashboard, editMode, getDetails, remove
 
 	const handleAddUser = async userName => {
 		const token = localStorage.getItem('token')
-		const res = await fetch(`http://localhost:5000/dashboards/${dashboardId}/add-user`, {
+		const res = await fetch(`${API_URL}dashboards/${dashboardId}/add-user`, {
 			method: 'POST',
 			headers: {
 				Authorization: `Bearer ${token}`,

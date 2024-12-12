@@ -1,5 +1,6 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import ReactDOM from 'react-dom/client'
+import {API_URL} from './config'
 import { Login } from './components/Login/Login'
 import { ProtectedRoute } from './components/ProtectedRoute/ProtectedRoute.jsx'
 import { Home } from './components/Home/Home.jsx'
@@ -46,7 +47,7 @@ const Main = () => {
 									throw new Error('No token found')
 								}
 
-								const response = await fetch(`http://localhost:5000/dashboards/${dashboardId}/folders`, {
+								const response = await fetch(`${API_URL}dashboards/${dashboardId}/folders`, {
 									headers: {
 										Authorization: `Bearer ${token}`,
 									},
@@ -76,14 +77,11 @@ const Main = () => {
 
 										const folderUrl = folderId ? `/${folderId}` : ''
 
-										const response = await fetch(
-											`http://localhost:5000/dashboards/${dashboardId}/folders/notes${folderUrl}`,
-											{
-												headers: {
-													Authorization: `Bearer ${token}`,
-												},
-											}
-										)
+										const response = await fetch(`${API_URL}dashboards/${dashboardId}/folders/notes${folderUrl}`, {
+											headers: {
+												Authorization: `Bearer ${token}`,
+											},
+										})
 
 										if (!response.ok) {
 											throw new Error('Failed to load folders')

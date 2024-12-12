@@ -2,6 +2,7 @@ import { useContext } from 'react'
 import { useEffect, useState } from 'react'
 import { Check, Edit, X } from 'react-feather'
 import { useParams } from 'react-router-dom'
+import { API_URL } from '../../config'
 import { ModalContext } from '../../contexts/ModalContext'
 import { FormRow } from '../FormRow/FormRow'
 
@@ -17,7 +18,7 @@ export function ModalFolderContent({ modalData }) {
 
 	const fetchFolders = async () => {
 		const token = localStorage.getItem('token')
-		const res = await fetch(`http://localhost:5000/dashboards/${dashboardId}/folders`, {
+		const res = await fetch(`${API_URL}dashboards/${dashboardId}/folders`, {
 			headers: {
 				Authorization: `Bearer ${token}`,
 			},
@@ -71,7 +72,7 @@ function FolderRow({ folder, action, dashboardId }) {
 	const token = localStorage.getItem('token')
 
 	const handleSave = async () => {
-		const res = await fetch(`http://localhost:5000/folders/${folder._id}`, {
+		const res = await fetch(`${API_URL}folders/${folder._id}`, {
 			method: 'PATCH',
 			headers: {
 				'Content-Type': 'application/json',
@@ -90,7 +91,7 @@ function FolderRow({ folder, action, dashboardId }) {
 	}
 
 	const handleRemove = async () => {
-		const url = `http://localhost:5000/dashboards/${dashboardId}/folders/${folder._id}`
+		const url = `${API_URL}dashboards/${dashboardId}/folders/${folder._id}`
 		const res = await fetch(url, {
 			method: 'DELETE',
 			headers: {

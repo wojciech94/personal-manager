@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import {API_URL} from '../../config'
 
 export const DashboardRow = ({ dashboard, fetchUserDashboards }) => {
 	const [showInput, setShowInput] = useState(false)
@@ -7,7 +8,7 @@ export const DashboardRow = ({ dashboard, fetchUserDashboards }) => {
 	const handleSubmit = async () => {
 		try {
 			const token = localStorage.getItem('token')
-			const response = await fetch(`http://localhost:5000/dashboards/${dashboard._id}/add-user`, {
+			const response = await fetch(`${API_URL}dashboards/${dashboard._id}/add-user`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -32,7 +33,7 @@ export const DashboardRow = ({ dashboard, fetchUserDashboards }) => {
 	const handleRemove = async () => {
 		try {
 			const token = localStorage.getItem('token')
-			const response = await fetch(`http://localhost:5000/dashboards/${dashboard._id}/remove`, {
+			const response = await fetch(`${API_URL}dashboards/${dashboard._id}/remove`, {
 				method: 'PATCH',
 				headers: {
 					'Content-Type': 'application/json',

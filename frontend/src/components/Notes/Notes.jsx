@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useContext } from 'react'
 import { useLoaderData, useParams } from 'react-router-dom'
+import { API_URL } from '../../config'
 import { ModalContext } from '../../contexts/ModalContext'
 import { Plus } from 'react-feather'
 import { debounce } from '../../utils/helpers'
@@ -40,7 +41,7 @@ export const Notes = () => {
 	async function fetchNotesCategories() {
 		const token = localStorage.getItem('token')
 
-		const response = await fetch(`http://localhost:5000/dashboards/${dashboardId}/note-categories`, {
+		const response = await fetch(`${API_URL}dashboards/${dashboardId}/note-categories`, {
 			method: 'GET',
 			headers: {
 				Authorization: `Bearer ${token}`,
@@ -59,7 +60,7 @@ export const Notes = () => {
 	async function fetchNotes() {
 		const token = localStorage.getItem('token')
 
-		let url = `http://localhost:5000/dashboards/${dashboardId}/folders/notes`
+		let url = `${API_URL}dashboards/${dashboardId}/folders/notes`
 		if (folderId) {
 			url = url + `/${folderId}`
 		}
@@ -86,9 +87,7 @@ export const Notes = () => {
 			.split(/[\s,]+/)
 			.map(tag => tag.trim())
 			.filter(tag => tag.length > 0)
-		const url = !noteId
-			? `http://localhost:5000/dashboards/${dashboardId}/add-note`
-			: `http://localhost:5000/notes/${noteId}`
+		const url = !noteId ? `${API_URL}dashboards/${dashboardId}/add-note` : `${API_URL}notes/${noteId}`
 		const response = await fetch(url, {
 			method: `${noteId ? 'PATCH' : 'POST'}`,
 			headers: {

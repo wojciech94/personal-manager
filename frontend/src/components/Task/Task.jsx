@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Check, Clock, Edit, Trash2 } from 'react-feather'
 import { useParams } from 'react-router-dom'
+import { API_URL } from '../../config'
 
 export function Task({ task, fetchTasks, tasksSettings }) {
 	const [taskData, setTaskData] = useState(task)
@@ -55,7 +56,7 @@ export function Task({ task, fetchTasks, tasksSettings }) {
 			config.body = JSON.stringify(updatedTask)
 		}
 
-		const res = await fetch(`http://localhost:5000/dashboards/${dashboardId}/task/${taskData._id}`, config)
+		const res = await fetch(`${API_URL}dashboards/${dashboardId}/task/${taskData._id}`, config)
 		if (res.ok) {
 			if (action === 'delete') {
 				console.log('fetch')

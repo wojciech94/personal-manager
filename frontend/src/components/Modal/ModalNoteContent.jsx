@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
+import { API_URL } from '../../config'
 import { FormRow } from '../FormRow/FormRow'
 
 export const ModalNoteContent = ({ modalData }) => {
@@ -27,7 +28,7 @@ export const ModalNoteContent = ({ modalData }) => {
 		if (noteId) {
 			const token = localStorage.getItem('token')
 			const fetchNoteData = async () => {
-				const response = await fetch(`http://localhost:5000/notes/${noteId}`, {
+				const response = await fetch(`${API_URL}notes/${noteId}`, {
 					method: 'GET',
 					headers: {
 						Authorization: `Bearer ${token}`,
@@ -56,7 +57,7 @@ export const ModalNoteContent = ({ modalData }) => {
 	async function fetchNotesCategories() {
 		const token = localStorage.getItem('token')
 
-		const response = await fetch(`http://localhost:5000/dashboards/${dashboardId}/note-categories`, {
+		const response = await fetch(`${API_URL}dashboards/${dashboardId}/note-categories`, {
 			method: 'GET',
 			headers: {
 				Authorization: `Bearer ${token}`,
@@ -74,7 +75,7 @@ export const ModalNoteContent = ({ modalData }) => {
 	async function fetchFolders() {
 		const token = localStorage.getItem('token')
 
-		const response = await fetch(`http://localhost:5000/dashboards/${dashboardId}/folders`, {
+		const response = await fetch(`${API_URL}dashboards/${dashboardId}/folders`, {
 			method: 'GET',
 			headers: {
 				Authorization: `Bearer ${token}`,

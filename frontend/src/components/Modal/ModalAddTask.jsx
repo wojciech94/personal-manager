@@ -1,6 +1,7 @@
 import { useContext } from 'react'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import { API_URL } from '../../config'
 import { ModalContext } from '../../contexts/ModalContext'
 
 import { FormRow } from '../FormRow/FormRow'
@@ -21,7 +22,7 @@ export function ModalAddTask({ modalData }) {
 	}, [modalData])
 
 	const handleAddTask = async () => {
-		const res = await fetch(`http://localhost:5000/dashboards/${dashboardId}/add-task`, {
+		const res = await fetch(`${API_URL}dashboards/${dashboardId}/add-task`, {
 			method: 'POST',
 			headers: {
 				Authorization: `Bearer ${token}`,

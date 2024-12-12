@@ -4,6 +4,7 @@ import { Alert } from '../Alert/Alert'
 import { Card, CardHeader } from '../Card/Card'
 import { Task } from '../Task/Task'
 import { useParams } from 'react-router-dom'
+import { API_URL } from '../../config'
 import { ModalContext } from '../../contexts/ModalContext'
 
 export const Todos = () => {
@@ -30,7 +31,7 @@ export const Todos = () => {
 	}, [tasksSettings])
 
 	const fetchTasksSettings = async () => {
-		const res = await fetch(`http://localhost:5000/dashboards/${dashboardId}/tasks-settings`, {
+		const res = await fetch(`${API_URL}dashboards/${dashboardId}/tasks-settings`, {
 			headers: {
 				Authorization: `Bearer ${token}`,
 			},
@@ -45,7 +46,7 @@ export const Todos = () => {
 	}
 
 	const fetchTodoGroups = async () => {
-		const res = await fetch(`http://localhost:5000/dashboards/${dashboardId}/tasks-groups`, {
+		const res = await fetch(`${API_URL}dashboards/${dashboardId}/tasks-groups`, {
 			headers: {
 				Authorization: `Bearer ${token}`,
 			},
@@ -61,7 +62,7 @@ export const Todos = () => {
 
 	const fetchTasks = async id => {
 		const res = await fetch(
-			`http://localhost:5000/dashboards/${dashboardId}/tasks/${id}?sortBy=${tasksSettings.sortMethod}&order=${tasksSettings.sortDirection}`,
+			`${API_URL}dashboards/${dashboardId}/tasks/${id}?sortBy=${tasksSettings.sortMethod}&order=${tasksSettings.sortDirection}`,
 			{
 				headers: {
 					Authorization: `Bearer ${token}`,
@@ -86,7 +87,7 @@ export const Todos = () => {
 
 	const addGroup = async name => {
 		if (token && dashboardId && name) {
-			const res = await fetch(`http://localhost:5000/dashboards/${dashboardId}/add-todo-group`, {
+			const res = await fetch(`${API_URL}dashboards/${dashboardId}/add-todo-group`, {
 				method: 'POST',
 				headers: {
 					Authorization: `Bearer ${token}`,
@@ -130,7 +131,7 @@ export const Todos = () => {
 	}
 
 	const handleSetTasksSettings = async settings => {
-		const res = await fetch(`http://localhost:5000/dashboards/${dashboardId}/tasks-settings`, {
+		const res = await fetch(`${API_URL}dashboards/${dashboardId}/tasks-settings`, {
 			method: 'POST',
 			headers: {
 				Authorization: `Bearer ${token}`,
@@ -213,7 +214,7 @@ export const Todos = () => {
 				<>
 					<div className='task-container rounded-bottom-4 overflow-hidden'>
 						{visibleTasks.map(t => (
-							<Task task={t} fetchTasks={() => fetchTasks(activeGroup)} tasksSettings={tasksSettings} />
+							<Task key={t._id} task={t} fetchTasks={() => fetchTasks(activeGroup)} tasksSettings={tasksSettings} />
 						))}
 					</div>
 				</>

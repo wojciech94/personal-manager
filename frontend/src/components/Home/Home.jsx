@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, Outlet, useLocation, useMatch, useNavigate } from 'react-router-dom'
+import {API_URL} from '../../config'
 import { Dashboards } from '../Dashboards/Dashboards'
 import { Modal } from '../Modal/Modal'
 import { Dropdown } from '../Dropdown/Dropdown'
@@ -41,7 +42,7 @@ export const Home = () => {
 	const fetchUserDashboards = async () => {
 		const token = localStorage.getItem('token')
 
-		const response = await fetch('http://localhost:5000/dashboards', {
+		const response = await fetch(`${API_URL}dashboards`, {
 			method: 'GET',
 			headers: {
 				Authorization: `Bearer ${token}`,
@@ -69,7 +70,7 @@ export const Home = () => {
 	}
 
 	const createDashboard = async dashboardName => {
-		const response = await fetch('http://localhost:5000/dashboards', {
+		const response = await fetch(`${API_URL}dashboards`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',

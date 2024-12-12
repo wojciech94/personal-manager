@@ -1,5 +1,5 @@
-import { useContext } from 'react'
-import { useState } from 'react'
+import { useContext, useState } from 'react'
+import { API_URL } from '../../config'
 import { ModalContext } from '../../contexts/ModalContext'
 import { FormRow } from '../FormRow/FormRow'
 
@@ -10,7 +10,7 @@ export const ModalAddCategoryContent = () => {
 	const addCategory = async () => {
 		const token = localStorage.getItem('token')
 		if (token) {
-			const res = await fetch('http://localhost:5000/notes/add-category', {
+			const res = await fetch(`${API_URL}notes/add-category`, {
 				method: 'POST',
 				headers: {
 					Authorization: `Bearer ${token}`,
