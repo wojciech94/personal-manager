@@ -19,7 +19,7 @@ const TasksSettings = require('./models/TasksSettings')
 const app = express()
 const PORT = process.env.PORT || 5000
 const corsOptions = {
-	origin: 'https://personal-manager-beta.vercel.app',
+	origin: ['https://personal-manager-beta.vercel.app', 'http://localhost:5173'],
 	methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS'],
 	allowedHeaders: ['Content-Type', 'Authorization'],
 }
