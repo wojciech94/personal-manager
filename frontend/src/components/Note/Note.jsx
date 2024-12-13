@@ -7,13 +7,14 @@ import { ModalContext } from '../../contexts/ModalContext'
 export const Note = ({ note, updateNote, fetchNotes }) => {
 	const [, setActiveModal] = useContext(ModalContext)
 	const { dashboardId } = useParams()
+
 	const removeNote = async id => {
 		if (id) {
 			const response = await fetch(`${API_URL}dashboards/${dashboardId}/notes/remove`, {
 				method: 'DELETE',
 				headers: {
 					'Content-Type': 'application/json',
-					Authorization: `Bearer ${localStorage.getItem('token')}`, // Dodaj token w nagłówkach
+					Authorization: `Bearer ${localStorage.getItem('token')}`,
 				},
 				body: JSON.stringify({ id }),
 			})
@@ -69,8 +70,8 @@ export const Note = ({ note, updateNote, fetchNotes }) => {
 						))}
 				</div>
 			)}
-			<div>{note.content}</div>
-			<div className='d-flex gap-3 justify-between border-top mx-n3 px-3 pt-2'>
+			<div className='mx-n3 px-3 py-3 border-top border-bottom border-light'>{note.content}</div>
+			<div className='d-flex gap-3 justify-between mx-n3 px-3 pt-2'>
 				<div className='d-flex gap-2 align-center'>
 					<Edit size={20} /> {note.updated_at.replace('T', ' ').replace('Z', '')}
 				</div>

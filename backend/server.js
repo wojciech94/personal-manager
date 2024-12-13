@@ -15,6 +15,7 @@ const Folder = require('./models/Folder')
 const TaskGroup = require('./models/TaskGroup')
 const Task = require('./models/Task')
 const TasksSettings = require('./models/TasksSettings')
+const { findById } = require('./models/Dashboard')
 
 const app = express()
 const PORT = process.env.PORT || 5000
@@ -40,47 +41,35 @@ mongoose
 
 // Endpoint logowania użytkowników
 app.post('/login', async (req, res) => {
-	const { name, password } = req.body
-
 	try {
-		// Sprawdź, czy użytkownik istnieje
+		const { name, password } = req.body
+
 		const user = await User.findOne({ name })
 		if (!user) {
 			return res.status(400).json({ message: 'Invalid credentials' })
 		}
 
-		// Porównaj hasło
 		const isMatch = await bcrypt.compare(password, user.password)
 		if (!isMatch) {
 			return res.status(400).json({ message: 'Invalid credentials' })
 		}
 
-		// Utwórz token JWT
 		const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' })
 
-		// Zwróć token
 		res.status(200).json({ token })
 	} catch (error) {
 		res.status(500).json({ error: error.message })
 	}
 })
 
-app.get('/userId', async (req, res) => {
+app.get('/userId', authMiddleware, async (req, res) => {
 	try {
-		const token = req.headers.authorization?.split(' ')[1]
-		console.log('Token received:', token) // Logowanie tokenu
-
-		if (!token) {
-			return res.status(401).json({ message: 'No token provided' })
-		}
-
-		const decoded = jwt.verify(token, process.env.JWT_SECRET)
-		const userId = decoded.userId
+		const userId = req.user.userId
 		if (!userId) {
 			throw new Error('Cannot decode user for provided token')
 		}
 
-		res.status(200).json({ userId: userId })
+		res.status(200).json({ userId })
 	} catch (error) {
 		res.status(500).json({ error: error.message })
 	}
@@ -97,7 +86,7 @@ app.post('/register', async (req, res) => {
 	}
 })
 
-app.get('/users', async (req, res) => {
+app.get('/users', authMiddleware, async (req, res) => {
 	try {
 		const users = await User.find()
 		res.status(200).json(users)
@@ -106,22 +95,11 @@ app.get('/users', async (req, res) => {
 	}
 })
 
-app.get('/dashboards', async (req, res) => {
+app.get('/dashboards', authMiddleware, async (req, res) => {
 	try {
-		const token = req.headers.authorization?.split(' ')[1]
-		console.log('Token received:', token) // Logowanie tokenu
-
-		if (!token) {
-			return res.status(401).json({ message: 'No token provided' })
-		}
-
-		const decoded = jwt.verify(token, process.env.JWT_SECRET)
-		const userId = decoded.userId
-
-		console.log('Decoded userId:', userId) // Logowanie userId
+		const userId = req.user.userId
 
 		const dashboards = await Dashboard.find({ userIds: userId })
-		console.log('Dashboards found:', dashboards) // Logowanie znalezionych dashboardów
 		res.status(200).json(dashboards)
 	} catch (error) {
 		console.error(error)
@@ -160,20 +138,10 @@ app.post('/dashboards', authMiddleware, async (req, res) => {
 	}
 })
 
-app.get('/dashboards/:dashboardId', async (req, res) => {
+//Pobieranie danych dashboarda
+app.get('/dashboards/:dashboardId', authMiddleware, async (req, res) => {
 	try {
-		const token = req.headers.authorization?.split(' ')[1]
-		if (!token) {
-			return res.status(401).json({ message: 'No token provided' })
-		}
-
-		let userId
-		try {
-			const decoded = jwt.verify(token, process.env.JWT_SECRET)
-			userId = decoded.userId
-		} catch (error) {
-			return res.status(401).json({ message: 'Invalid or expired token' })
-		}
+		const userId = req.user.userId
 
 		const { dashboardId } = req.params
 
@@ -194,6 +162,25 @@ app.get('/dashboards/:dashboardId', async (req, res) => {
 		dashboard.isOwner = isOwner
 
 		return res.status(200).json(dashboard)
+	} catch (error) {
+		res.status(500).json({ message: error.message })
+	}
+})
+
+app.delete('/dashboards/:dashboardId', authMiddleware, async (req, res) => {
+	try {
+		const { dashboardId } = req.params
+
+		if (!dashboardId) {
+			return res.status(400).json({ message: 'No dashboardId provided' })
+		}
+
+		const dashboard = await Dashboard.findByIdAndDelete(dashboardId)
+
+		if (!dashboard) {
+			return res.status(404).json({ message: 'Dashboard not found for provided id' })
+		}
+		res.status(204).send()
 	} catch (error) {
 		res.status(500).json({ message: error.message })
 	}
@@ -271,24 +258,8 @@ app.post('/dashboards/:dashboardId/tasks-settings', authMiddleware, async (req, 
 })
 
 //Dodawanie użytkownika do dashboardu
-app.post('/dashboards/:dashboardId/add-user', async (req, res) => {
+app.post('/dashboards/:dashboardId/add-user', authMiddleware, async (req, res) => {
 	try {
-		const authHeader = req.headers.authorization
-		if (!authHeader) {
-			return res.status(401).json({ message: 'No token provided' })
-		}
-
-		const token = authHeader.split(' ')[1]
-		if (!token) {
-			return res.status(401).json({ message: 'No token provided' })
-		}
-
-		try {
-			jwt.verify(token, process.env.JWT_SECRET)
-		} catch (error) {
-			return res.status(401).json({ message: 'Invalid or expired token' })
-		}
-
 		const { dashboardId } = req.params
 		const { name } = req.body
 
@@ -315,21 +286,10 @@ app.post('/dashboards/:dashboardId/add-user', async (req, res) => {
 })
 
 //Edytowanie dashboardu
-app.patch('/dashboards/:dashboardId', async (req, res) => {
+app.patch('/dashboards/:dashboardId', authMiddleware, async (req, res) => {
 	try {
 		const { dashboardId } = req.params
 		const { name, creatorId, tasksArchiveTime, tasksRemoveTime } = req.body
-		const token = req.headers.authorization.split(' ')[1]
-		if (!token) {
-			return res.status(401).json({ message: 'No token provided' })
-		}
-
-		const decoded = jwt.verify(token, process.env.JWT_SECRET)
-		const userId = new mongoose.Types.ObjectId(decoded.userId)
-
-		if (!userId) {
-			return res.status(401).json({ message: 'Token validation failed' })
-		}
 
 		const dashboard = await Dashboard.findById(dashboardId)
 		if (!dashboard) {
@@ -349,26 +309,17 @@ app.patch('/dashboards/:dashboardId', async (req, res) => {
 })
 
 //Usuwanie użytkownika z dashboardu
-app.patch('/dashboards/:dashboardId/remove', async (req, res) => {
+app.patch('/dashboards/:dashboardId/remove', authMiddleware, async (req, res) => {
 	try {
 		const { dashboardId } = req.params
 		const { id } = req.body
-		const token = req.headers.authorization.split(' ')[1]
-		if (!token) {
-			return res.status(401).json({ message: 'No token provided' })
-		}
-
-		const decoded = jwt.verify(token, process.env.JWT_SECRET)
-		const userId = new mongoose.Types.ObjectId(decoded.userId)
-
-		if (!userId) {
-			return res.status(401).json({ message: 'Token validation failed' })
-		}
 
 		const dashboard = await Dashboard.findById(dashboardId)
 		if (!dashboard) {
 			return res.status(404).json({ message: 'Dashboard not found' })
 		}
+
+		const userId = req.user.userId
 
 		if (!dashboard.userIds.includes(userId)) {
 			return res.status(400).json({ message: `User doesn't have access to dashboard ${dashboard.name}` })
@@ -392,24 +343,8 @@ app.patch('/dashboards/:dashboardId/remove', async (req, res) => {
 })
 
 //Dodawanie notatki
-app.post('/dashboards/:dashboardId/add-note', async (req, res) => {
+app.post('/dashboards/:dashboardId/add-note', authMiddleware, async (req, res) => {
 	try {
-		const authHeader = req.headers.authorization
-		if (!authHeader) {
-			return res.status(401).json({ message: 'No token provided' })
-		}
-
-		const token = authHeader.split(' ')[1]
-		if (!token) {
-			return res.status(401).json({ message: 'No token provided' })
-		}
-
-		try {
-			jwt.verify(token, process.env.JWT_SECRET)
-		} catch (error) {
-			return res.status(401).json({ message: 'Invalid or expired token' })
-		}
-
 		const { dashboardId } = req.params
 		const { title, content, category, tags, folder_id, is_favourite, expired_at } = req.body
 
@@ -444,20 +379,8 @@ app.post('/dashboards/:dashboardId/add-note', async (req, res) => {
 })
 
 //Pobieranie notatek dashboarda
-app.get('/dashboards/:dashboardId/folders/notes/:folderId?', async (req, res) => {
+app.get('/dashboards/:dashboardId/folders/notes/:folderId?', authMiddleware, async (req, res) => {
 	try {
-		const token = req.headers.authorization?.split(' ')[1]
-
-		if (!token) {
-			return res.status(401).json({ message: 'No token provided' })
-		}
-
-		try {
-			jwt.verify(token, process.env.JWT_SECRET)
-		} catch (error) {
-			return res.status(401).json({ message: 'Invalid or expired token' })
-		}
-
 		const { dashboardId, folderId } = req.params
 
 		const dashboard = await Dashboard.findById(dashboardId)
@@ -505,24 +428,8 @@ app.get('/dashboards/:dashboardId/folders/notes/:folderId?', async (req, res) =>
 })
 
 //Pobieranie konkretnej notatki
-app.get('/notes/:noteId', async (req, res) => {
+app.get('/notes/:noteId', authMiddleware, async (req, res) => {
 	try {
-		const authHeader = req.headers.authorization
-		if (!authHeader) {
-			return res.status(401).json({ message: 'No token provided' })
-		}
-
-		const token = authHeader.split(' ')[1]
-		if (!token) {
-			return res.status(401).json({ message: 'No token provided' })
-		}
-
-		try {
-			jwt.verify(token, process.env.JWT_SECRET)
-		} catch (error) {
-			return res.status(401).json({ message: 'Invalid or expired token' })
-		}
-
 		const { noteId } = req.params
 
 		const note = await Note.findById(noteId)
@@ -538,25 +445,9 @@ app.get('/notes/:noteId', async (req, res) => {
 })
 
 //Aktualizacja notatki
-app.patch('/notes/:noteId', async (req, res) => {
+app.patch('/notes/:noteId', authMiddleware, async (req, res) => {
 	try {
-		const authHeader = req.headers.authorization
-		if (!authHeader) {
-			return res.status(401).json({ message: 'No token provided' })
-		}
-
-		const token = authHeader.split(' ')[1]
-		if (!token) {
-			return res.status(401).json({ message: 'No token provided' })
-		}
-
-		let userId
-		try {
-			const decoded = jwt.verify(token, process.env.JWT_SECRET)
-			userId = decoded.userId
-		} catch (error) {
-			return res.status(401).json({ message: 'Invalid or expired token' })
-		}
+		const userId = req.user.userId
 
 		const { noteId } = req.params
 		const note = await Note.findById(noteId)
@@ -584,24 +475,10 @@ app.patch('/notes/:noteId', async (req, res) => {
 })
 
 //Usuwanie notatek
-app.delete('/dashboards/:dashboardId/notes/remove', async (req, res) => {
+app.delete('/dashboards/:dashboardId/notes/remove', authMiddleware, async (req, res) => {
 	try {
 		const { dashboardId } = req.params
 		const { id } = req.body
-
-		console.log(id)
-
-		const token = req.headers.authorization.split(' ')[1]
-		if (!token) {
-			return res.status(401).json({ message: 'No token provided' })
-		}
-
-		const decoded = jwt.verify(token, process.env.JWT_SECRET)
-		const userId = new mongoose.Types.ObjectId(decoded.userId)
-
-		if (!userId) {
-			return res.status(401).json({ message: 'Token validation failed' })
-		}
 
 		const dashboard = await Dashboard.findById(dashboardId)
 		if (!dashboard) {
@@ -624,19 +501,8 @@ app.delete('/dashboards/:dashboardId/notes/remove', async (req, res) => {
 	}
 })
 
-app.get('/dashboards/:dashboardId/note-categories', async (req, res) => {
-	const token = req.headers.authorization?.split(' ')[1]
-
-	if (!token) {
-		return res.status(401).json({ message: 'No token provided' })
-	}
-
-	try {
-		jwt.verify(token, process.env.JWT_SECRET)
-	} catch (error) {
-		return res.status(401).json({ message: 'Invalid or expired token' })
-	}
-
+//Pobranie kategorii notatek dashboarda
+app.get('/dashboards/:dashboardId/note-categories', authMiddleware, async (req, res) => {
 	const { dashboardId } = req.params
 
 	const dashboard = await Dashboard.findById(dashboardId).populate('userIds')
@@ -663,25 +529,9 @@ app.get('/dashboards/:dashboardId/note-categories', async (req, res) => {
 })
 
 //Dodawanie kategorii notatki
-app.post('/notes/add-category', async (req, res) => {
+app.post('/notes/add-category', authMiddleware, async (req, res) => {
 	try {
-		const authHeader = req.headers.authorization
-		if (!authHeader) {
-			return res.status(401).json({ message: 'No token provided' })
-		}
-
-		const token = authHeader.split(' ')[1]
-		if (!token) {
-			return res.status(401).json({ message: 'No token provided' })
-		}
-
-		let userId
-		try {
-			const decoded = jwt.verify(token, process.env.JWT_SECRET)
-			userId = decoded.userId
-		} catch (error) {
-			return res.status(401).json({ message: 'Invalid or expired token' })
-		}
+		const userId = req.user.userId
 
 		const user = await User.findById(userId)
 
@@ -711,33 +561,20 @@ app.post('/notes/add-category', async (req, res) => {
 	}
 })
 
-app.get('/dashboards/:dashboardId/folders', async (req, res) => {
-	const token = req.headers.authorization?.split(' ')[1]
-
-	if (!token) {
-		return res.status(401).json({ message: 'No token provided' })
-	}
-
-	try {
-		jwt.verify(token, process.env.JWT_SECRET)
-	} catch (error) {
-		return res.status(401).json({ message: 'Invalid or expired token' })
-	}
-
+//pobranie folderów dashboardu
+app.get('/dashboards/:dashboardId/folders', authMiddleware, async (req, res) => {
 	const { dashboardId } = req.params
 
 	if (!mongoose.Types.ObjectId.isValid(dashboardId)) {
 		return res.status(400).json({ message: 'Invalid dashboard ID format' })
 	}
 
-	// Wyszukiwanie dashboardu w bazie danych
 	const dashboard = await Dashboard.findById(dashboardId).populate('userIds')
 
 	if (!dashboard) {
 		return res.status(404).json({ message: 'Dashboard not found' })
 	}
 
-	// Pobieranie listy folderów
 	const folderIds = dashboard.foldersIds
 
 	if (!folderIds || folderIds.length === 0) {
@@ -754,26 +591,9 @@ app.get('/dashboards/:dashboardId/folders', async (req, res) => {
 })
 
 //Dodawanie folderu
-app.post('/dashboards/:dashboardId/add-folder', async (req, res) => {
+app.post('/dashboards/:dashboardId/add-folder', authMiddleware, async (req, res) => {
 	try {
-		const authHeader = req.headers.authorization
-		if (!authHeader) {
-			return res.status(401).json({ message: 'No token provided' })
-		}
-
-		const token = authHeader.split(' ')[1]
-		if (!token) {
-			return res.status(401).json({ message: 'No token provided' })
-		}
-
-		let userId
-		try {
-			const decoded = jwt.verify(token, process.env.JWT_SECRET)
-			userId = decoded.userId
-		} catch (error) {
-			return res.status(401).json({ message: 'Invalid or expired token' })
-		}
-
+		const userId = req.user.userId
 		const { dashboardId } = req.params
 
 		const dashboard = await Dashboard.findById(dashboardId)
@@ -804,20 +624,10 @@ app.post('/dashboards/:dashboardId/add-folder', async (req, res) => {
 	}
 })
 
-app.delete('/dashboards/:dashboardId/folders/:folderId', async (req, res) => {
+//delete folder
+app.delete('/dashboards/:dashboardId/folders/:folderId', authMiddleware, async (req, res) => {
 	try {
 		const { dashboardId, folderId } = req.params
-
-		const token = req.headers.authorization.split(' ')[1]
-		if (!token) {
-			return res.status(401).json({ message: 'No token provided' })
-		}
-
-		try {
-			jwt.verify(token, process.env.JWT_SECRET)
-		} catch (error) {
-			return res.status(401).json({ message: 'Invalid or expired token' })
-		}
 
 		const dashboard = await Dashboard.findById(dashboardId)
 		if (!dashboard) {
@@ -840,25 +650,10 @@ app.delete('/dashboards/:dashboardId/folders/:folderId', async (req, res) => {
 	}
 })
 
-app.patch('/folders/:folderId', async (req, res) => {
+//update folder
+app.patch('/folders/:folderId', authMiddleware, async (req, res) => {
 	try {
-		const authHeader = req.headers.authorization
-		if (!authHeader) {
-			return res.status(401).json({ message: 'No token provided' })
-		}
-
-		const token = authHeader.split(' ')[1]
-		if (!token) {
-			return res.status(401).json({ message: 'No token provided' })
-		}
-
-		let userId
-		try {
-			const decoded = jwt.verify(token, process.env.JWT_SECRET)
-			userId = decoded.userId
-		} catch (error) {
-			return res.status(401).json({ message: 'Invalid or expired token' })
-		}
+		const userId = req.user.userId
 
 		const { folderId } = req.params
 		const { name } = req.body
@@ -1139,6 +934,7 @@ app.patch('/dashboards/:dashboardId/task/:id', authMiddleware, async (req, res) 
 	}
 })
 
+//delete task
 app.delete('/dashboards/:dashboardId/task/:id', authMiddleware, async (req, res) => {
 	try {
 		const { id } = req.params

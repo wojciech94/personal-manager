@@ -1,10 +1,10 @@
 import { Menu } from '../Menu/Menu'
 import { Outlet, useMatch, useNavigate, useParams } from 'react-router-dom'
-import {API_URL} from '../../config'
+import { API_URL } from '../../config'
 import { Card, CardHeader } from '../Card/Card'
 import { useEffect, useState } from 'react'
 import { FormRow } from '../FormRow/FormRow'
-import { Check, Plus, Repeat, Trash, User, X } from 'react-feather'
+import { Check, Plus, Repeat, Trash, Trash2, User, X } from 'react-feather'
 import { useContext } from 'react'
 import { ModalContext } from '../../contexts/ModalContext'
 import { FetchDashboardsContext } from '../../contexts/FetchDashboardsContext'
@@ -64,6 +64,25 @@ export const Dashboard = () => {
 		}
 	}
 
+	const deleteDashboard = async () => {
+		if (!token) {
+			return
+		}
+		const res = await fetch(`${API_URL}dashboards/${dashboardId}`, {
+			method: 'DELETE',
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		})
+		if (!res.ok) {
+			const errorData = await res.json().message
+			console.error(errorData)
+		} else {
+			setEditMode(false)
+			navigate('/')
+		}
+	}
+
 	const headerActions = () => {
 		const actionsArray = [
 			{
@@ -76,11 +95,19 @@ export const Dashboard = () => {
 		if (dashboard && !dashboard.isOwner) {
 			const removeAction = {
 				action: () => removeUser(null),
-				icon: <Trash size={16} />,
+				icon: <Trash2 size={16} />,
 				label: 'Drop dashboard',
 				btnClass: 'btn-danger',
 			}
 			actionsArray.push(removeAction)
+		} else {
+			const deleteAction = {
+				action: deleteDashboard,
+				icon: <Trash2 size={16} />,
+				label: 'Delete dashboard',
+				btnClass: 'btn-danger',
+			}
+			actionsArray.push(deleteAction)
 		}
 
 		return actionsArray
@@ -96,7 +123,6 @@ export const Dashboard = () => {
 					<Card headerComponent={cardHeader}>
 						<DashboardDetails
 							dashboard={dashboard}
-							dashboardId={dashboardId}
 							editMode={editMode}
 							getDetails={getDetails}
 							removeUser={removeUser}
@@ -110,7 +136,7 @@ export const Dashboard = () => {
 	)
 }
 
-const DashboardDetails = ({ dashboardId, dashboard, editMode, getDetails, removeUser }) => {
+const DashboardDetails = ({ dashboard, editMode, getDetails, removeUser }) => {
 	const [, setActiveModal] = useContext(ModalContext)
 	const [fetchUserDashboards] = useContext(FetchDashboardsContext)
 	const [nameValue, setNameValue] = useState('')
@@ -131,7 +157,7 @@ const DashboardDetails = ({ dashboardId, dashboard, editMode, getDetails, remove
 
 	const updateDashboard = async () => {
 		const token = localStorage.getItem('token')
-		const res = await fetch(`${API_URL}dashboards/${dashboardId}`, {
+		const res = await fetch(`${API_URL}dashboards/${dashboard._id}`, {
 			method: 'PATCH',
 			headers: {
 				Authorization: `Bearer ${token}`,
@@ -155,7 +181,7 @@ const DashboardDetails = ({ dashboardId, dashboard, editMode, getDetails, remove
 
 	const handleAddUser = async userName => {
 		const token = localStorage.getItem('token')
-		const res = await fetch(`${API_URL}dashboards/${dashboardId}/add-user`, {
+		const res = await fetch(`${API_URL}dashboards/${dashboard._id}/add-user`, {
 			method: 'POST',
 			headers: {
 				Authorization: `Bearer ${token}`,
