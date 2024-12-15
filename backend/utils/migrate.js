@@ -18,8 +18,10 @@ mongoose
 async function runMigration() {
 	try {
 		const result = await Dashboard.updateMany(
-			{ tasksArchiveTime: { $exists: false } },
-			{ $set: { tasksArchiveTime: 24, tasksRemoveTime: 720 } }
+			//{ tasksArchiveTime: { $exists: false } },
+			//{ $set: { tasksArchiveTime: 24, tasksRemoveTime: 720 } }
+			{ productsIds: { $exists: false } },
+			{ $set: { productsIds: [] } }
 		)
 		console.log('Documents updated:', result)
 	} catch (error) {

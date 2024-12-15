@@ -7,7 +7,8 @@ export const Menu = () => {
 		<div className='menu'>
 			<NavLink
 				className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}
-				to={`/dashboards/${dashboardId}`} end>
+				to={`/dashboards/${dashboardId}`}
+				end>
 				Details
 			</NavLink>
 			<NavLink
@@ -27,8 +28,8 @@ export const Menu = () => {
 			</NavLink>
 			<NavLink
 				className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}
-				to={`/dashboards/${dashboardId}/shoppinglist`}>
-				Shopping list
+				to={`/dashboards/${dashboardId}/shopping`}>
+				Shopping
 			</NavLink>
 			<NavLink
 				className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}

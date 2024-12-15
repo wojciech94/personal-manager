@@ -15,7 +15,7 @@ const Folder = require('./models/Folder')
 const TaskGroup = require('./models/TaskGroup')
 const Task = require('./models/Task')
 const TasksSettings = require('./models/TasksSettings')
-const { findById } = require('./models/Dashboard')
+const Product = require('./models/Product')
 
 const app = express()
 const PORT = process.env.PORT || 5000
@@ -959,6 +959,60 @@ app.delete('/dashboards/:dashboardId/task/:id', authMiddleware, async (req, res)
 		await Task.deleteOne({ _id: id })
 
 		res.status(204).send()
+	} catch (error) {
+		res.status(500).json({ message: error.message })
+	}
+})
+
+//get products
+app.get('/dashboards/:dashboardId/products', authMiddleware, async (req, res) => {
+	try {
+		const { dashboardId } = req.params
+
+		if (!dashboardId || !mongoose.Types.ObjectId.isValid(dashboardId)) {
+			return res.status(400).json({ message: 'Missing or invalid dashboardId' })
+		}
+
+		const dashboard = await Dashboard.findById(dashboardId).populate('productsIds')
+
+		if (!dashboard) {
+			return res.status(404).json({ message: 'Dashboard not found for provided id' })
+		}
+
+		res.status(201).json(dashboard.productsIds)
+	} catch (error) {
+		res.status(500).json({ message: error.message })
+	}
+})
+
+//add product
+app.post('/dashboards/:dashboardId/products', authMiddleware, async (req, res) => {
+	try {
+		const { dashboardId } = req.params
+
+		if (!dashboardId || !mongoose.Types.ObjectId.isValid(dashboardId)) {
+			return res.status(400).json({ message: 'Missing or invalid dashboardId' })
+		}
+
+		const dashboard = await Dashboard.findById(dashboardId)
+
+		if (!dashboard) {
+			return res.status(404).json({ message: 'Dashboard not found for provided id' })
+		}
+
+		const { name, category, unit, price, tags } = req.body
+
+		const product = await Product.create({ name, category, unit, price, tags })
+
+		if (!product) {
+			return res.status(500).json({ message: 'Cannot create product.' })
+		}
+
+		dashboard.productsIds.push(product._id)
+
+		await dashboard.save()
+
+		res.status(201).json(product)
 	} catch (error) {
 		res.status(500).json({ message: error.message })
 	}

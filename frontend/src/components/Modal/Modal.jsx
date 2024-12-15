@@ -9,6 +9,8 @@ import { ModalAddCategoryContent } from './ModalAddCategoryContent'
 import { ModalModifyTodoGroup } from './ModalModifyTodoGroup'
 import { ModalAddTask } from './ModalAddTask'
 import { ModalTasksSettingsContent } from './ModalTasksSettingsContent'
+import { ModalAddListItem } from './ModalAddListItem'
+import { ModalAddProduct } from './ModalAddProduct'
 
 export const Modal = ({ modalName, modalTitle, modalData }) => {
 	const [, setActiveModal] = useContext(ModalContext)
@@ -40,6 +42,12 @@ export const Modal = ({ modalName, modalTitle, modalData }) => {
 			break
 		case 'tasksSettings':
 			modalContent = <ModalTasksSettingsContent modalData={modalData} />
+			break
+		case 'addListItem':
+			modalContent = <ModalAddListItem modalData={modalData} />
+			break
+		case 'addProduct':
+			modalContent = <ModalAddProduct modalData={modalData} />
 			break
 		default:
 			modalContent = <>Alert</>

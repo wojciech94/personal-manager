@@ -9,6 +9,9 @@ import './App.css'
 import { Notes } from './components/Notes/Notes'
 import { Folders } from './components/Folders/Folders'
 import { Todos } from './components/Todos/Todos'
+import { Shopping } from './components/Shopping/Shopping'
+import { ShoppingList } from './components/ShoppingList/ShoppingList'
+import { Products } from './components/Products/Products'
 
 const Main = () => {
 	const router = createBrowserRouter([
@@ -30,7 +33,7 @@ const Main = () => {
 					children: [
 						{
 							path: 'calendar',
-							element: <>Calendar content</>,
+							element: <>Calendar content work in progress</>,
 						},
 						{
 							path: 'todo',
@@ -93,12 +96,26 @@ const Main = () => {
 							],
 						},
 						{
-							path: 'shoppinglist',
-							element: <>Shopping content</>,
+							path: 'shopping',
+							element: <Shopping />,
+							children: [
+								{
+									path: 'list',
+									element: <ShoppingList />,
+								},
+								{
+									path: 'products',
+									element: <Products />,
+								},
+								{
+									path: 'receipts',
+									element: <>Receipts</>,
+								},
+							],
 						},
 						{
 							path: 'linktree',
-							element: <>Linktree content</>,
+							element: <>Linktree content work in progress</>,
 						},
 					],
 				},

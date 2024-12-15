@@ -4,7 +4,7 @@ import { API_URL } from '../../config'
 import { Card, CardHeader } from '../Card/Card'
 import { useEffect, useState } from 'react'
 import { FormRow } from '../FormRow/FormRow'
-import { Check, Plus, Repeat, Trash, Trash2, User, X } from 'react-feather'
+import { Check, Plus, Repeat, Trash2, User, X } from 'react-feather'
 import { useContext } from 'react'
 import { ModalContext } from '../../contexts/ModalContext'
 import { FetchDashboardsContext } from '../../contexts/FetchDashboardsContext'
@@ -248,7 +248,7 @@ const DashboardDetails = ({ dashboard, editMode, getDetails, removeUser }) => {
 							</div>
 							<div className='d-flex gap-2'>
 								{dashboard.userIds.map(u => (
-									<Card key={u._id}>
+									<Card key={u._id} contentClass='border-none'>
 										<div className='d-flex align-center gap-2'>
 											<User size={16} /> {u.name}
 											{dashboard.isOwner && editMode && (

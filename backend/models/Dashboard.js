@@ -33,6 +33,12 @@ const dashboardSchema = new mongoose.Schema({
 			ref: 'TaskGroup',
 		},
 	],
+	productsIds: [
+		{
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'Product',
+		},
+	],
 	created_at: {
 		type: Date,
 		default: Date.now(),
