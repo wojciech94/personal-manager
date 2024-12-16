@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
 import { ModalContext } from '../../contexts/ModalContext'
 import { ExpandableMenu } from '../ExpandableMenu.jsx/ExpandableMenu'
+import { ProductsList } from '../ProductsList/ProductsList'
 
 export function Products() {
 	const [, setActiveModal] = useContext(ModalContext)
@@ -54,13 +55,7 @@ export function Products() {
 				<div className='card-title'>Products</div>
 				<ExpandableMenu items={menuItems} />
 			</div>
-			{products && products.length > 0 && (
-				<div>
-					{products.map(p => (
-						<div key={p._id}>{p.name}</div>
-					))}
-				</div>
-			)}
+			{products && products.length > 0 && <ProductsList products={products} />}
 		</>
 	)
 }

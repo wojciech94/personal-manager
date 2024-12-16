@@ -20,10 +20,6 @@ export const CATEGORIES = [
 		value: 'bakery',
 	},
 	{
-		name: 'Vegetables',
-		value: 'vegetables',
-	},
-	{
 		name: 'Cereal',
 		value: 'cereal',
 	},

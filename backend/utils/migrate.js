@@ -2,6 +2,7 @@ require('dotenv').config()
 const express = require('express')
 const mongoose = require('mongoose')
 const Dashboard = require('../models/Dashboard')
+const Product = require('../models/Product')
 
 const dbUrl = process.env.DB_URL
 
@@ -17,11 +18,13 @@ mongoose
 
 async function runMigration() {
 	try {
-		const result = await Dashboard.updateMany(
+		const result = await Product.updateMany(
 			//{ tasksArchiveTime: { $exists: false } },
 			//{ $set: { tasksArchiveTime: 24, tasksRemoveTime: 720 } }
-			{ productsIds: { $exists: false } },
-			{ $set: { productsIds: [] } }
+			// { productsIds: { $exists: false } },
+			// { $set: { productsIds: [] } }
+			{ isFavourite: { $exists: false } },
+			{ $set: { isFavourite: false } }
 		)
 		console.log('Documents updated:', result)
 	} catch (error) {

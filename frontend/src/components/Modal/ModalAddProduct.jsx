@@ -12,6 +12,7 @@ export function ModalAddProduct({ modalData }) {
 	const [unitValue, setUnitValue] = useState('')
 	const [priceValue, setPriceValue] = useState('')
 	const [tagsValue, setTagsValue] = useState('')
+	const [isFavouriteValue, setIsFavouriteValue] = useState(false)
 	const { dashboardId } = useParams()
 	const [, setActiveModal] = useContext(ModalContext)
 
@@ -33,6 +34,7 @@ export function ModalAddProduct({ modalData }) {
 				unit: unitValue,
 				price: priceValue,
 				tags: tagsValue,
+				isFavourite: isFavouriteValue,
 			}),
 		})
 		if (res.ok) {
@@ -97,6 +99,9 @@ export function ModalAddProduct({ modalData }) {
 						value={tagsValue}
 						onChange={e => setTagsValue(e.target.value)}
 					/>
+				</FormRow>
+				<FormRow label='Is favourite'>
+					<input type='checkbox' checked={isFavouriteValue} onChange={e => setIsFavouriteValue(e.target.checked)} />
 				</FormRow>
 			</div>
 			<div className='card-footer'>

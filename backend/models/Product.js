@@ -9,7 +9,7 @@ const ProductSchema = new mongoose.Schema({
 	},
 	category: {
 		type: String,
-		default: 'Uncategorized',
+		default: 'Other',
 		trim: true,
 	},
 	unit: {
@@ -24,6 +24,10 @@ const ProductSchema = new mongoose.Schema({
 	tags: {
 		type: [String],
 		default: [],
+	},
+	isFavourite: {
+		type: Boolean,
+		default: false,
 	},
 })
 

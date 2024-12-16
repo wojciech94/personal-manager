@@ -96,6 +96,14 @@ nav .link:not(.active):hover::after {
 	min-width: 200px !important;
 }
 
+.min-w-500px {
+	min-width: 500px !important;
+}
+
+.max-w-100px {
+	max-width: 100px;
+}
+
 .max-w-200px {
 	max-width: 200px;
 }
@@ -185,7 +193,7 @@ a.active,
 }
 
 .btn-icon {
-	display: flex;
+	display: inline-flex;
 	padding: 0.5rem;
 }
 
@@ -240,7 +248,11 @@ a.active,
 }
 
 .bg-light {
-	background-color: lightgray;
+	background-color: rgb(224, 224, 224);
+}
+
+.bg-lighter {
+	background-color: rgb(240, 240, 240);
 }
 
 .bg-dark-transparent {
@@ -604,6 +616,14 @@ a.active,
 
 .task-priority.high {
 	background-color: firebrick;
+}
+
+.products-list {
+	margin-top: 0.5rem;
+}
+
+.product-row:nth-child(2n) {
+	background-color: #f8f8f8;
 }
 
 .p-0 {
@@ -1028,6 +1048,18 @@ a.active,
 	gap: 2rem;
 }
 
+table {
+	width: 100%;
+	table-layout: fixed;
+}
+
+th,
+td {
+	text-align: inherit;
+	padding: 0.25rem;
+	border: inherit;
+}
+
 .text-bold {
 	font-weight: bold;
 }
@@ -1042,6 +1074,10 @@ a.active,
 
 .text-center {
 	text-align: center;
+}
+
+.text-start {
+	text-align: start;
 }
 
 .text-fill {
@@ -1173,6 +1209,10 @@ a.active,
 .rounded-bottom-4 {
 	border-bottom-left-radius: 1rem;
 	border-bottom-right-radius: 1rem;
+}
+
+.overflow-x-auto {
+	overflow-x: auto;
 }
 
 .scroll-x-auto {
