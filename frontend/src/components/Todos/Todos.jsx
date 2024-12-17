@@ -132,7 +132,7 @@ export const Todos = () => {
 
 	const handleSetTasksSettings = async settings => {
 		const res = await fetch(`${API_URL}dashboards/${dashboardId}/tasks-settings`, {
-			method: 'POST',
+			method: 'PATCH',
 			headers: {
 				Authorization: `Bearer ${token}`,
 				'Content-Type': 'application/json',

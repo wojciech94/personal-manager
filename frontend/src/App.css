@@ -192,6 +192,11 @@ a.active,
 	transition: background-color ease-in-out 0.2s, color ease-in-out 0.2s;
 }
 
+.btn-lg {
+	padding: .75rem 1rem;
+	font-size: 1.2rem;
+}
+
 .btn-icon {
 	display: inline-flex;
 	padding: 0.5rem;

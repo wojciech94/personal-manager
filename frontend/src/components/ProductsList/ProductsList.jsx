@@ -132,7 +132,11 @@ export function ProductsList({ products }) {
 													/>
 												</td>
 												<td>
-													<select name='categorySelect' id='categorySelect' value={categoryValue}>
+													<select
+														name='categorySelect'
+														id='categorySelect'
+														value={categoryValue}
+														onChange={e => setCategoryValue(e.target.value)}>
 														{CATEGORIES.map(c => (
 															<option value={c.value}>{c.name}</option>
 														))}

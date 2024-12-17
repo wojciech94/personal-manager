@@ -18,7 +18,7 @@ export const Login = () => {
 
 		try {
 			const baseUrl = `${API_URL}`
-			const response = await fetch(`${baseUrl}${mode === 'signIn' ? 'login' : 'register'}`, {
+			const response = await fetch(`${baseUrl}auth/${mode === 'signIn' ? 'login' : 'register'}`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',

@@ -64,3 +64,31 @@ export const CATEGORIES = [
 		value: 'hygiene',
 	},
 ]
+
+export const WELCOME_SLIDES = [
+	{
+		title: 'Save your notes',
+		subtitle: 'Quickly note ideas, thoughts and reminders.',
+		class: 'gradient-0',
+	},
+	{
+		title: 'Plan your tasks',
+		subtitle: 'Stay organized by managing your daily tasks and to-dos.',
+		class: 'gradient-1',
+	},
+	{
+		title: 'Create shopping list',
+		subtitle: 'Make sure you never forget anything with your shopping lists.',
+		class: 'gradient-2',
+	},
+	{
+		title: 'Share dashboards with others',
+		subtitle: 'Collaborate with team members by sharing your dashboards.',
+		class: 'gradient-4',
+	},
+	{
+		title: 'Save your notes',
+		subtitle: 'Quickly note ideas, thoughts and reminders.',
+		class: 'gradient-0',
+	},
+]

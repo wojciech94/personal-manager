@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, Outlet, useLocation, useMatch, useNavigate } from 'react-router-dom'
-import {API_URL} from '../../config'
+import { API_URL } from '../../config'
 import { Dashboards } from '../Dashboards/Dashboards'
 import { Modal } from '../Modal/Modal'
 import { Dropdown } from '../Dropdown/Dropdown'
@@ -8,6 +8,7 @@ import { ModalContext } from '../../contexts/ModalContext'
 import { FetchDashboardsContext } from '../../contexts/FetchDashboardsContext'
 import { Plus } from 'react-feather'
 import { getTokenExpiration } from '../../utils/helpers'
+import { WELCOME_SLIDES } from '../../constants/appConstants'
 
 export const Home = () => {
 	const [dashboards, setDashboards] = useState([])
@@ -58,23 +59,12 @@ export const Home = () => {
 		}
 	}
 
-	const openModal = () => {
-		setActiveModal({
-			name: 'createDashboard',
-			data: {
-				action: createDashboard,
-				actionName: 'Create dashboard',
-			},
-			title: 'Create dashboard',
-		})
-	}
-
 	const createDashboard = async dashboardName => {
 		const response = await fetch(`${API_URL}dashboards`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
-				Authorization: `Bearer ${localStorage.getItem('token')}`, // Dodaj token w nagłówkach
+				Authorization: `Bearer ${localStorage.getItem('token')}`,
 			},
 			body: JSON.stringify({ name: dashboardName }),
 		})
@@ -88,6 +78,19 @@ export const Home = () => {
 			const errorData = await response.json()
 			console.error(errorData.message)
 		}
+	}
+
+	const createDashboardModalData = {
+		name: 'createDashboard',
+		data: {
+			action: createDashboard,
+			actionName: 'Create dashboard',
+		},
+		title: 'Create dashboard',
+	}
+
+	const openModal = () => {
+		setActiveModal(createDashboardModalData)
 	}
 
 	const goToSettings = () => {
@@ -123,7 +126,13 @@ export const Home = () => {
 						</div>
 						<Dropdown title='User' items={dropdownItems}></Dropdown>
 					</div>
-					<div className='flex-1'>{isExactMatch ? <WelcomeScreen isNew={dashboards.length === 0} /> : <Outlet />}</div>
+					<div className='flex-1'>
+						{isExactMatch ? (
+							<WelcomeScreen isNew={dashboards.length === 0} createDashboardModal={openModal} />
+						) : (
+							<Outlet />
+						)}
+					</div>
 					{activeModal && (
 						<Modal modalName={activeModal.name} modalTitle={activeModal.title} modalData={activeModal.data} />
 					)}
@@ -133,35 +142,9 @@ export const Home = () => {
 	)
 }
 
-const WelcomeScreen = ({ isNew }) => {
+const WelcomeScreen = ({ isNew, createDashboardModal }) => {
 	const [mode, setMode] = useState(1)
-	const slides = [
-		{
-			title: 'Save your notes',
-			subtitle: 'Quickly note ideas, thoughts and reminders.',
-			class: 'gradient-0',
-		},
-		{
-			title: 'Plan your tasks',
-			subtitle: 'Stay organized by managing your daily tasks and to-dos.',
-			class: 'gradient-1',
-		},
-		{
-			title: 'Create shopping list',
-			subtitle: 'Make sure you never forget anything with your shopping lists.',
-			class: 'gradient-2',
-		},
-		{
-			title: 'Share dashboards with others',
-			subtitle: 'Collaborate with team members by sharing your dashboards.',
-			class: 'gradient-4',
-		},
-		{
-			title: 'Save your notes',
-			subtitle: 'Quickly note ideas, thoughts and reminders.',
-			class: 'gradient-0',
-		},
-	]
+	const slides = WELCOME_SLIDES
 
 	useEffect(() => {
 		const interval = setInterval(
@@ -183,9 +166,13 @@ const WelcomeScreen = ({ isNew }) => {
 	return (
 		<div className='d-flex flex-column gap-4 m-5'>
 			<div className='bg-welcome wrapper rounded-4 overflow-hidden d-flex flex-column flex-center shadow p-8'>
-				<div className='max-w-95 bg-dark-transparent text-white p-8 rounded-4 m-10 fs-xl'>
+				<div className='max-w-95 bg-dark-transparent text-white p-8 rounded-4 m-10 fs-xl d-flex flex-column align-center'>
 					<h1>Organize your life like never before</h1>
-					{isNew && <button className='btn btn-primary w-100 mt-4'>Create your first dashboard</button>}
+					{isNew && (
+						<button className='btn btn-primary btn-lg mt-4' onClick={createDashboardModal}>
+							Create your first dashboard
+						</button>
+					)}
 				</div>
 				<div className='carousel w-100 m-8'>
 					<div
