@@ -7,12 +7,15 @@ const ShoppingListSchema = new mongoose.Schema(
 			required: true,
 			trim: true,
 		},
-		list: [
-			{
-				type: mongoose.Schema.Types.ObjectId,
-				ref: 'ShoppingItem',
-			},
-		],
+		list: {
+			type: [
+				{
+					type: mongoose.Schema.Types.ObjectId,
+					ref: 'ShoppingItem',
+				},
+			],
+			default: [],
+		},
 		creatorId: {
 			type: mongoose.Schema.Types.ObjectId,
 			ref: 'User',

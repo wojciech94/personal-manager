@@ -10,26 +10,19 @@ import { Notes } from './components/Notes/Notes'
 import { Folders } from './components/Folders/Folders'
 import { Todos } from './components/Todos/Todos'
 import { Shopping } from './components/Shopping/Shopping'
-import { ShoppingList } from './components/ShoppingList/ShoppingList'
+import { ShoppingLists } from './components/ShoppingLists/ShoppingLists'
 import { Products } from './components/Products/Products'
+import { ShoppingList } from './components/ShoppingList.jsx/ShoppingList'
 
 const Main = () => {
 	const router = createBrowserRouter([
 		{
 			path: '/',
-			element: (
-				<ProtectedRoute>
-					<Home />
-				</ProtectedRoute>
-			),
+			element: <Home />,
 			children: [
 				{
 					path: '/dashboards/:dashboardId',
-					element: (
-						<ProtectedRoute>
-							<Dashboard />
-						</ProtectedRoute>
-					),
+					element: <Dashboard />,
 					children: [
 						{
 							path: 'calendar',
@@ -101,7 +94,29 @@ const Main = () => {
 							children: [
 								{
 									path: 'list',
-									element: <ShoppingList />,
+									element: <ShoppingLists />,
+									children: [
+										{
+											path: ':shoppingListId',
+											element: <ShoppingList />,
+											loader: async ({ params }) => {
+												const { shoppingListId } = params
+												const token = localStorage.getItem('token')
+												const res = await fetch(`${API_URL}shopping-lists/${shoppingListId}`, {
+													headers: {
+														Authorization: `bearer ${token}`,
+													},
+												})
+												if (res.ok) {
+													const data = await res.json()
+													return data
+												} else {
+													const errorMessage = await res.json()
+													console.error(errorMessage.message)
+												}
+											},
+										},
+									],
 								},
 								{
 									path: 'products',

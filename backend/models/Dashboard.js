@@ -33,6 +33,12 @@ const dashboardSchema = new mongoose.Schema({
 			ref: 'TaskGroup',
 		},
 	],
+	shoppingListsIds: [
+		{
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'ShoppingList',
+		},
+	],
 	productsIds: [
 		{
 			type: mongoose.Schema.Types.ObjectId,

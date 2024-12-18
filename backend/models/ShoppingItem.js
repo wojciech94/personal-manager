@@ -13,9 +13,10 @@ const ShoppingItemSchema = mongoose.Schema(
 			default: 1,
 			required: true,
 		},
-		notes: { type: String, trim: true },
+		notes: { type: String, trim: true, default: '' },
 		customUnit: {
 			type: String,
+			default: ''
 		},
 		customPrice: {
 			type: Number,
