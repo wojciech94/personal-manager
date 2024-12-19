@@ -6,7 +6,7 @@ const mongoose = require('mongoose')
 exports.addItem = async (req, res) => {
 	try {
 		const { shoppingListId } = req.params
-		const { quantity, notes, customUnit, customPrice, isPurchased } = req.body
+		const { quantity, notes, customUnit, customPrice, isPurchased, productId } = req.body
 
 		if (!quantity) {
 			return res.status(400).json({ message: 'Quantity is a required filed' })
@@ -22,7 +22,7 @@ exports.addItem = async (req, res) => {
 			return res.status(404).json({ message: 'Canot find shopping list for provided Id' })
 		}
 
-		const shoppingItem = await ShoppingItem.create({ quantity, notes, customUnit, customPrice, isPurchased })
+		const shoppingItem = await ShoppingItem.create({ productId, quantity, notes, customUnit, customPrice, isPurchased })
 
 		shoppingList.list.push(shoppingItem)
 
@@ -41,14 +41,16 @@ exports.getItems = async (req, res) => {
 			return res.status(400).json({ message: 'Missing or invalid shoppingListId' })
 		}
 
-		const shoppingList = ShoppingList.findById(shoppingListId).populate('list')
+		const shoppingList = await ShoppingList.findById(shoppingListId).populate('list')
 		if (!shoppingList) {
 			return res.status(404).json({ message: 'Cannot find shopping list for provided Id' })
 		}
 
-		const shoppingItems = shoppingList.list
+		const shoppingItems = await ShoppingItem.find({ _id: { $in: shoppingList.list } }).populate('productId')
 		res.status(200).json(shoppingItems)
-	} catch (error) {}
+	} catch (error) {
+		res.status(500).json({ message: error.message })
+	}
 }
 
 exports.updateItem = async (req, res) => {
@@ -83,7 +85,7 @@ exports.updateItem = async (req, res) => {
 exports.deleteItem = async (req, res) => {
 	try {
 		const { id, shoppingListId } = req.params
-		if (!id || mongoose.Types.ObjectId.isValid(id)) {
+		if (!id || !mongoose.Types.ObjectId.isValid(id)) {
 			return res.status(400).json({ message: 'Missing or invalid shopping item Id' })
 		}
 

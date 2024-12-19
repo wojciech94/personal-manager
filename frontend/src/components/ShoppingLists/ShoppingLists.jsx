@@ -34,19 +34,16 @@ export function ShoppingLists() {
 		}
 	}
 
-	const menuItems = [
-		{
-			label: 'Add item',
-			action: () =>
-				setActiveModal({
-					name: 'addListItem',
-					data: {
-						action: console.log('addListItem'),
-					},
-					title: 'Add item to list',
-				}),
-		},
-	]
+	const modifyShoppingListsModal = () => {
+		const modifyShoppingListModal = {
+			name: 'modifyShoppingLists',
+			data: {
+				action: fetchShoppingLists,
+			},
+			title: 'Modify shopping lists',
+		}
+		setActiveModal(modifyShoppingListModal)
+	}
 
 	const openCreateShoppingListModal = () => {
 		const modalData = {
@@ -58,6 +55,13 @@ export function ShoppingLists() {
 		}
 		setActiveModal(modalData)
 	}
+
+	const menuItems = [
+		{
+			label: 'Modify shopping lists',
+			action: modifyShoppingListsModal,
+		},
+	]
 
 	return (
 		<>

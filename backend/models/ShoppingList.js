@@ -8,14 +8,11 @@ const ShoppingListSchema = new mongoose.Schema(
 			trim: true,
 		},
 		list: {
-			type: [
-				{
-					type: mongoose.Schema.Types.ObjectId,
-					ref: 'ShoppingItem',
-				},
-			],
+			type: [mongoose.Schema.Types.ObjectId],
+			ref: 'ShoppingItem',
 			default: [],
 		},
+
 		creatorId: {
 			type: mongoose.Schema.Types.ObjectId,
 			ref: 'User',

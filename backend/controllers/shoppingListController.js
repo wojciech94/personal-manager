@@ -1,4 +1,5 @@
 const ShoppingList = require('../models/ShoppingList')
+const ShoppingItem = require('../models/ShoppingItem')
 const Dashboard = require('../models/Dashboard')
 
 const mongoose = require('mongoose')
@@ -64,12 +65,14 @@ exports.getList = async (req, res) => {
 			return res.status(400).json({ message: 'Missing or invalid shopping list Id' })
 		}
 
-		const list = await ShoppingList.findById(id)
-		if (!list) {
+		const shoppingList = await ShoppingList.findById(id)
+		if (!shoppingList) {
 			res.status(404).json({ message: 'Cannot find shopping list for provided Id' })
 		}
 
-		res.status(200).json(list)
+		const shoppingItems = await ShoppingItem.find({ _id: { $in: shoppingList.list } }).populate('productId')
+
+		res.status(200).json({ ...shoppingList.toObject(), list: shoppingItems })
 	} catch (error) {
 		res.status(500).json({ message: error.message })
 	}
@@ -80,7 +83,7 @@ exports.updateList = async (req, res) => {
 		const { id } = req.params
 		const { name, creatorId } = req.body
 
-		if (!id || mongoose.Types.ObjectId.isValid(id)) {
+		if (!id || !mongoose.Types.ObjectId.isValid(id)) {
 			return res.status(400).json({ message: 'Missing or invalid shopping list Id' })
 		}
 
@@ -90,7 +93,7 @@ exports.updateList = async (req, res) => {
 		}
 
 		if (name) shoppingList.name = name
-		if (creatorId || mongoose.Types.ObjectId.isValid(creatorId)) shoppingList.creatorId = creatorId
+		if (creatorId || !mongoose.Types.ObjectId.isValid(creatorId)) shoppingList.creatorId = creatorId
 
 		await shoppingList.save()
 
@@ -108,7 +111,7 @@ exports.deleteList = async (req, res) => {
 			return res.status(400).json({ message: 'Missing or invalid dashboard Id' })
 		}
 
-		if (!id || mongoose.Types.ObjectId.isValid(id)) {
+		if (!id || !mongoose.Types.ObjectId.isValid(id)) {
 			return res.status(400).json({ message: 'Missing or invalid Id' })
 		}
 

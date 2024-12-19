@@ -12,6 +12,8 @@ import { ModalTasksSettingsContent } from './ModalTasksSettingsContent'
 import { ModalAddListItem } from './ModalAddListItem'
 import { ModalAddProduct } from './ModalAddProduct'
 import { ModalCreateShoppingList } from './ModalCreateShoppingList'
+import { ModalModifyShoppingLists } from './ModalModifyShoppingLists'
+import { ModalAddShoppingItem } from './ModalAddShoppingItem'
 
 export const Modal = ({ modalName, modalTitle, modalData }) => {
 	const [, setActiveModal] = useContext(ModalContext)
@@ -49,6 +51,12 @@ export const Modal = ({ modalName, modalTitle, modalData }) => {
 			break
 		case 'createShoppingList':
 			modalContent = <ModalCreateShoppingList modalData={modalData} />
+			break
+		case 'modifyShoppingLists':
+			modalContent = <ModalModifyShoppingLists modalData={modalData} />
+			break
+		case 'addShoppingItem':
+			modalContent = <ModalAddShoppingItem modalData={modalData} />
 			break
 		case 'addProduct':
 			modalContent = <ModalAddProduct modalData={modalData} />
