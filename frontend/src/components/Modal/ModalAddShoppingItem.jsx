@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
-import { useNavigate, useParams, useContext } from 'react-router-dom'
+import { useState, useEffect, useContext } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
 import { ModalContext } from '../../contexts/ModalContext'
 
@@ -55,7 +55,7 @@ export function ModalAddShoppingItem() {
 				const data = await res.json()
 				if (data) {
 					setActiveModal(null)
-					navigate(`.`, { replace: true })
+					navigate(window.location.pathname, { replace: true })
 				}
 			} else {
 				const errorData = await res.json()

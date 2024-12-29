@@ -58,11 +58,11 @@ exports.updateItem = async (req, res) => {
 		const { id } = req.params
 		const { quantity, notes, customUnit, customPrice, isPurchased } = req.body
 
-		if (!id || mongoose.Types.ObjectId.isValid(id)) {
+		if (!id || !mongoose.Types.ObjectId.isValid(id)) {
 			return res.status(400).json({ message: 'Missing or invalid shopping item Id' })
 		}
 
-		const shoppingItem = ShoppingItem.findById(id)
+		const shoppingItem = await ShoppingItem.findById(id)
 
 		if (!shoppingItem) {
 			return res.status(404).json({ message: 'Cannot find shopping item for provided Id' })
