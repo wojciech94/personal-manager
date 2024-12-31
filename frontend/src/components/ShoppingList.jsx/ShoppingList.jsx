@@ -2,6 +2,7 @@ import { useContext } from 'react'
 import { Plus } from 'react-feather'
 import { useLoaderData, useParams, useRevalidator } from 'react-router-dom'
 import { API_URL } from '../../config'
+import { Alert } from '../Alert/Alert'
 import { ModalContext } from '../../contexts/ModalContext'
 import { ShoppingProduct } from '../ShoppingProduct/ShoppingProduct'
 
@@ -29,7 +30,7 @@ export function ShoppingList() {
 			console.warning('Token not available')
 			return
 		}
-		const res = await fetch(`${API_URL}shopping-items/${id}`, {
+		const res = await fetch(`${API_URL}shoppingLists/${shoppingListId}/shopping-items/${id}`, {
 			method: 'PATCH',
 			headers: {
 				Authorization: `Bearer ${token}`,
@@ -63,9 +64,21 @@ export function ShoppingList() {
 		}
 	}
 
+	const calculateSum = () => {
+		if (!data || !Array.isArray(data.list)) {
+			return 0
+		}
+
+		return data.list
+			.reduce((acc, currentVal) => {
+				return acc + currentVal.customPrice * currentVal.quantity
+			}, 0)
+			.toFixed(2)
+	}
+
 	return (
 		<>
-			{data && (
+			{data ? (
 				<>
 					<div className='mt-4 mb-4 d-flex gap-2 justify-between align-center'>
 						<div className='d-flex flex-column gap-1'>
@@ -80,13 +93,13 @@ export function ShoppingList() {
 						</button>
 					</div>
 					<div className='mx-n4 mb-n4'>
-						<table cellSpacing={0}>
+						<table cellSpacing={0} className='overflow-hidden rounded-bottom-3'>
 							<thead className='bg-lighter'>
 								<tr className='border-top border-bottom border-light'>
 									<th style={{ width: '30px' }}></th>
 									<th>Name</th>
 									<th>{'Quantity [unit]'}</th>
-									<th>Price</th>
+									<th>Price per unit</th>
 									<th>Notes</th>
 									<th style={{ width: '85px' }}></th>
 								</tr>
@@ -96,15 +109,33 @@ export function ShoppingList() {
 									data.list.length > 0 &&
 									data.list.map(p => (
 										<ShoppingProduct
+											key={p._id}
 											data={p}
 											onListItemUpdate={handleUpdateListItem}
 											onListItemDelete={handleDeleteListItem}
 										/>
 									))}
 							</tbody>
+							{data.list && data.list.length > 0 && (
+								<tfoot>
+									<tr className='bg-lighter border-top border-light text-bold'>
+										<td colSpan={2} className='px-2'>
+											Summary:
+										</td>
+										<td className='text-end'>Products Value:</td>
+										<td colSpan={3}>{calculateSum()}</td>
+									</tr>
+								</tfoot>
+							)}
 						</table>
 					</div>
 				</>
+			) : (
+				<Alert>
+					<div>
+						Your shopping list is still empty. Click <button className='btn btn-link link'>here</button>
+					</div>
+				</Alert>
 			)}
 		</>
 	)

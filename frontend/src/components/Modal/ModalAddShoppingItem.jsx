@@ -64,6 +64,13 @@ export function ModalAddShoppingItem() {
 		}
 	}
 
+	const handleSelectItem = id => {
+		const activeProduct = products.find(p => p._id === id)
+		setActiveProductId(id || null)
+		setUnitValue(activeProduct.unit || '')
+		setPriceValue(activeProduct.price || 0)
+	}
+
 	useEffect(() => {
 		fetchProducts()
 	}, [])
@@ -75,7 +82,7 @@ export function ModalAddShoppingItem() {
 					{products && products.length > 0 && (
 						<div className='d-flex flex-column gap-1'>
 							<div>Product</div>
-							<select name='productsSelect' id='productsSelect' onChange={e => setActiveProductId(e.target.value)}>
+							<select name='productsSelect' id='productsSelect' onChange={e => handleSelectItem(e.target.value)}>
 								{products.map(p => (
 									<option value={p._id}>{p.name}</option>
 								))}

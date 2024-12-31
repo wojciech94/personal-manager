@@ -1089,6 +1089,10 @@ tbody tr.border-bottom:last-child {
 	text-align: start;
 }
 
+.text-end {
+	text-align: end;
+}
+
 .text-fill {
 	width: max-content;
 	max-width: 100%;

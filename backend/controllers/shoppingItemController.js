@@ -55,7 +55,7 @@ exports.getItems = async (req, res) => {
 
 exports.updateItem = async (req, res) => {
 	try {
-		const { id } = req.params
+		const { shoppingListId, id } = req.params
 		const { quantity, notes, customUnit, customPrice, isPurchased } = req.body
 
 		if (!id || !mongoose.Types.ObjectId.isValid(id)) {
@@ -68,6 +68,12 @@ exports.updateItem = async (req, res) => {
 			return res.status(404).json({ message: 'Cannot find shopping item for provided Id' })
 		}
 
+		const shoppingList = await ShoppingList.findById(shoppingListId)
+
+		if (!shoppingList) {
+			return res.status(404).json({ message: 'Cannot find shopping list for provided Id' })
+		}
+
 		if (quantity) shoppingItem.quantity = quantity
 		if (notes) shoppingItem.notes = notes
 		if (customUnit) shoppingItem.customUnit = customUnit
@@ -75,6 +81,8 @@ exports.updateItem = async (req, res) => {
 		if (typeof isPurchased !== 'undefined') shoppingItem.isPurchased = isPurchased
 
 		await shoppingItem.save()
+		shoppingList.updatedAt = new Date()
+		await shoppingList.save()
 
 		res.status(200).json(shoppingItem)
 	} catch (error) {

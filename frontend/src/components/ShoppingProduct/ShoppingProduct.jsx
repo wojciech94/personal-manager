@@ -48,7 +48,7 @@ export function ShoppingProduct({ data, onListItemUpdate, onListItemDelete }) {
 	return (
 		<>
 			{data && (
-				<tr className='border-bottom border-light'>
+				<tr className={`border-bottom border-light ${isPurchasedValue ? 'text-gray' : ''}`}>
 					<td className='text-center'>
 						<input
 							type='checkbox'
