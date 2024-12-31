@@ -18,10 +18,6 @@ export const Home = () => {
 	const isExactMatch = useMatch('/')
 
 	useEffect(() => {
-		fetchUserDashboards()
-	}, [location.pathname])
-
-	useEffect(() => {
 		let tokenTimeout
 		const checkToken = () => {
 			const token = localStorage.getItem('token')
@@ -32,6 +28,8 @@ export const Home = () => {
 				}
 				tokenTimeout = setTimeout(checkToken, remainingTime)
 				console.log(`Remaining time: ${Math.floor(remainingTime / 60000)} min`)
+			} else {
+				navigate('/login')
 			}
 		}
 
@@ -40,8 +38,16 @@ export const Home = () => {
 		return () => clearTimeout(tokenTimeout)
 	}, [])
 
+	useEffect(() => {
+		fetchUserDashboards()
+	}, [location.pathname])
+
 	const fetchUserDashboards = async () => {
 		const token = localStorage.getItem('token')
+		if (!token) {
+			console.warn('Token not provided. Please log in before')
+			return
+		}
 
 		const response = await fetch(`${API_URL}dashboards`, {
 			method: 'GET',
