@@ -78,7 +78,7 @@ export function ShoppingLists() {
 				<>
 					<div className='bg-light d-flex gap-3 mx-n4 mt-4 border-top border-bottom px-4 py-2'>
 						{shoppingLists.map(l => (
-							<NavLink to={`${l._id}`} className='btn btn-link link'>
+							<NavLink key={l._id} to={`${l._id}`} className='btn btn-link link'>
 								{l.name}
 							</NavLink>
 						))}
