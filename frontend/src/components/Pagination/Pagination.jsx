@@ -1,4 +1,4 @@
-export function Pagination({ currentPage, totalPages, nextPage, prevPage, goToPage }) {
+export function Pagination({ currentPage, totalPages, nextPage, prevPage, goToPage, onSetItemsPerPage }) {
 	const prev2Button = currentPage > 2
 	const prevCondition = currentPage > 1
 	const nextCondition = currentPage < totalPages
@@ -47,7 +47,19 @@ export function Pagination({ currentPage, totalPages, nextPage, prevPage, goToPa
 						</>
 					)}
 				</div>
-                <div></div>
+				<div className='d-flex flex-column gap-1 text-end'>
+					<div>Items per page</div>
+					<select
+						className='w-50px'
+						name='itemsSelect'
+						id='itemsSelect'
+						onChange={e => onSetItemsPerPage(e.target.value)}>
+						<option value='5'>5</option>
+						<option value='10'>10</option>
+						<option value='20'>20</option>
+						<option value='50'>50</option>
+					</select>
+				</div>
 			</div>
 		</>
 	)

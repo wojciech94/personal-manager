@@ -7,17 +7,17 @@ export function usePagination(items, itemsPerPage) {
 		if (currentPage > Math.ceil(items.length / itemsPerPage)) {
 			setCurrentPage(1)
 		}
-	}, [items])
+	}, [items, itemsPerPage])
 
 	const totalPages = useMemo(() => {
 		return Math.ceil(items.length / itemsPerPage)
-	}, [items])
+	}, [items, itemsPerPage])
 
 	const currentItems = useMemo(() => {
 		const start = (currentPage - 1) * itemsPerPage
 		const end = start + itemsPerPage
 		return items.slice(start, end)
-	}, [currentPage, items])
+	}, [currentPage, items, itemsPerPage])
 
 	const nextPage = () => setCurrentPage(prev => Math.min(prev + 1, totalPages))
 	const prevPage = () => setCurrentPage(prev => Math.max(prev - 1, 1))
