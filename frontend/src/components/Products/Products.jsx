@@ -81,7 +81,13 @@ export function Products() {
 							value={selectedCategory}
 							onChange={e => handleSelectCategory(e.target.value)}>
 							<option value=''>All categories</option>
-							{CATEGORIES && CATEGORIES.length > 0 && CATEGORIES.map(c => <option value={c.value}>{c.name}</option>)}
+							{CATEGORIES &&
+								CATEGORIES.length > 0 &&
+								CATEGORIES.map(c => (
+									<option key={c.value} value={c.value}>
+										{c.name}
+									</option>
+								))}
 						</select>
 					</div>
 				</div>

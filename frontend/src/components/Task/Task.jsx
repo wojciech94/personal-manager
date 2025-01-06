@@ -25,7 +25,7 @@ export function Task({ task, fetchTasks, tasksSettings }) {
 	const updateTask = async action => {
 		let updatedTask
 		switch (action) {
-			case 'toggle':
+			case 'toggle': {
 				let dataParams
 				if (!taskData.is_done) {
 					const now = new Date()
@@ -37,12 +37,14 @@ export function Task({ task, fetchTasks, tasksSettings }) {
 				}
 				updatedTask = { ...taskData, is_done: !taskData.is_done, ...dataParams }
 				break
+			}
 			case 'delete':
 				break
 			case 'update':
-			default:
+			default: {
 				updatedTask = { ...taskData, content: contentValue, priority: priorityValue, expired_at: expirationValue }
 				break
+			}
 		}
 		const config = {
 			method: action === 'delete' ? 'DELETE' : 'PATCH',

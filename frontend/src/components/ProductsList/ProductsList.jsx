@@ -6,10 +6,6 @@ import { CATEGORIES } from '../../constants/appConstants'
 import { Alert } from '../Alert/Alert'
 
 export function ProductsList({ products }) {
-	if (!products) {
-		return
-	}
-
 	const [productsData, setProductsData] = useState([])
 	const { dashboardId } = useParams()
 	const [editedProduct, setEditedProduct] = useState(-1)
@@ -94,6 +90,10 @@ export function ProductsList({ products }) {
 		}
 	}
 
+	if (!products) {
+		return
+	}
+
 	return (
 		<div className='products-list mx-n4'>
 			{productsData && productsData.length > 0 ? (
@@ -113,7 +113,7 @@ export function ProductsList({ products }) {
 							</thead>
 							<tbody>
 								{productsData.map(p => (
-									<tr className='product-row'>
+									<tr key={p._id} className='product-row'>
 										<td>
 											<button
 												className='btn btn-icon'
@@ -138,7 +138,7 @@ export function ProductsList({ products }) {
 														value={categoryValue}
 														onChange={e => setCategoryValue(e.target.value)}>
 														{CATEGORIES.map(c => (
-															<option value={c.value}>{c.name}</option>
+															<option key={c.value} value={c.value}>{c.name}</option>
 														))}
 													</select>
 												</td>

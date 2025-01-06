@@ -103,7 +103,7 @@ export function ModalModifyShoppingLists({ modalData }) {
 			{shoppingLists && shoppingLists.length > 0 && (
 				<div className='card-content d-flex flex-column gap-2'>
 					{shoppingLists.map(l => (
-						<div className='d-flex gap-2 justify-between align-center'>
+						<div key={l._id} className='d-flex gap-2 justify-between align-center'>
 							{editedListId && editedListId === l._id ? (
 								<input
 									type='text'

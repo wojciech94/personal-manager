@@ -84,7 +84,9 @@ export function ModalAddShoppingItem() {
 							<div>Product</div>
 							<select name='productsSelect' id='productsSelect' onChange={e => handleSelectItem(e.target.value)}>
 								{products.map(p => (
-									<option value={p._id}>{p.name}</option>
+									<option key={p._id} value={p._id}>
+										{p.name}
+									</option>
 								))}
 							</select>
 						</div>
