@@ -3,19 +3,26 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
 import { ModalContext } from '../../contexts/ModalContext'
 
-export function ModalAddShoppingItem() {
-	const [products, setProducts] = useState([])
-	const [activeProductId, setActiveProductId] = useState('')
+export function ModalAddShoppingItem(): JSX.Element {
+	const [products, setProducts] = useState<IProduct[]>([])
+	const [activeProductId, setActiveProductId] = useState<string | null>(null)
 	const { dashboardId, shoppingListId } = useParams()
-	const [unitValue, setUnitValue] = useState('')
-	const [priceValue, setPriceValue] = useState(0)
-	const [quantityValue, setQuantityValue] = useState(0)
-	const [notesValue, setNotesValue] = useState('')
-	const token = localStorage.getItem('token')
+	const [unitValue, setUnitValue] = useState<string>('')
+	const [priceValue, setPriceValue] = useState<number>(0)
+	const [quantityValue, setQuantityValue] = useState<number>(0)
+	const [notesValue, setNotesValue] = useState<string>('')
+	const token: string | null = localStorage.getItem('token')
 	const [, setActiveModal] = useContext(ModalContext)
 	const navigate = useNavigate()
 
-	const fetchProducts = async () => {
+	interface IProduct {
+		_id: string
+		unit: string
+		price: number
+		name: string
+	}
+
+	const fetchProducts = async (): Promise<void> => {
 		if (token) {
 			const res = await fetch(`${API_URL}dashboards/${dashboardId}/products`, {
 				headers: {
@@ -35,7 +42,7 @@ export function ModalAddShoppingItem() {
 		}
 	}
 
-	const addShoppingItem = async () => {
+	const addShoppingItem = async (): Promise<void> => {
 		if (token) {
 			const res = await fetch(`${API_URL}shoppingLists/${shoppingListId}/shopping-items`, {
 				method: 'POST',
@@ -64,11 +71,11 @@ export function ModalAddShoppingItem() {
 		}
 	}
 
-	const handleSelectItem = id => {
+	const handleSelectItem = (id: string): void => {
 		const activeProduct = products.find(p => p._id === id)
 		setActiveProductId(id || null)
-		setUnitValue(activeProduct.unit || '')
-		setPriceValue(activeProduct.price || 0)
+		setUnitValue(activeProduct?.unit || '')
+		setPriceValue(activeProduct?.price || 0)
 	}
 
 	useEffect(() => {
@@ -93,7 +100,7 @@ export function ModalAddShoppingItem() {
 					)}
 					<div className='d-flex flex-column gap-1'>
 						<div>Quantity</div>
-						<input type='text' value={quantityValue} onChange={e => setQuantityValue(e.target.value)} />
+						<input type='number' value={quantityValue} onChange={e => setQuantityValue(Number(e.target.value))} />
 					</div>
 					<div className='d-flex flex-column gap-1'>
 						<div>Unit</div>
@@ -101,11 +108,11 @@ export function ModalAddShoppingItem() {
 					</div>
 					<div className='d-flex flex-column gap-1'>
 						<div>Price</div>
-						<input type='text' value={priceValue} onChange={e => setPriceValue(e.target.value)} />
+						<input type='number' value={priceValue} onChange={e => setPriceValue(Number(e.target.value))} />
 					</div>
 					<div className='d-flex flex-column flex-1 gap-1'>
 						<div>Notes</div>
-						<textarea type='text' value={notesValue} onChange={e => setNotesValue(e.target.value)} />
+						<textarea value={notesValue} onChange={e => setNotesValue(e.target.value)} />
 					</div>
 				</div>
 			</div>

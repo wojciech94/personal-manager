@@ -14,58 +14,59 @@ import { ModalAddProduct } from './ModalAddProduct'
 import { ModalCreateShoppingList } from './ModalCreateShoppingList'
 import { ModalModifyShoppingLists } from './ModalModifyShoppingLists'
 import { ModalAddShoppingItem } from './ModalAddShoppingItem'
+import { ModalDataProps } from './types'
 
-export const Modal = ({ modalName, modalTitle, modalData }) => {
-	const [, setActiveModal] = useContext(ModalContext)
+export const Modal: React.FC<ModalDataProps> = ({ name, title, data }): JSX.Element => {
+	const { setActiveModal } = useContext(ModalContext) ?? {}
 
 	let modalContent = null
 
-	switch (modalName) {
+	switch (name) {
 		case 'createDashboard':
-			modalContent = <ModalDashboardContent modalData={modalData} />
+			modalContent = <ModalDashboardContent modalData={data} />
 			break
 		case 'addUser':
-			modalContent = <ModalAddUserContent modalData={modalData} />
+			modalContent = <ModalAddUserContent modalData={data} />
 			break
 		case 'addNoteCategory':
 			modalContent = <ModalAddCategoryContent />
 			break
 		case 'createNote':
 		case 'editNote':
-			modalContent = <ModalNoteContent modalData={modalData} />
+			modalContent = <ModalNoteContent modalData={data} />
 			break
 		case 'editFolder':
-			modalContent = <ModalFolderContent modalData={modalData} />
+			modalContent = <ModalFolderContent modalData={data} />
 			break
 		case 'modifyTodoGroup':
-			modalContent = <ModalModifyTodoGroup modalData={modalData} />
+			modalContent = <ModalModifyTodoGroup modalData={data} />
 			break
 		case 'addTask':
-			modalContent = <ModalAddTask modalData={modalData} />
+			modalContent = <ModalAddTask modalData={data} />
 			break
 		case 'tasksSettings':
-			modalContent = <ModalTasksSettingsContent modalData={modalData} />
+			modalContent = <ModalTasksSettingsContent modalData={data} />
 			break
 		case 'addListItem':
-			modalContent = <ModalAddListItem modalData={modalData} />
+			modalContent = <ModalAddListItem modalData={data} />
 			break
 		case 'createShoppingList':
-			modalContent = <ModalCreateShoppingList modalData={modalData} />
+			modalContent = <ModalCreateShoppingList modalData={data} />
 			break
 		case 'modifyShoppingLists':
-			modalContent = <ModalModifyShoppingLists modalData={modalData} />
+			modalContent = <ModalModifyShoppingLists modalData={data} />
 			break
 		case 'addShoppingItem':
-			modalContent = <ModalAddShoppingItem modalData={modalData} />
+			modalContent = <ModalAddShoppingItem />
 			break
 		case 'addProduct':
-			modalContent = <ModalAddProduct modalData={modalData} />
+			modalContent = <ModalAddProduct modalData={data} />
 			break
 		default:
 			modalContent = <>Alert</>
 	}
 
-	if (!modalName) {
+	if (!name) {
 		return <></>
 	}
 
@@ -73,8 +74,8 @@ export const Modal = ({ modalName, modalTitle, modalData }) => {
 		<div className='modal-backdrop'>
 			<div className='modal'>
 				<div className='d-flex gap-4 justify-end p-4'>
-					{modalTitle && <div className='flex-1 modal-title p-2'>{modalTitle}</div>}
-					<button onClick={() => setActiveModal(null)}>
+					{title && <div className='flex-1 modal-title p-2'>{title}</div>}
+					<button onClick={() => setActiveModal?.(null)}>
 						<X size={20} />
 					</button>
 				</div>

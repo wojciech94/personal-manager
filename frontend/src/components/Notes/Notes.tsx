@@ -7,7 +7,7 @@ import { Plus } from 'react-feather'
 import { debounce } from '../../utils/helpers'
 import { ToggleBox } from '../ToggleBox/ToggleBox'
 import { Note } from '../Note/Note'
-import { ExpandableMenu } from '../ExpandableMenu.jsx/ExpandableMenu'
+import { ExpandableMenu } from '../ExpandableMenu/ExpandableMenu'
 import { Alert } from '../Alert/Alert'
 
 export const Notes = () => {

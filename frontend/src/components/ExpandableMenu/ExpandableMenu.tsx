@@ -1,25 +1,36 @@
 import { useState, useRef, useEffect } from 'react'
 import { MoreVertical } from 'react-feather'
 import styles from './ExpandableMenu.module.css'
-export const ExpandableMenu = ({ title, items }) => {
+
+interface ItemsProps {
+	label: string
+	action: () => void
+}
+
+interface Props {
+	title: string
+	items: ItemsProps[]
+}
+
+export const ExpandableMenu: React.FC<Props> = ({ title, items }): JSX.Element => {
 	const [isExpanded, setIsExpanded] = useState(false)
-	const expandableRef = useRef(null)
+	const expandableRef = useRef<HTMLDivElement>(null)
 
 	useEffect(() => {
 		document.addEventListener('mousedown', handleClickOutside)
 
 		return () => {
-			document.removeEventListener('mouseDown', handleClickOutside)
+			document.removeEventListener('mousedown', handleClickOutside)
 		}
 	}, [])
 
-	const handleClickOutside = e => {
-		if (expandableRef.current && !expandableRef.current.contains(e.target)) {
+	const handleClickOutside = (e: MouseEvent) => {
+		if (expandableRef.current && !expandableRef.current.contains(e.target as Node)) {
 			setIsExpanded(false)
 		}
 	}
 
-	const handleAction = action => {
+	const handleAction = (action?: () => void): void => {
 		if (action) {
 			setIsExpanded(false)
 			action()

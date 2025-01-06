@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react'
 import { Settings } from 'react-feather'
 import { NavLink, Outlet, useLoaderData, useParams } from 'react-router-dom'
-import {API_URL} from '../../config'
+import { API_URL } from '../../config'
 import { ModalContext } from '../../contexts/ModalContext'
 
 export const Folders = () => {

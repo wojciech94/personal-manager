@@ -9,16 +9,17 @@ import { FetchDashboardsContext } from '../../contexts/FetchDashboardsContext'
 import { Plus } from 'react-feather'
 import { getTokenExpiration } from '../../utils/helpers'
 import { WELCOME_SLIDES } from '../../constants/appConstants'
+import { ModalDataProps } from '../Modal/types'
 
 export const Home = () => {
 	const [dashboards, setDashboards] = useState([])
-	const [activeModal, setActiveModal] = useState(false)
+	const [activeModal, setActiveModal] = useState<ModalDataProps | null>(null)
 	const navigate = useNavigate()
 	const location = useLocation()
 	const isExactMatch = useMatch('/')
 
 	useEffect(() => {
-		let tokenTimeout
+		let tokenTimeout: number | undefined
 		const checkToken = () => {
 			const token = localStorage.getItem('token')
 			if (token) {
@@ -65,7 +66,7 @@ export const Home = () => {
 		}
 	}
 
-	const createDashboard = async dashboardName => {
+	const createDashboard = async (dashboardName: string | undefined): Promise<void> => {
 		const response = await fetch(`${API_URL}dashboards`, {
 			method: 'POST',
 			headers: {
@@ -86,7 +87,7 @@ export const Home = () => {
 		}
 	}
 
-	const createDashboardModalData = {
+	const createDashboardModalData: ModalDataProps = {
 		name: 'createDashboard',
 		data: {
 			action: createDashboard,
@@ -117,8 +118,8 @@ export const Home = () => {
 	]
 
 	return (
-		<ModalContext.Provider value={[activeModal, setActiveModal]}>
-			<FetchDashboardsContext.Provider value={[fetchUserDashboards]}>
+		<ModalContext.Provider value={{ activeModal, setActiveModal }}>
+			<FetchDashboardsContext.Provider value={{ fetchUserDashboards }}>
 				<div className='d-flex flex-column'>
 					<div className='topbar'>
 						<Link to={'/'}>
@@ -139,9 +140,7 @@ export const Home = () => {
 							<Outlet />
 						)}
 					</div>
-					{activeModal && (
-						<Modal modalName={activeModal.name} modalTitle={activeModal.title} modalData={activeModal.data} />
-					)}
+					{activeModal && <Modal name={activeModal.name} title={activeModal.title} data={activeModal.data} />}
 				</div>
 			</FetchDashboardsContext.Provider>
 		</ModalContext.Provider>

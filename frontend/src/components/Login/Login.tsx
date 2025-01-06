@@ -1,10 +1,10 @@
-import { useState } from 'react'
+import { FormEvent, useState } from 'react'
 import { Eye, EyeOff } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
-import {API_URL} from '../../config'
+import { API_URL } from '../../config'
 import { Card } from '../Card/Card'
 
-export const Login = () => {
+export const Login: React.FC = (): JSX.Element => {
 	const [username, setUsername] = useState('')
 	const [password, setPassword] = useState('')
 	const [showPassword, setShowPassword] = useState(false)
@@ -13,7 +13,7 @@ export const Login = () => {
 
 	const navigate = useNavigate()
 
-	const handleSubmit = async e => {
+	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
 
 		try {
@@ -44,7 +44,9 @@ export const Login = () => {
 			setUsername('')
 			setPassword('')
 		} catch (error) {
-			setMessage(error.message)
+			if (error instanceof Error) {
+				setMessage(error.message)
+			}
 		}
 	}
 

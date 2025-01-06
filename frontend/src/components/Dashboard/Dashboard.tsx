@@ -137,8 +137,8 @@ export const Dashboard = () => {
 }
 
 const DashboardDetails = ({ dashboard, editMode, getDetails, removeUser }) => {
-	const [, setActiveModal] = useContext(ModalContext)
-	const [fetchUserDashboards] = useContext(FetchDashboardsContext)
+	const { setActiveModal } = useContext(ModalContext)
+	const { fetchUserDashboards } = useContext(FetchDashboardsContext)
 	const [nameValue, setNameValue] = useState('')
 	const [selectedOwner, setSelectedOwner] = useState('')
 

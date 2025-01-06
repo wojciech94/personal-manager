@@ -3,7 +3,7 @@ import { Plus } from 'react-feather'
 import { NavLink, Outlet, useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
 import { ModalContext } from '../../contexts/ModalContext'
-import { ExpandableMenu } from '../ExpandableMenu.jsx/ExpandableMenu'
+import { ExpandableMenu } from '../ExpandableMenu/ExpandableMenu'
 
 export function ShoppingLists() {
 	const [, setActiveModal] = useContext(ModalContext)

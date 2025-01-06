@@ -1,6 +1,15 @@
 import { NavLink } from 'react-router-dom'
 
-export const Dashboards = ({ dashboards }) => {
+interface DashboardsProps {
+	name: string
+	_id: string
+}
+
+interface Props {
+	dashboards: DashboardsProps[]
+}
+
+export const Dashboards: React.FC<Props> = ({ dashboards }): JSX.Element => {
 	return (
 		<nav className='d-flex flex-1 gap-5 justify-center align-center'>
 			{dashboards &&

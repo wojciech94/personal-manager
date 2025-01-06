@@ -4,11 +4,28 @@ import { useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
 import { ModalContext } from '../../contexts/ModalContext'
 
-export const Note = ({ note, updateNote, fetchNotes }) => {
-	const [, setActiveModal] = useContext(ModalContext)
+interface NoteProps {
+	_id: string
+	title: string
+	category: string
+	is_favourite: boolean
+	tags: string[]
+	content: string
+	updated_at: string
+	expired_at: string
+}
+
+interface Props {
+	note: NoteProps
+	updateNote: () => void
+	fetchNotes: () => void
+}
+
+export const Note: React.FC<Props> = ({ note, updateNote, fetchNotes }): JSX.Element => {
+	const { setActiveModal } = useContext(ModalContext) ?? {}
 	const { dashboardId } = useParams()
 
-	const removeNote = async id => {
+	const removeNote = async (id: string): Promise<void> => {
 		if (id) {
 			const response = await fetch(`${API_URL}dashboards/${dashboardId}/notes/remove`, {
 				method: 'DELETE',
@@ -32,7 +49,7 @@ export const Note = ({ note, updateNote, fetchNotes }) => {
 		}
 	}
 
-	const editModal = id => {
+	const editModal = (id: string) => {
 		return {
 			name: 'editNote',
 			data: {
@@ -52,7 +69,7 @@ export const Note = ({ note, updateNote, fetchNotes }) => {
 					<div className='badge'>{note.category}</div>
 				</div>
 				<div className='d-flex gap-2 align-center'>
-					<button className='btn btn-icon btn-primary' onClick={() => setActiveModal(() => editModal(note._id))}>
+					<button className='btn btn-icon btn-primary' onClick={() => setActiveModal?.(() => editModal(note._id))}>
 						<Edit size={16} />
 					</button>
 					<button className='btn btn-icon btn-light' onClick={() => removeNote(note._id)}>

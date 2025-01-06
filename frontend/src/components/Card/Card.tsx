@@ -1,4 +1,33 @@
-export const Card = ({ title, footer, children, headerComponent, className, contentClass }) => {
+interface Props {
+	title?: string
+	footer?: React.ReactNode
+	children?: React.ReactNode
+	headerComponent?: React.ReactNode
+	className?: string
+	contentClass?: string
+}
+
+interface HeaderDataProps {
+	label: string
+	btnClass?: string
+	icon?: React.ReactNode
+	action: () => void
+}
+
+interface HeaderProps {
+	title: string
+	data: HeaderDataProps[]
+	className: string
+}
+
+export const Card: React.FC<Props> = ({
+	title,
+	footer,
+	children,
+	headerComponent,
+	className,
+	contentClass,
+}): JSX.Element => {
 	return (
 		<div className={`card ${className ? className : ''}`}>
 			{headerComponent && headerComponent}
@@ -9,7 +38,7 @@ export const Card = ({ title, footer, children, headerComponent, className, cont
 	)
 }
 
-export const CardHeader = ({ title, data, className }) => {
+export const CardHeader: React.FC<HeaderProps> = ({ title, data, className }): JSX.Element => {
 	return (
 		<div className={`card-header ${className ? className : ''}`}>
 			<div className='card-title flex-1'>{title}</div>

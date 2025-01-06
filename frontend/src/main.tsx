@@ -1,10 +1,9 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { createBrowserRouter, RouterProvider, LoaderFunctionArgs } from 'react-router-dom'
 import ReactDOM from 'react-dom/client'
 import { API_URL } from './config'
 import { Login } from './components/Login/Login'
-import { ProtectedRoute } from './components/ProtectedRoute/ProtectedRoute.jsx'
-import { Home } from './components/Home/Home.jsx'
-import { Dashboard } from './components/Dashboard/Dashboard.jsx'
+import { Home } from './components/Home/Home'
+import { Dashboard } from './components/Dashboard/Dashboard'
 import './App.css'
 import { Notes } from './components/Notes/Notes'
 import { Folders } from './components/Folders/Folders'
@@ -12,7 +11,7 @@ import { Todos } from './components/Todos/Todos'
 import { Shopping } from './components/Shopping/Shopping'
 import { ShoppingLists } from './components/ShoppingLists/ShoppingLists'
 import { Products } from './components/Products/Products'
-import { ShoppingList } from './components/ShoppingList.jsx/ShoppingList'
+import { ShoppingList } from './components/ShoppingList/ShoppingList'
 
 const Main = () => {
 	const router = createBrowserRouter([
@@ -35,7 +34,7 @@ const Main = () => {
 						{
 							path: 'folders',
 							element: <Folders />,
-							loader: async ({ params }) => {
+							loader: async ({ params }: LoaderFunctionArgs) => {
 								const { dashboardId } = params
 								const token = localStorage.getItem('token')
 
@@ -63,7 +62,7 @@ const Main = () => {
 								{
 									path: 'notes/:folderId?',
 									element: <Notes />,
-									loader: async ({ params }) => {
+									loader: async ({ params }: LoaderFunctionArgs) => {
 										const { dashboardId, folderId } = params
 										const token = localStorage.getItem('token')
 
@@ -99,7 +98,7 @@ const Main = () => {
 										{
 											path: ':shoppingListId',
 											element: <ShoppingList />,
-											loader: async ({ params }) => {
+											loader: async ({ params }: LoaderFunctionArgs) => {
 												const { shoppingListId } = params
 												const token = localStorage.getItem('token')
 												const res = await fetch(`${API_URL}shopping-lists/${shoppingListId}`, {
@@ -145,4 +144,9 @@ const Main = () => {
 	return <RouterProvider router={router} />
 }
 
-ReactDOM.createRoot(document.getElementById('root')).render(<Main />)
+const rootElement = document.getElementById('root')
+if (rootElement) {
+	ReactDOM.createRoot(rootElement).render(<Main />)
+} else {
+	console.error('Element with id "root" not found')
+}
