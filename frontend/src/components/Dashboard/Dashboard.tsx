@@ -5,13 +5,33 @@ import { Card, CardHeader } from '../Card/Card'
 import { useEffect, useState } from 'react'
 import { FormRow } from '../FormRow/FormRow'
 import { Check, Plus, Repeat, Trash2, User, X } from 'react-feather'
-import { useContext } from 'react'
-import { ModalContext } from '../../contexts/ModalContext'
-import { FetchDashboardsContext } from '../../contexts/FetchDashboardsContext'
+import { useModalContext } from '../../contexts/ModalContext'
+import { useFetchDashboardsContext } from '../../contexts/FetchDashboardsContext'
+
+type DashboardDetails = {
+	dashboard: DashboardType | null
+	editMode: boolean
+	getDetails: () => Promise<void>
+	removeUser: (id: string | null) => Promise<void>
+}
+
+type User = {
+	_id: string
+	name: string
+}
+
+type DashboardType = {
+	_id: string
+	name: string
+	isOwner: boolean
+	creatorId: User
+	userIds: User[]
+	created_at: string
+}
 
 export const Dashboard = () => {
 	const { dashboardId } = useParams()
-	const [dashboard, setDashboard] = useState(null)
+	const [dashboard, setDashboard] = useState<DashboardType | null>(null)
 	const [editMode, setEditMode] = useState(false)
 	const navigate = useNavigate()
 	const isExactMatch = useMatch('/dashboards/:dashboardId')
@@ -25,8 +45,8 @@ export const Dashboard = () => {
 		})
 
 		if (!res.ok) {
-			const error = await res.json()
-			console.error('Server error', error)
+			const error: { message: string } = await res.json()
+			console.error(error.message)
 		} else {
 			const data = await res.json()
 			setDashboard(data)
@@ -38,7 +58,7 @@ export const Dashboard = () => {
 		getDetails()
 	}, [dashboardId])
 
-	const removeUser = async id => {
+	const removeUser = async (id: string | null) => {
 		if (token) {
 			const res = await fetch(`${API_URL}dashboards/${dashboardId}/remove`, {
 				method: 'PATCH',
@@ -49,15 +69,14 @@ export const Dashboard = () => {
 				body: JSON.stringify({ id: id }),
 			})
 			if (!res.ok) {
-				const errorData = await res.json().message
-				console.error(errorData)
+				const errorJson: { message: string } = await res.json()
+				console.error(errorJson?.message)
 			} else {
-				const data = await res.json()
 				setEditMode(false)
 				if (!id || id === dashboard?.creatorId?._id) {
 					navigate('/')
 				}
-				if (dashboard.userIds.length > 1) {
+				if (dashboard && Array.isArray(dashboard.userIds) && dashboard.userIds.length > 1) {
 					getDetails()
 				}
 			}
@@ -75,8 +94,12 @@ export const Dashboard = () => {
 			},
 		})
 		if (!res.ok) {
-			const errorData = await res.json().message
-			console.error(errorData)
+			const errorJson: { message: string } = await res.json()
+			if (errorJson) {
+				console.error(errorJson.message)
+			} else {
+				console.error('Unknown error')
+			}
 		} else {
 			setEditMode(false)
 			navigate('/')
@@ -92,7 +115,7 @@ export const Dashboard = () => {
 				btnClass: 'btn-light',
 			},
 		]
-		if (dashboard && !dashboard.isOwner) {
+		if (dashboard?.isOwner) {
 			const removeAction = {
 				action: () => removeUser(null),
 				icon: <Trash2 size={16} />,
@@ -136,28 +159,28 @@ export const Dashboard = () => {
 	)
 }
 
-const DashboardDetails = ({ dashboard, editMode, getDetails, removeUser }) => {
-	const { setActiveModal } = useContext(ModalContext)
-	const { fetchUserDashboards } = useContext(FetchDashboardsContext)
+const DashboardDetails: React.FC<DashboardDetails> = ({ dashboard, editMode, getDetails, removeUser }) => {
+	const { setActiveModal } = useModalContext()
+	const { fetchUserDashboards } = useFetchDashboardsContext()
 	const [nameValue, setNameValue] = useState('')
 	const [selectedOwner, setSelectedOwner] = useState('')
 
 	useEffect(() => {
 		if (editMode) {
-			setNameValue(dashboard.name)
+			setNameValue(dashboard?.name || '')
 		}
 	}, [editMode])
 
 	useEffect(() => {
 		if (dashboard) {
 			setNameValue(dashboard.name || '')
-			setSelectedOwner(dashboard.creatorId || '')
+			setSelectedOwner(dashboard.creatorId._id || '')
 		}
 	}, [dashboard])
 
 	const updateDashboard = async () => {
 		const token = localStorage.getItem('token')
-		const res = await fetch(`${API_URL}dashboards/${dashboard._id}`, {
+		const res = await fetch(`${API_URL}dashboards/${dashboard?._id}`, {
 			method: 'PATCH',
 			headers: {
 				Authorization: `Bearer ${token}`,
@@ -175,13 +198,13 @@ const DashboardDetails = ({ dashboard, editMode, getDetails, removeUser }) => {
 			fetchUserDashboards()
 		} else {
 			const error = await res.json()
-			console.log(error.message)
+			console.error(error.message)
 		}
 	}
 
-	const handleAddUser = async userName => {
+	const handleAddUser = async (userName: string) => {
 		const token = localStorage.getItem('token')
-		const res = await fetch(`${API_URL}dashboards/${dashboard._id}/add-user`, {
+		const res = await fetch(`${API_URL}dashboards/${dashboard?._id}/add-user`, {
 			method: 'POST',
 			headers: {
 				Authorization: `Bearer ${token}`,
@@ -191,10 +214,9 @@ const DashboardDetails = ({ dashboard, editMode, getDetails, removeUser }) => {
 		})
 
 		if (!res.ok) {
-			const error = await res.json().message
-			console.error('Server error:', error)
+			const errorJson: { message: string } = await res.json()
+			console.error(errorJson.message)
 		} else {
-			const data = await res.json()
 			getDetails()
 		}
 	}
@@ -223,15 +245,16 @@ const DashboardDetails = ({ dashboard, editMode, getDetails, removeUser }) => {
 	) : (
 		''
 	)
+	console.log(dashboard)
 	const nameContent = editMode ? nameInput : dashboard?.name
-	const ownerContent = editMode && dashboard.isOwner ? ownerSelect : dashboard?.creatorId.name
+	const ownerContent = editMode && dashboard?.isOwner ? ownerSelect : dashboard?.creatorId.name
 	return (
 		<>
 			{dashboard && (
 				<div className='d-flex flex-column gap-2'>
 					<FormRow label={'Name'} content={nameContent} />
 					<FormRow label={'Owner'} content={ownerContent} />
-					<FormRow className='mb-2' label={'Creation date'} content={dashboard.created_at?.split('T')[0]} />
+					<FormRow className='mb-2' label={'Creation date'} content={dashboard?.created_at?.split('T')[0]} />
 					{dashboard.userIds && dashboard.userIds.length > 0 && (
 						<div className='d-flex flex-column gap-2'>
 							<div className='d-flex justify-between align-center text-bold gap-2 card-subtitle mb-2'>

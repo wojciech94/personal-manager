@@ -147,7 +147,12 @@ export const Home = () => {
 	)
 }
 
-const WelcomeScreen = ({ isNew, createDashboardModal }) => {
+type WelcomeScreenProps = {
+	isNew: boolean
+	createDashboardModal: () => void
+}
+
+const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ isNew, createDashboardModal }) => {
 	const [mode, setMode] = useState(1)
 	const slides = WELCOME_SLIDES
 
