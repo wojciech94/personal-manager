@@ -2,13 +2,13 @@ import { useState, useRef, useEffect } from 'react'
 import { MoreVertical } from 'react-feather'
 import styles from './ExpandableMenu.module.css'
 
-interface ItemsProps {
+type ItemsProps = {
 	label: string
 	action: () => void
 }
 
-interface Props {
-	title: string
+type Props = {
+	title?: string
 	items: ItemsProps[]
 }
 

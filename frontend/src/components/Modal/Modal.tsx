@@ -1,6 +1,5 @@
-import { useContext } from 'react'
 import { X } from 'react-feather'
-import { ModalContext } from '../../contexts/ModalContext'
+import { useModalContext } from '../../contexts/ModalContext'
 import { ModalDashboardContent } from './ModalDashboardContent'
 import { ModalNoteContent } from './ModalNoteContent'
 import { ModalFolderContent } from './ModalFolderContent'
@@ -17,7 +16,7 @@ import { ModalAddShoppingItem } from './ModalAddShoppingItem'
 import { ModalDataProps } from './types'
 
 export const Modal: React.FC<ModalDataProps> = ({ name, title, data }): JSX.Element => {
-	const { setActiveModal } = useContext(ModalContext) ?? {}
+	const { setActiveModal } = useModalContext()
 
 	let modalContent = null
 

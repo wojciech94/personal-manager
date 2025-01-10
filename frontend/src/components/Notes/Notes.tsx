@@ -1,31 +1,36 @@
-import { useState, useEffect, useCallback } from 'react'
-import { useContext } from 'react'
+import { useState, useEffect, useCallback, ChangeEvent, FormEventHandler, FormEvent } from 'react'
 import { useLoaderData, useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
-import { ModalContext } from '../../contexts/ModalContext'
+import { useModalContext } from '../../contexts/ModalContext'
 import { Plus } from 'react-feather'
 import { debounce } from '../../utils/helpers'
 import { ToggleBox } from '../ToggleBox/ToggleBox'
-import { Note } from '../Note/Note'
+import { Note, NoteProps } from '../Note/Note'
 import { ExpandableMenu } from '../ExpandableMenu/ExpandableMenu'
 import { Alert } from '../Alert/Alert'
 
+type Notes = NoteProps[]
+
+type ErrorType = {
+	message: string
+}
+
 export const Notes = () => {
-	const data = useLoaderData()
-	const [, setActiveModal] = useContext(ModalContext)
-	const [notes, setNotes] = useState(data)
-	const [filteredNotes, setFilteredNotes] = useState([])
-	const [categoryNames, setCategoryNames] = useState([])
+	const data = useLoaderData() as Notes | ErrorType
+	const [notes, setNotes] = useState<Notes>([])
+	const { setActiveModal } = useModalContext()
+	const [filteredNotes, setFilteredNotes] = useState<Notes>([])
+	const [categoryNames, setCategoryNames] = useState<string[]>([])
 	const [filterCategory, setFilterCategory] = useState('')
 	const [isFavourite, setIsFavourite] = useState(false)
 	const [sortBy, setSortBy] = useState('')
-	const [sortOrder, setSortOrder] = useState('asc')
+	const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
 	const [filterOrRule, setFilterOrRule] = useState(true)
 	const [searchValue, setSearchValue] = useState('')
 	const { dashboardId, folderId } = useParams()
 
 	const debouncedSearchFilter = useCallback(
-		debounce(val => searchFilter(val), 500),
+		debounce((val: string) => searchFilter(val), 500),
 		[notes]
 	)
 
@@ -34,8 +39,10 @@ export const Notes = () => {
 	}, [])
 
 	useEffect(() => {
-		setNotes(data)
-		setFilteredNotes(data)
+		if (Array.isArray(data)) {
+			setNotes(data)
+			setFilteredNotes(data)
+		}
 	}, [data])
 
 	async function fetchNotesCategories() {
@@ -81,12 +88,23 @@ export const Notes = () => {
 		}
 	}
 
-	//Dodawanie lub aktualizacja notatki
-	const updateNote = async (title, content, category, tags, folder_id, is_favourite, expired_at, noteId) => {
-		tags = tags
-			.split(/[\s,]+/)
-			.map(tag => tag.trim())
-			.filter(tag => tag.length > 0)
+	const updateNote = async (
+		title: string,
+		content: string,
+		category: string,
+		tags: string | string[],
+		folder_id: string,
+		is_favourite: boolean,
+		expired_at: string | null,
+		noteId: string
+	) => {
+		let noteTags
+		if (typeof tags === 'string') {
+			noteTags = tags.split(/[\s,]+/)
+		} else {
+			noteTags = tags
+		}
+		noteTags = noteTags.map(tag => tag.trim()).filter(tag => tag.length > 0)
 		const url = !noteId ? `${API_URL}dashboards/${dashboardId}/add-note` : `${API_URL}notes/${noteId}`
 		const response = await fetch(url, {
 			method: `${noteId ? 'PATCH' : 'POST'}`,
@@ -94,7 +112,7 @@ export const Notes = () => {
 				'Content-Type': 'application/json',
 				Authorization: `Bearer ${localStorage.getItem('token')}`,
 			},
-			body: JSON.stringify({ title, content, category, tags, folder_id, is_favourite, expired_at }),
+			body: JSON.stringify({ title, content, category, noteTags, folder_id, is_favourite, expired_at }),
 		})
 		if (response.ok) {
 			const updatedNote = await response.json()
@@ -118,12 +136,12 @@ export const Notes = () => {
 		title: 'Add note category',
 	}
 
-	const searchFilter = val => {
+	const searchFilter = (val: string) => {
 		const filteredNotes = notes.filter(note => note.title.toLowerCase().includes(val.toLowerCase()))
 		setFilteredNotes(filteredNotes)
 	}
 
-	const onSearchInputChange = e => {
+	const onSearchInputChange = (e: ChangeEvent<HTMLInputElement>) => {
 		const value = e.target.value
 		setSearchValue(value)
 		debouncedSearchFilter(value)
@@ -148,9 +166,9 @@ export const Notes = () => {
 					newNotes.sort((a, b) => {
 						let val
 						if (sortOrder === 'desc') {
-							val = new Date(b.updated_at) - new Date(a.updated_at)
+							val = new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
 						} else {
-							val = new Date(a.updated_at) - new Date(b.updated_at)
+							val = new Date(a.updated_at).getTime() - new Date(b.updated_at).getTime()
 						}
 						return val
 					})
@@ -159,9 +177,9 @@ export const Notes = () => {
 					newNotes.sort((a, b) => {
 						let val
 						if (sortOrder === 'desc') {
-							val = new Date(b.expired_at) - new Date(a.expired_at)
+							val = new Date(b.expired_at).getTime() - new Date(a.expired_at).getTime()
 						} else {
-							val = new Date(a.expired_at) - new Date(b.expired_at)
+							val = new Date(a.expired_at).getTime() - new Date(b.expired_at).getTime()
 						}
 						return val
 					})
@@ -171,9 +189,9 @@ export const Notes = () => {
 					newNotes.sort((a, b) => {
 						let val
 						if (sortOrder === 'desc') {
-							val = new Date(b.created_at) - new Date(a.created_at)
+							val = new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
 						} else {
-							val = new Date(a.created_at) - new Date(b.created_at)
+							val = new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
 						}
 						return val
 					})
@@ -246,7 +264,7 @@ export const Notes = () => {
 								type='checkbox'
 								name='favNote'
 								id='isFav'
-								value={isFavourite}
+								checked={isFavourite}
 								onChange={() => setIsFavourite(prevState => !prevState)}
 							/>
 							<label htmlFor='isFav'>Is favourite</label>
@@ -260,7 +278,11 @@ export const Notes = () => {
 							<option value='deadlineDate'>Deadline date</option>
 						</select>
 						<div className='toggle-subtitle'>Sort by</div>
-						<select name='sortOrder' id='sortOrder' value={sortOrder} onChange={e => setSortOrder(e.target.value)}>
+						<select
+							name='sortOrder'
+							id='sortOrder'
+							value={sortOrder}
+							onChange={e => setSortOrder(e.target.value as 'asc' | 'desc')}>
 							<option value='asc'>Ascending</option>
 							<option value='desc'>Descending</option>
 						</select>

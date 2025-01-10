@@ -1,16 +1,22 @@
-import { useContext, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Settings } from 'react-feather'
 import { NavLink, Outlet, useLoaderData, useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
-import { ModalContext } from '../../contexts/ModalContext'
+import { useModalContext } from '../../contexts/ModalContext'
+
+type Folder = {
+	name: string
+	_id: string
+}
+type LoaderData = Folder[]
 
 export const Folders = () => {
-	const [, setActiveModal] = useContext(ModalContext)
-	const [data, setData] = useState(useLoaderData())
+	const loaderData = useLoaderData() as LoaderData
+	const [data, setData] = useState<LoaderData | null>(loaderData)
+	const { setActiveModal } = useModalContext()
 	const { dashboardId } = useParams()
 
-	const handleAddFolder = async val => {
-		console.log(val)
+	const handleAddFolder = async (val: string) => {
 		const token = localStorage.getItem('token')
 		const res = await fetch(`${API_URL}dashboards/${dashboardId}/add-folder`, {
 			method: 'POST',
@@ -33,6 +39,9 @@ export const Folders = () => {
 
 	const fetchFolders = async () => {
 		const token = localStorage.getItem('token')
+		if (!token) {
+			return
+		}
 		const res = await fetch(`${API_URL}dashboards/${dashboardId}/folders`, {
 			headers: {
 				Authorization: `Bearer ${token}`,

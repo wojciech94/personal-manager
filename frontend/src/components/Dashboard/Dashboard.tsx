@@ -245,7 +245,6 @@ const DashboardDetails: React.FC<DashboardDetails> = ({ dashboard, editMode, get
 	) : (
 		''
 	)
-	console.log(dashboard)
 	const nameContent = editMode ? nameInput : dashboard?.name
 	const ownerContent = editMode && dashboard?.isOwner ? ownerSelect : dashboard?.creatorId.name
 	return (

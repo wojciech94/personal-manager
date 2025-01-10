@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
 import { ModalContext } from '../../contexts/ModalContext'
 
-interface NoteProps {
+export type NoteProps = {
 	_id: string
 	title: string
 	category: string
@@ -12,12 +12,22 @@ interface NoteProps {
 	tags: string[]
 	content: string
 	updated_at: string
+	created_at: string
 	expired_at: string
 }
 
-interface Props {
+type Props = {
 	note: NoteProps
-	updateNote: () => void
+	updateNote: (
+		title: string,
+		content: string,
+		category: string,
+		tags: string | string[],
+		folder_id: string,
+		is_favourite: boolean,
+		expired_at: string | null,
+		noteId: string
+	) => void
 	fetchNotes: () => void
 }
 

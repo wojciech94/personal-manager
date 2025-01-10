@@ -1,11 +1,11 @@
 import { useState } from 'react'
 
-interface ItemsProps {
+type ItemsProps = {
 	name: string
 	action: () => void
 }
 
-interface DropdownProps {
+type DropdownProps = {
 	title?: string
 	items: ItemsProps[]
 }
