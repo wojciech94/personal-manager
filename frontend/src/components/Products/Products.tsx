@@ -1,18 +1,27 @@
 import { useEffect, useState } from 'react'
-import { useContext } from 'react'
 import { Plus } from 'react-feather'
 import { useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
-import { ModalContext } from '../../contexts/ModalContext'
+import { useModalContext } from '../../contexts/ModalContext'
 import { ProductsList } from '../ProductsList/ProductsList'
 import { CATEGORIES } from '../../constants/appConstants'
 import { usePagination } from '../../hooks/usePagination'
 import { Pagination } from '../Pagination/Pagination'
 
+export type Product = {
+	_id: string
+	name: string
+	category: string
+	unit: string
+	price: number
+	tags: string
+	isFavourite?: boolean
+}
+
 export function Products() {
-	const [, setActiveModal] = useContext(ModalContext)
-	const [products, setProducts] = useState([])
-	const [filteredProducts, setFilteredProducts] = useState([])
+	const { setActiveModal } = useModalContext()
+	const [products, setProducts] = useState<Product[]>([])
+	const [filteredProducts, setFilteredProducts] = useState<Product[]>([])
 	const [selectedCategory, setSelectedCategory] = useState('')
 	const { dashboardId } = useParams()
 	const [itemsPerPage, setItemsPerPage] = useState(5)
@@ -54,7 +63,7 @@ export function Products() {
 		name: 'addProduct',
 	}
 
-	const handleSelectCategory = value => {
+	const handleSelectCategory = (value: string) => {
 		setSelectedCategory(value)
 		if (value) {
 			const newProducts = products.filter(p => p.category === value)
@@ -64,8 +73,8 @@ export function Products() {
 		}
 	}
 
-	const handleSetItemsPerPage = items => {
-		setItemsPerPage(items)
+	const handleSetItemsPerPage = (itemsCount: number) => {
+		setItemsPerPage(itemsCount)
 	}
 
 	return (

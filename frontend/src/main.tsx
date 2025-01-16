@@ -12,6 +12,11 @@ import { Shopping } from './components/Shopping/Shopping'
 import { ShoppingLists } from './components/ShoppingLists/ShoppingLists'
 import { Products } from './components/Products/Products'
 import { ShoppingList } from './components/ShoppingList/ShoppingList'
+import { GlobalError } from './components/GlobalError/GlobalError'
+
+export type ApiError = {
+	message: string
+}
 
 const Main = () => {
 	const router = createBrowserRouter([
@@ -49,7 +54,8 @@ const Main = () => {
 								})
 
 								if (!response.ok) {
-									throw new Error('Failed to load folders')
+									const ErrorMessage: ApiError = await response.json()
+									throw new Error(ErrorMessage.message)
 								}
 
 								if (response.status === 204) {
@@ -79,7 +85,8 @@ const Main = () => {
 										})
 
 										if (!response.ok) {
-											throw new Error('Failed to load folders')
+											const ErrorMessage: ApiError = await response.json()
+											throw new Error(ErrorMessage.message)
 										}
 
 										return response.json()
@@ -101,18 +108,17 @@ const Main = () => {
 											loader: async ({ params }: LoaderFunctionArgs) => {
 												const { shoppingListId } = params
 												const token = localStorage.getItem('token')
-												const res = await fetch(`${API_URL}shopping-lists/${shoppingListId}`, {
+												const response = await fetch(`${API_URL}shopping-lists/${shoppingListId}`, {
 													headers: {
 														Authorization: `bearer ${token}`,
 													},
 												})
-												if (res.ok) {
-													const data = await res.json()
-													return data
-												} else {
-													const errorMessage = await res.json()
-													console.error(errorMessage.message)
+												if (!response.ok) {
+													const ErrorMessage: ApiError = await response.json()
+													throw new Error(ErrorMessage.message)
 												}
+												const data: ShoppingList = await response.json()
+												return data
 											},
 										},
 									],
@@ -134,6 +140,7 @@ const Main = () => {
 					],
 				},
 			],
+			errorElement: <GlobalError />,
 		},
 		{
 			path: '/login',

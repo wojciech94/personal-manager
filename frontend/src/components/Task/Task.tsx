@@ -3,7 +3,44 @@ import { Check, Clock, Edit, Trash2 } from 'react-feather'
 import { useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
 
-export function Task({ task, fetchTasks, tasksSettings }) {
+enum TaskPriorities {
+	LOW = 'low',
+	MEDIUM = 'medium',
+	HIGH = 'high',
+}
+
+export enum SortMethods {
+	CREATED_AT = 'created_at',
+	EXPIRED_AT = 'expired_at',
+	PRIORITY = 'priority',
+}
+
+type Props = {
+	task: Task
+	fetchTasks: () => void
+	tasksSettings: TasksSettings
+}
+
+export type Task = {
+	_id: string
+	content: string
+	priority: TaskPriorities
+	is_done: boolean
+	created_at: string
+	expired_at: string
+	archived_at: string
+	removed_at: string
+}
+
+export type TasksSettings = {
+	showDeadline: boolean
+	archivizationTime: number
+	removeTime: number
+	sortMethod: SortMethods
+	sortDirection: 'asc' | 'desc'
+}
+
+export function Task({ task, fetchTasks, tasksSettings }: Props) {
 	const [taskData, setTaskData] = useState(task)
 	const [contentValue, setContentValue] = useState(task.content)
 	const [priorityValue, setPriorityValue] = useState(task.priority)
@@ -22,7 +59,7 @@ export function Task({ task, fetchTasks, tasksSettings }) {
 		}
 	}, [task])
 
-	const updateTask = async action => {
+	const updateTask = async (action: string) => {
 		let updatedTask
 		switch (action) {
 			case 'toggle': {
@@ -46,7 +83,7 @@ export function Task({ task, fetchTasks, tasksSettings }) {
 				break
 			}
 		}
-		const config = {
+		const config: RequestInit = {
 			method: action === 'delete' ? 'DELETE' : 'PATCH',
 			headers: {
 				Authorization: `Bearer ${token}`,
@@ -94,7 +131,7 @@ export function Task({ task, fetchTasks, tasksSettings }) {
 								name='prioritySelect'
 								id='prioritySelect'
 								value={taskData.priority}
-								onChange={e => setPriorityValue(e.target.value)}>
+								onChange={e => setPriorityValue(e.target.value as TaskPriorities)}>
 								<option value='low'>Low</option>
 								<option value='medium'>Medium</option>
 								<option value='high'>High</option>
@@ -122,7 +159,7 @@ export function Task({ task, fetchTasks, tasksSettings }) {
 					</>
 				)}
 			</div>
-			{tasksSettings.showDeadline && expirationValue && !isEdit && (
+			{tasksSettings && tasksSettings.showDeadline && expirationValue && !isEdit && (
 				<div className='d-flex gap-2 align-center text-gray'>
 					<Clock size={16} />
 					{expirationValue}

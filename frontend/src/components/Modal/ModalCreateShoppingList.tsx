@@ -8,7 +8,7 @@ import { FormRow } from '../FormRow/FormRow'
 export function ModalCreateShoppingList({ modalData }) {
 	const [nameValue, setNameValue] = useState('')
 	const { dashboardId } = useParams()
-	const [, setActiveModal] = useContext(ModalContext)
+	const { setActiveModal } = useModalContext()
 
 	const createShoppingList = async () => {
 		const token = localStorage.getItem('token')

@@ -1,8 +1,7 @@
-import { useContext } from 'react'
 import { Edit, X, Clock } from 'react-feather'
 import { useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
-import { ModalContext } from '../../contexts/ModalContext'
+import { useModalContext } from '../../contexts/ModalContext'
 
 export type NoteProps = {
 	_id: string
@@ -32,7 +31,7 @@ type Props = {
 }
 
 export const Note: React.FC<Props> = ({ note, updateNote, fetchNotes }): JSX.Element => {
-	const { setActiveModal } = useContext(ModalContext) ?? {}
+	const { setActiveModal } = useModalContext() ?? {}
 	const { dashboardId } = useParams()
 
 	const removeNote = async (id: string): Promise<void> => {

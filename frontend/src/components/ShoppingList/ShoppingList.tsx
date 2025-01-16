@@ -1,14 +1,35 @@
-import { useContext } from 'react'
 import { Plus } from 'react-feather'
 import { useLoaderData, useParams, useRevalidator } from 'react-router-dom'
 import { API_URL } from '../../config'
 import { Alert } from '../Alert/Alert'
-import { ModalContext } from '../../contexts/ModalContext'
+import { useModalContext } from '../../contexts/ModalContext'
 import { ShoppingProduct } from '../ShoppingProduct/ShoppingProduct'
+import { ApiError } from '../../main'
+import { Product } from '../Products/Products'
+
+export type ShoppingItem = {
+	productId: Product
+	quantity: number
+	notes: string
+	customUnit: string
+	customPrice: number
+	isPurchased: boolean
+	_id: string
+}
+
+export type IsShoppingPurchased = {
+	isPurchased: boolean
+}
+
+export type ShoppingList = {
+	_id: string
+	list: ShoppingItem[]
+	updatedAt: string
+}
 
 export function ShoppingList() {
-	const data = useLoaderData()
-	const [, setActiveModal] = useContext(ModalContext)
+	const data: ShoppingList = useLoaderData() as ShoppingList
+	const { setActiveModal } = useModalContext()
 	const { shoppingListId } = useParams()
 	const productsToBuy = data?.list.filter(p => p.isPurchased === false).length
 	const { revalidate } = useRevalidator()
@@ -16,18 +37,15 @@ export function ShoppingList() {
 	const openAddItemModal = () => {
 		const modalData = {
 			name: 'addShoppingItem',
-			data: {
-				action: () => console.log('addShoppingItem'),
-			},
 			title: 'Add shopping item',
 		}
 		setActiveModal(modalData)
 	}
 
-	const handleUpdateListItem = async (id, data) => {
+	const handleUpdateListItem = async (id: string, data: ShoppingItem | IsShoppingPurchased) => {
 		const token = localStorage.getItem('token')
 		if (!token) {
-			console.warning('Token not available')
+			console.warn('Token not available')
 			return
 		}
 		const res = await fetch(`${API_URL}shoppingLists/${shoppingListId}/shopping-items/${id}`, {
@@ -39,14 +57,14 @@ export function ShoppingList() {
 			body: JSON.stringify(data),
 		})
 		if (!res.ok) {
-			const errorData = res.json()
+			const errorData: ApiError = await res.json()
 			console.error(errorData.message)
 		} else {
 			revalidate()
 		}
 	}
 
-	const handleDeleteListItem = async id => {
+	const handleDeleteListItem = async (id: string) => {
 		const token = localStorage.getItem('token')
 		if (token) {
 			const res = await fetch(`${API_URL}shoppingLists/${shoppingListId}/shopping-items/${id}`, {

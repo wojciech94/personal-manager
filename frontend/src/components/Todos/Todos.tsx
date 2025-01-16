@@ -1,22 +1,28 @@
-import { useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Edit, Plus, Repeat, Settings } from 'react-feather'
 import { Alert } from '../Alert/Alert'
 import { Card, CardHeader } from '../Card/Card'
-import { Task } from '../Task/Task'
+import { Task, TasksSettings } from '../Task/Task'
 import { useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
-import { ModalContext } from '../../contexts/ModalContext'
+import { useModalContext } from '../../contexts/ModalContext'
+
+export type TodoGroup = {
+	_id: string
+	name: string
+	tasks: Task[]
+}
 
 export const Todos = () => {
 	const { dashboardId } = useParams()
 	const token = localStorage.getItem('token')
-	const [todoGroups, setTodoGroups] = useState(null)
-	const [tasks, setTasks] = useState(null)
-	const [archivedTasks, setArchivedTasks] = useState(null)
-	const [tasksSettings, setTasksSettings] = useState(null)
+	const [todoGroups, setTodoGroups] = useState<TodoGroup[] | null>(null)
+	const [tasks, setTasks] = useState<Task[] | null>(null)
+	const [archivedTasks, setArchivedTasks] = useState<Task[] | null>(null)
+	const [tasksSettings, setTasksSettings] = useState<TasksSettings | null>(null)
 	const [activeGroup, setActiveGroup] = useState('')
 	const [showArchive, setShowArchive] = useState(false)
-	const [, setActiveModal] = useContext(ModalContext)
+	const { setActiveModal } = useModalContext()
 	const visibleTasks = showArchive ? archivedTasks : tasks
 
 	useEffect(() => {
@@ -53,14 +59,18 @@ export const Todos = () => {
 		})
 		if (res.ok) {
 			const data = await res.json()
-			setTodoGroups(data.todoGroups)
+			setTodoGroups(data)
 		} else {
 			const errorData = await res.json()
 			console.error(errorData.message)
 		}
 	}
 
-	const fetchTasks = async id => {
+	const fetchTasks = async (id: string) => {
+		if (!tasksSettings) {
+			return
+		}
+
 		const res = await fetch(
 			`${API_URL}dashboards/${dashboardId}/tasks/${id}?sortBy=${tasksSettings.sortMethod}&order=${tasksSettings.sortDirection}`,
 			{
@@ -71,7 +81,7 @@ export const Todos = () => {
 		)
 		setActiveGroup(id)
 		if (res.ok) {
-			const data = await res.json()
+			const data = (await res.json()) as TodoGroup
 			if (data) {
 				const now = new Date()
 				const activeTasks = data.tasks.filter(t => !t.archived_at || new Date(t.archived_at) > now)
@@ -85,7 +95,7 @@ export const Todos = () => {
 		}
 	}
 
-	const addGroup = async name => {
+	const addGroup = async (name: string) => {
 		if (token && dashboardId && name) {
 			const res = await fetch(`${API_URL}dashboards/${dashboardId}/add-todo-group`, {
 				method: 'POST',
@@ -100,7 +110,7 @@ export const Todos = () => {
 			})
 			if (res.ok) {
 				const data = await res.json()
-				await fetchTodoGroups()
+				setTodoGroups(prevGroups => [...(prevGroups ?? []), data])
 			} else {
 				const errorData = await res.json()
 				console.error(errorData.message)
@@ -130,7 +140,7 @@ export const Todos = () => {
 		title: 'Add task',
 	}
 
-	const handleSetTasksSettings = async settings => {
+	const handleSetTasksSettings = async (settings: TasksSettings) => {
 		const res = await fetch(`${API_URL}dashboards/${dashboardId}/tasks-settings`, {
 			method: 'PATCH',
 			headers: {
@@ -213,9 +223,10 @@ export const Todos = () => {
 			{visibleTasks && visibleTasks.length > 0 ? (
 				<>
 					<div className='task-container rounded-bottom-4 overflow-hidden'>
-						{visibleTasks.map(t => (
-							<Task key={t._id} task={t} fetchTasks={() => fetchTasks(activeGroup)} tasksSettings={tasksSettings} />
-						))}
+						{tasksSettings &&
+							visibleTasks.map(t => (
+								<Task key={t._id} task={t} fetchTasks={() => fetchTasks(activeGroup)} tasksSettings={tasksSettings} />
+							))}
 					</div>
 				</>
 			) : (

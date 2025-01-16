@@ -5,7 +5,7 @@ import { API_URL } from '../../config'
 import { ModalContext } from '../../contexts/ModalContext'
 
 export function ModalModifyTodoGroup({ modalData }) {
-	const [, setActiveModal] = useContext(ModalContext)
+	const { setActiveModal } = useModalContext()
 	const [inputVal, setInputVal] = useState('')
 	const [groups, setGroups] = useState([])
 	const [inputValues, setInputValues] = useState(null)

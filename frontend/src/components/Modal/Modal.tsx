@@ -41,13 +41,13 @@ export const Modal: React.FC<ModalDataProps> = ({ name, title, data }): JSX.Elem
 			modalContent = <ModalModifyTodoGroup modalData={data} />
 			break
 		case 'addTask':
-			modalContent = <ModalAddTask modalData={data} />
+			if (data) modalContent = <ModalAddTask modalData={data} />
 			break
 		case 'tasksSettings':
-			modalContent = <ModalTasksSettingsContent modalData={data} />
+			if (data) modalContent = <ModalTasksSettingsContent modalData={data} />
 			break
 		case 'addListItem':
-			modalContent = <ModalAddListItem modalData={data} />
+			modalContent = <ModalAddListItem />
 			break
 		case 'createShoppingList':
 			modalContent = <ModalCreateShoppingList modalData={data} />
@@ -59,10 +59,10 @@ export const Modal: React.FC<ModalDataProps> = ({ name, title, data }): JSX.Elem
 			modalContent = <ModalAddShoppingItem />
 			break
 		case 'addProduct':
-			modalContent = <ModalAddProduct modalData={data} />
+			if (data) modalContent = <ModalAddProduct modalData={data} />
 			break
 		default:
-			modalContent = <>Alert</>
+			modalContent = <>{`Not implemented modal type: ${name}`}</>
 	}
 
 	if (!name) {

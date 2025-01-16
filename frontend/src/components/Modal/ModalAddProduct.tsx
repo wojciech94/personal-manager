@@ -1,12 +1,12 @@
-import { useContext } from 'react'
 import { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
 import { CATEGORIES } from '../../constants/appConstants'
-import { ModalContext } from '../../contexts/ModalContext'
+import { useModalContext } from '../../contexts/ModalContext'
 import { FormRow } from '../FormRow/FormRow'
+import { DataProps } from './types'
 
-export function ModalAddProduct({ modalData }) {
+export function ModalAddProduct({ modalData }: { modalData: DataProps }) {
 	const [nameValue, setNameValue] = useState('')
 	const [categoryValue, setCategoryValue] = useState('')
 	const [unitValue, setUnitValue] = useState('')
@@ -14,7 +14,7 @@ export function ModalAddProduct({ modalData }) {
 	const [tagsValue, setTagsValue] = useState('')
 	const [isFavouriteValue, setIsFavouriteValue] = useState(false)
 	const { dashboardId } = useParams()
-	const [, setActiveModal] = useContext(ModalContext)
+	const { setActiveModal } = useModalContext()
 
 	const addProduct = async () => {
 		const token = localStorage.getItem('token')
@@ -40,8 +40,11 @@ export function ModalAddProduct({ modalData }) {
 		if (res.ok) {
 			const data = await res.json()
 			if (data) {
-				if (modalData?.action) {
-					modalData.action()
+				if (modalData?.action && modalData.action.length) {
+					const action = modalData.action as () => Promise<void>
+					action()
+				} else {
+					console.error('Unexpected function type: arugments not passed')
 				}
 				setActiveModal(null)
 			}

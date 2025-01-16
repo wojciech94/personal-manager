@@ -10,7 +10,7 @@ export function ModalFolderContent({ modalData }) {
 	const [folders, setFolders] = useState([])
 	const [addInputValue, setAddInputValue] = useState('')
 	const { dashboardId } = useParams()
-	const [, setActiveModal] = useContext(ModalContext)
+	const { setActiveModal } = useModalContext()
 
 	useEffect(() => {
 		fetchFolders()

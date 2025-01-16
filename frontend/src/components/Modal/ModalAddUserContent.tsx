@@ -5,7 +5,7 @@ import { FormRow } from '../FormRow/FormRow'
 
 export const ModalAddUserContent = ({ modalData }) => {
 	const [userInput, setUserInput] = useState('')
-	const [, setActiveModal] = useContext(ModalContext)
+	const { setActiveModal } = useModalContext()
 
 	const handleAddUser = () => {
 		if (modalData.action) {

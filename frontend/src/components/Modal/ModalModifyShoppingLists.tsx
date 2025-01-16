@@ -9,7 +9,7 @@ export function ModalModifyShoppingLists({ modalData }) {
 	const [shoppingLists, setShoppingLists] = useState([])
 	const [editedListId, setEditedListId] = useState(null)
 	const [nameValue, setNameValue] = useState('')
-	const [, setActiveModal] = useContext(ModalContext)
+	const { setActiveModal } = useModalContext()
 	const { dashboardId } = useParams()
 	const token = localStorage.getItem('token')
 	const navigate = useNavigate()

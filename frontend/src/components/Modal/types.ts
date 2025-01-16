@@ -1,7 +1,11 @@
+import { TasksSettings } from '../Task/Task'
+import { TodoGroup } from '../Todos/Todos'
+
 export type DataProps = {
 	action?:
 		| ((args: string) => Promise<void>)
 		| (() => Promise<void>)
+		| ((args: TasksSettings) => Promise<void>)
 		| ((
 				title: string,
 				content: string,
@@ -16,8 +20,8 @@ export type DataProps = {
 	fetchAction?: ((args: string) => Promise<void>) | (() => Promise<void>)
 	actionName?: string
 	id?: string
-	initValue?: unknown
-	group?: unknown
+	initValue?: string | TasksSettings
+	groups?: TodoGroup[]
 }
 
 export type ModalDataProps = {

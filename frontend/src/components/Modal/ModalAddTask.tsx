@@ -1,23 +1,30 @@
-import { useContext } from 'react'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
-import { ModalContext } from '../../contexts/ModalContext'
+import { useModalContext } from '../../contexts/ModalContext'
 
 import { FormRow } from '../FormRow/FormRow'
-export function ModalAddTask({ modalData }) {
-	const [taskGroup, setTaskGroup] = useState(modalData.initValue || modalData.groups[0]._id)
-	const [groups, setGroups] = useState(modalData.groups)
+import { TodoGroup } from '../Todos/Todos'
+import { DataProps } from './types'
+
+export function ModalAddTask({ modalData }: { modalData: DataProps }) {
+	const [taskGroup, setTaskGroup] = useState<string>('')
+	const [groups, setGroups] = useState<TodoGroup[]>([])
 	const [contentValue, setContentValue] = useState('')
 	const [priorityValue, setPriorityValue] = useState('medium')
 	const [expiredDate, setExpiredDate] = useState('')
 	const token = localStorage.getItem('token')
 	const { dashboardId } = useParams()
-	const [, setActiveModal] = useContext(ModalContext)
+	const { setActiveModal } = useModalContext()
 
 	useEffect(() => {
-		if (modalData.initValue) {
+		if (modalData.initValue && typeof modalData.initValue === 'string') {
 			setTaskGroup(modalData.initValue)
+		} else {
+			if (modalData.groups && modalData.groups.length > 0) {
+				setGroups(modalData.groups)
+				setTaskGroup(modalData.groups[0]._id)
+			}
 		}
 	}, [modalData])
 
@@ -37,8 +44,11 @@ export function ModalAddTask({ modalData }) {
 		})
 		if (res.ok) {
 			await res.json()
-			if (modalData.action) {
-				modalData.action()
+			if (modalData?.action && modalData.action.length) {
+				const action = modalData.action as () => Promise<void>
+				action()
+			} else {
+				console.error('Unexpected function type: arugments not passed')
 			}
 		} else {
 			const errorData = await res.json()

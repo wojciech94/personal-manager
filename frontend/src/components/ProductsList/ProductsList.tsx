@@ -4,15 +4,18 @@ import { useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
 import { CATEGORIES } from '../../constants/appConstants'
 import { Alert } from '../Alert/Alert'
+import { Product } from '../Products/Products'
 
-export function ProductsList({ products }) {
-	const [productsData, setProductsData] = useState([])
+type UpdateProduct = Omit<Product, '_id'>
+
+export function ProductsList({ products }: { products: Product[] }) {
+	const [productsData, setProductsData] = useState<Product[]>([])
 	const { dashboardId } = useParams()
-	const [editedProduct, setEditedProduct] = useState(-1)
+	const [editedProduct, setEditedProduct] = useState('')
 	const [nameValue, setNameValue] = useState('')
 	const [categoryValue, setCategoryValue] = useState('')
 	const [unitValue, setUnitValue] = useState('')
-	const [priceValue, setPriceValue] = useState('')
+	const [priceValue, setPriceValue] = useState(0)
 	const [tagsValue, setTagsValue] = useState('')
 
 	const productData = { name: nameValue, category: categoryValue, unit: unitValue, price: priceValue, tags: tagsValue }
@@ -23,7 +26,7 @@ export function ProductsList({ products }) {
 
 	const token = localStorage.getItem('token')
 
-	const handleEditProduct = id => {
+	const handleEditProduct = (id: string) => {
 		if (productsData && productsData.length > 0) {
 			const product = productsData.find(p => p._id === id)
 			if (!product) {
@@ -41,7 +44,7 @@ export function ProductsList({ products }) {
 		}
 	}
 
-	const handleUpdate = async (id, data) => {
+	const handleUpdate = async (id: string, data: UpdateProduct | { isFavourite: boolean }) => {
 		if (!token) {
 			console.error('No token found in local storage.')
 		}
@@ -68,10 +71,10 @@ export function ProductsList({ products }) {
 			const errorData = await res.json()
 			console.error(errorData.message)
 		}
-		setEditedProduct(-1)
+		setEditedProduct('')
 	}
 
-	const handleDelete = async id => {
+	const handleDelete = async (id: string) => {
 		if (!token) {
 			return
 		}
@@ -91,7 +94,7 @@ export function ProductsList({ products }) {
 	}
 
 	if (!products) {
-		return
+		return null
 	}
 
 	return (
@@ -138,7 +141,9 @@ export function ProductsList({ products }) {
 														value={categoryValue}
 														onChange={e => setCategoryValue(e.target.value)}>
 														{CATEGORIES.map(c => (
-															<option key={c.value} value={c.value}>{c.name}</option>
+															<option key={c.value} value={c.value}>
+																{c.name}
+															</option>
 														))}
 													</select>
 												</td>
@@ -155,7 +160,7 @@ export function ProductsList({ products }) {
 														type='number'
 														value={priceValue}
 														placeholder='Type price...'
-														onChange={e => setPriceValue(e.target.value)}
+														onChange={e => setPriceValue(Number(e.target.value))}
 													/>
 												</td>
 												<td>

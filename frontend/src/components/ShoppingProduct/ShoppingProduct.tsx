@@ -1,17 +1,25 @@
 import { useEffect } from 'react'
 import { useState } from 'react'
 import { Check, Edit, Trash2 } from 'react-feather'
-import { useNavigate } from 'react-router-dom'
+import { IsShoppingPurchased, ShoppingItem } from '../ShoppingList/ShoppingList'
 
-export function ShoppingProduct({ data, onListItemUpdate, onListItemDelete }) {
+type ShoppingItemToUpdate = Omit<ShoppingItem, '_id'>
+
+type Props = {
+	data: ShoppingItem
+	onListItemUpdate: (_id: string, data: ShoppingItemToUpdate | IsShoppingPurchased) => Promise<void>
+	onListItemDelete: (_id: string) => void
+}
+
+export function ShoppingProduct({ data, onListItemUpdate, onListItemDelete }: Props) {
 	const [product, setProduct] = useState(data.productId)
-	const [editedId, setEditedId] = useState(null)
+	const [editedId, setEditedId] = useState<string | null>(null)
 	const [isPurchasedValue, setIsPurchasedValue] = useState(data.isPurchased)
 	const [quantityValue, setQuantityValue] = useState(data.quantity)
 	const [notesValue, setNotesValue] = useState(data.notes)
 	const [unitValue, setUnitValue] = useState(data.customUnit)
 	const [priceValue, setPriceValue] = useState(data.customPrice)
-	const navigate = useNavigate()
+
 	const updateData = {
 		quantity: quantityValue,
 		notes: notesValue,
@@ -25,7 +33,7 @@ export function ShoppingProduct({ data, onListItemUpdate, onListItemDelete }) {
 			setQuantityValue(data.quantity)
 			setNotesValue(data.notes)
 			setUnitValue(data.customUnit)
-			setPriceValue(data.priceValue)
+			setPriceValue(data.customPrice)
 		}
 	}, [editedId])
 
@@ -63,7 +71,7 @@ export function ShoppingProduct({ data, onListItemUpdate, onListItemDelete }) {
 					<td>
 						{editedId && editedId === data._id ? (
 							<div className='d-flex gap-1'>
-								<input type='text' value={quantityValue} onChange={e => setQuantityValue(e.target.value)} />
+								<input type='text' value={quantityValue} onChange={e => setQuantityValue(Number(e.target.value))} />
 								<input type='text' value={unitValue} onChange={e => setUnitValue(e.target.value)} />
 							</div>
 						) : (
@@ -72,18 +80,14 @@ export function ShoppingProduct({ data, onListItemUpdate, onListItemDelete }) {
 					</td>
 					<td>
 						{editedId && editedId === data._id ? (
-							<input type='text' value={priceValue} onChange={e => setPriceValue(e.target.value)}></input>
+							<input type='text' value={priceValue} onChange={e => setPriceValue(Number(e.target.value))}></input>
 						) : (
 							data.customPrice
 						)}
 					</td>
 					<td>
 						{editedId && editedId === data._id ? (
-							<textarea
-								className='w-100'
-								type='text'
-								value={notesValue}
-								onChange={e => setNotesValue(e.target.value)}></textarea>
+							<textarea className='w-100' value={notesValue} onChange={e => setNotesValue(e.target.value)}></textarea>
 						) : (
 							data.notes
 						)}

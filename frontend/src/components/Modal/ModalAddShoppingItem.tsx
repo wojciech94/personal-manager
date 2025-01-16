@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
-import { ModalContext } from '../../contexts/ModalContext'
+import { ModalContext, useModalContext } from '../../contexts/ModalContext'
 
 export function ModalAddShoppingItem(): JSX.Element {
 	const [products, setProducts] = useState<IProduct[]>([])
@@ -12,7 +12,7 @@ export function ModalAddShoppingItem(): JSX.Element {
 	const [quantityValue, setQuantityValue] = useState<number>(0)
 	const [notesValue, setNotesValue] = useState<string>('')
 	const token: string | null = localStorage.getItem('token')
-	const [, setActiveModal] = useContext(ModalContext)
+	const { setActiveModal } = useModalContext()
 	const navigate = useNavigate()
 
 	interface IProduct {

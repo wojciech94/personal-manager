@@ -1,13 +1,19 @@
-import { useContext, useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { Plus } from 'react-feather'
 import { NavLink, Outlet, useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
-import { ModalContext } from '../../contexts/ModalContext'
+import { useModalContext } from '../../contexts/ModalContext'
 import { ExpandableMenu } from '../ExpandableMenu/ExpandableMenu'
 
+type ShoppingList = {
+	list: string[]
+	name: string
+	_id: string
+}
+
 export function ShoppingLists() {
-	const [, setActiveModal] = useContext(ModalContext)
-	const [shoppingLists, setShoppingLists] = useState([])
+	const { setActiveModal } = useModalContext()
+	const [shoppingLists, setShoppingLists] = useState<ShoppingList[]>([] as ShoppingList[])
 	const token = localStorage.getItem('token')
 	const { dashboardId } = useParams()
 
@@ -24,6 +30,7 @@ export function ShoppingLists() {
 			})
 			if (res.ok) {
 				const data = await res.json()
+				console.log(data)
 				if (data) {
 					setShoppingLists(data)
 				}

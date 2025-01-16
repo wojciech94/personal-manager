@@ -1,11 +1,11 @@
-import { useContext, useState } from 'react'
+import { useState } from 'react'
 import { API_URL } from '../../config'
-import { ModalContext } from '../../contexts/ModalContext'
+import { useModalContext } from '../../contexts/ModalContext'
 import { FormRow } from '../FormRow/FormRow'
 
 export const ModalAddCategoryContent = () => {
 	const [nameValue, setNameValue] = useState('')
-	const [, setActiveModal] = useContext(ModalContext)
+	const { setActiveModal } = useModalContext()
 
 	const addCategory = async () => {
 		const token = localStorage.getItem('token')
