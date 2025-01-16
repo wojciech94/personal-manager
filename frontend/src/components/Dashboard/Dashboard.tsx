@@ -139,9 +139,9 @@ export const Dashboard = () => {
 	const cardHeader = <CardHeader title='Dashboard details' data={headerActions()} />
 
 	return (
-		<div className='d-flex justify-between align-start gap-5 p-5'>
+		<div className='page-wrapper'>
 			<Menu />
-			<div className='flex-1 content-container mx-auto'>
+			<div className='flex-1 content-container'>
 				{isExactMatch ? (
 					<Card headerComponent={cardHeader}>
 						<DashboardDetails

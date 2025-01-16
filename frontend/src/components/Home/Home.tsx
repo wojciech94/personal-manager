@@ -121,25 +121,26 @@ export const Home = () => {
 		<ModalContext.Provider value={{ activeModal, setActiveModal }}>
 			<FetchDashboardsContext.Provider value={{ fetchUserDashboards }}>
 				<div className='d-flex flex-column'>
-					<div className='topbar'>
+					<header className='topbar'>
 						<Link to={'/'}>
 							<img src='/logo.png' width={40} alt='' />
 						</Link>
 						<div className='d-flex flex-1 justify-center'>
 							<Dashboards dashboards={dashboards}></Dashboards>
 							<button className='btn btn-primary d-flex gap-2 align-center' onClick={openModal}>
-								<Plus size={16} /> Add dashboard
+								<Plus size={16} />
+								<span className='d-none d-inline-sm'>Add dashboard</span>
 							</button>
 						</div>
 						<Dropdown title='User' items={dropdownItems}></Dropdown>
-					</div>
-					<div className='flex-1'>
+					</header>
+					<main className='flex-1'>
 						{isExactMatch ? (
 							<WelcomeScreen isNew={dashboards.length === 0} createDashboardModal={openModal} />
 						) : (
 							<Outlet />
 						)}
-					</div>
+					</main>
 					{activeModal && <Modal name={activeModal.name} title={activeModal.title} data={activeModal.data} />}
 				</div>
 			</FetchDashboardsContext.Provider>
