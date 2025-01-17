@@ -17,7 +17,13 @@ const shoppingItemRoutes = require('./routes/shoppingItemRoutes')
 const app = express()
 const PORT = process.env.PORT || 5000
 const corsOptions = {
-	origin: ['https://personal-manager-beta.vercel.app', 'http://localhost:5173'],
+	origin: (origin, callback) => {
+		if (origin?.endsWith('.vercel.app') || origin === 'http://localhost:5173') {
+			callback(null, true)
+		} else {
+			callback(new Error('Not allowed by CORS'))
+		}
+	},
 	methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS'],
 	allowedHeaders: ['Content-Type', 'Authorization'],
 }
