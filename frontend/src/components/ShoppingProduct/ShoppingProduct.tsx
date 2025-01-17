@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { useState } from 'react'
 import { Check, Edit, Trash2 } from 'react-feather'
+import { Product } from '../Products/Products'
 import { IsShoppingPurchased, ShoppingItem } from '../ShoppingList/ShoppingList'
 
 type ShoppingItemToUpdate = Omit<ShoppingItem, '_id'>
@@ -12,7 +13,7 @@ type Props = {
 }
 
 export function ShoppingProduct({ data, onListItemUpdate, onListItemDelete }: Props) {
-	const [product, setProduct] = useState(data.productId)
+	const [product, setProduct] = useState<Product>(data.productId)
 	const [editedId, setEditedId] = useState<string | null>(null)
 	const [isPurchasedValue, setIsPurchasedValue] = useState(data.isPurchased)
 	const [quantityValue, setQuantityValue] = useState(data.quantity)
@@ -30,6 +31,7 @@ export function ShoppingProduct({ data, onListItemUpdate, onListItemDelete }: Pr
 
 	useEffect(() => {
 		if (editedId) {
+			setProduct(data.productId)
 			setQuantityValue(data.quantity)
 			setNotesValue(data.notes)
 			setUnitValue(data.customUnit)

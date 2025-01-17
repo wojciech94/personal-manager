@@ -23,6 +23,7 @@ export type IsShoppingPurchased = {
 
 export type ShoppingList = {
 	_id: string
+	name: string
 	list: ShoppingItem[]
 	updatedAt: string
 }
@@ -31,7 +32,7 @@ export function ShoppingList() {
 	const data: ShoppingList = useLoaderData() as ShoppingList
 	const { setActiveModal } = useModalContext()
 	const { shoppingListId } = useParams()
-	const productsToBuy = data?.list.filter(p => p.isPurchased === false).length
+	const productsToBuy = data.list.filter(p => p.isPurchased === false).length
 	const { revalidate } = useRevalidator()
 
 	const openAddItemModal = () => {

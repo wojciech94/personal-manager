@@ -1,14 +1,20 @@
-import { useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Check, Edit, Trash } from 'react-feather'
 import { useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
-import { ModalContext } from '../../contexts/ModalContext'
+import { useModalContext } from '../../contexts/ModalContext'
+import { TodoGroup } from '../Todos/Todos'
+import { DataProps } from './types'
 
-export function ModalModifyTodoGroup({ modalData }) {
+type InputDynamicObject = {
+	[key: string]: string
+}
+
+export function ModalModifyTodoGroup({ modalData }: { modalData: DataProps }) {
 	const { setActiveModal } = useModalContext()
 	const [inputVal, setInputVal] = useState('')
-	const [groups, setGroups] = useState([])
-	const [inputValues, setInputValues] = useState(null)
+	const [groups, setGroups] = useState<TodoGroup[]>([])
+	const [inputValues, setInputValues] = useState<InputDynamicObject>({})
 
 	const token = localStorage.getItem('token')
 	const { dashboardId } = useParams()
@@ -19,7 +25,7 @@ export function ModalModifyTodoGroup({ modalData }) {
 		}
 	}, [modalData])
 
-	const initGroups = groups => {
+	const initGroups = (groups: TodoGroup[]) => {
 		const dataToEdit = groups.map(g => {
 			g.isEdit = false
 			return g
@@ -29,12 +35,13 @@ export function ModalModifyTodoGroup({ modalData }) {
 
 	const addTodoGroup = () => {
 		setActiveModal(null)
-		if (modalData.action) {
-			modalData.action(inputVal)
+		if (modalData.action && typeof modalData.action === 'function' && modalData.action.length === 1) {
+			const action = modalData.action as (arg: string) => Promise<void>
+			action(inputVal)
 		}
 	}
 
-	const removeTodoGroup = async id => {
+	const removeTodoGroup = async (id: string) => {
 		if (!id || !token) {
 			return
 		}
@@ -51,8 +58,9 @@ export function ModalModifyTodoGroup({ modalData }) {
 			const data = await res.json()
 			if (data) {
 				initGroups(data)
-				if (modalData.fetchAction) {
-					modalData.fetchAction()
+				if (modalData.fetchAction && typeof modalData.action === 'function' && modalData.action.length === 0) {
+					const action = modalData.action as () => Promise<void>
+					action()
 				}
 			}
 		} else {
@@ -61,7 +69,7 @@ export function ModalModifyTodoGroup({ modalData }) {
 		}
 	}
 
-	const setEdit = (id, val) => {
+	const setEdit = (id: string, val: string) => {
 		setGroups(prevGroups =>
 			prevGroups.map(g => {
 				if (g._id === id) {
@@ -73,7 +81,7 @@ export function ModalModifyTodoGroup({ modalData }) {
 		setInputValues(prevValues => ({ ...prevValues, [id]: val }))
 	}
 
-	const saveInput = async (id, val) => {
+	const saveInput = async (id: string, val: string) => {
 		if (id && val && token && dashboardId) {
 			const res = await fetch(`${API_URL}dashboards/${dashboardId}/tasks-groups`, {
 				method: 'PATCH',
@@ -89,8 +97,13 @@ export function ModalModifyTodoGroup({ modalData }) {
 			if (res.ok) {
 				const data = await res.json()
 				initGroups(data)
-				if (modalData.fetchAction) {
-					modalData.fetchAction()
+				if (
+					modalData.fetchAction &&
+					typeof modalData.fetchAction === 'function' &&
+					modalData.fetchAction.length === 0
+				) {
+					const action = modalData.fetchAction as () => Promise<void>
+					action()
 				}
 			} else {
 				const errorData = await res.json()
@@ -99,7 +112,7 @@ export function ModalModifyTodoGroup({ modalData }) {
 		}
 	}
 
-	const handleInputChange = (id, value) => {
+	const handleInputChange = (id: string, value: string) => {
 		setInputValues(prevValues => ({ ...prevValues, [id]: value }))
 	}
 

@@ -4,7 +4,7 @@ import { NavLink, Outlet, useLoaderData, useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
 import { useModalContext } from '../../contexts/ModalContext'
 
-type Folder = {
+export type Folder = {
 	name: string
 	_id: string
 }

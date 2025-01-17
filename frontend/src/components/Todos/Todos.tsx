@@ -11,6 +11,7 @@ export type TodoGroup = {
 	_id: string
 	name: string
 	tasks: Task[]
+	isEdit: boolean
 }
 
 export const Todos = () => {
@@ -109,7 +110,7 @@ export const Todos = () => {
 				}),
 			})
 			if (res.ok) {
-				const data = await res.json()
+				const data: TodoGroup = await res.json()
 				setTodoGroups(prevGroups => [...(prevGroups ?? []), data])
 			} else {
 				const errorData = await res.json()
@@ -118,26 +119,20 @@ export const Todos = () => {
 		}
 	}
 
-	const modifyTodoGroupCategoryModal = {
-		name: 'modifyTodoGroup',
-		data: {
-			action: addGroup,
-			actionName: 'Add group',
-			fetchAction: fetchTodoGroups,
-			groups: todoGroups,
-		},
-		title: 'Modify todo group',
-	}
-
-	const addTaskModal = {
-		name: 'addTask',
-		data: {
-			action: () => fetchTasks(activeGroup),
-			actionName: 'Save task',
-			initValue: activeGroup,
-			groups: todoGroups,
-		},
-		title: 'Add task',
+	const handleModifyTodoGroupCategory = () => {
+		if (todoGroups && todoGroups.length > 0) {
+			const modifyTodoGroupCategoryModal = {
+				name: 'modifyTodoGroup',
+				data: {
+					action: addGroup,
+					actionName: 'Add group',
+					fetchAction: fetchTodoGroups,
+					groups: todoGroups,
+				},
+				title: 'Modify todo group',
+			}
+			setActiveModal(modifyTodoGroupCategoryModal)
+		}
 	}
 
 	const handleSetTasksSettings = async (settings: TasksSettings) => {
@@ -158,16 +153,6 @@ export const Todos = () => {
 		}
 	}
 
-	const tasksSettingsModal = {
-		name: 'tasksSettings',
-		data: {
-			action: handleSetTasksSettings,
-			actionName: 'Save settings',
-			initValue: tasksSettings,
-		},
-		title: 'Tasks settings',
-	}
-
 	const headerActions = () => {
 		const actionsArray = [
 			{
@@ -176,14 +161,37 @@ export const Todos = () => {
 				label: showArchive ? 'Show active tasks' : 'Show archive tasks',
 				btnClass: 'btn-light',
 			},
-			{
+		]
+		if (tasksSettings) {
+			const tasksSettingsModal = {
+				name: 'tasksSettings',
+				data: {
+					action: handleSetTasksSettings,
+					actionName: 'Save settings',
+					initValue: tasksSettings as TasksSettings,
+				},
+				title: 'Tasks settings',
+			}
+
+			actionsArray.push({
 				action: () => setActiveModal(tasksSettingsModal),
 				icon: <Settings size={16} />,
 				label: 'Settings',
 				btnClass: 'btn-light',
-			},
-		]
+			})
+		}
 		if (todoGroups && todoGroups.length > 0) {
+			const addTaskModal = {
+				name: 'addTask',
+				data: {
+					action: () => fetchTasks(activeGroup),
+					actionName: 'Save task',
+					initValue: activeGroup,
+					groups: todoGroups,
+				},
+				title: 'Add task',
+			}
+
 			actionsArray.unshift({
 				action: () => setActiveModal(addTaskModal),
 				icon: <Plus size={16} />,
@@ -212,9 +220,7 @@ export const Todos = () => {
 							</button>
 						))}
 				</div>
-				<button
-					className='d-flex gap-2 align-center btn btn-light border'
-					onClick={() => setActiveModal(modifyTodoGroupCategoryModal)}>
+				<button className='d-flex gap-2 align-center btn btn-light border' onClick={handleModifyTodoGroupCategory}>
 					<Edit size={16} />
 					Manage groups
 				</button>

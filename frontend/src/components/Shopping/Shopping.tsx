@@ -6,13 +6,10 @@ export function Shopping() {
 		<>
 			<div className='d-flex gap-3 align-center mb-4'>
 				<NavLink to={'list'} className='btn btn-link'>
-					List
+					Lists
 				</NavLink>
 				<NavLink to={'products'} className='btn btn-link'>
 					Products
-				</NavLink>
-				<NavLink to={'receipts'} className='btn btn-link'>
-					Receipts
 				</NavLink>
 			</div>
 			<Card contentClass='border-none'>{<Outlet />}</Card>

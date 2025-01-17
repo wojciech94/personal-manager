@@ -14,7 +14,7 @@ export type DataProps = {
 				folder_id: string,
 				is_favourite: boolean,
 				expired_at: string | null,
-				note_id: string
+				note_id: string | null
 		  ) => Promise<void>)
 	addAction?: ((args: string) => Promise<void>) | (() => Promise<void>)
 	fetchAction?: ((args: string) => Promise<void>) | (() => Promise<void>)

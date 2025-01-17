@@ -1,16 +1,18 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect, ChangeEvent } from 'react'
 import { useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
+import { Folder } from '../Folders/Folders'
 import { FormRow } from '../FormRow/FormRow'
+import { DataProps } from './types'
 
-export const ModalNoteContent = ({ modalData }) => {
+export const ModalNoteContent = ({ modalData }: { modalData: DataProps }) => {
 	const [noteName, setNoteName] = useState('')
 	const [noteContent, setNoteContent] = useState('')
-	const [categoryNames, setCategoryNames] = useState([])
+	const [categoryNames, setCategoryNames] = useState<string[]>([])
 	const [selectedCategory, setSelectedCategory] = useState('')
 	const [isFavourite, setIsFavourite] = useState(false)
 	const [selectedFolder, setSelectedFolder] = useState('')
-	const [folderNames, setFolderNames] = useState([])
+	const [folderNames, setFolderNames] = useState<Folder[]>([])
 	const [expiredDate, setExpiredDate] = useState('')
 	const [noteTags, setNoteTags] = useState('')
 	const { dashboardId } = useParams()
@@ -91,8 +93,19 @@ export const ModalNoteContent = ({ modalData }) => {
 	}
 
 	const handleUpdateNote = () => {
-		if (modalData.action) {
-			modalData.action(
+		console.log(modalData)
+		if (modalData.action && modalData.action.length === 8) {
+			const action = modalData.action as (
+				title: string,
+				content: string,
+				category: string,
+				tags: string | string[],
+				folder_id: string,
+				is_favourite: boolean,
+				expired_at: string | null,
+				note_id: string | null
+			) => Promise<void>
+			action(
 				noteName,
 				noteContent,
 				selectedCategory,
@@ -100,13 +113,13 @@ export const ModalNoteContent = ({ modalData }) => {
 				selectedFolder,
 				isFavourite,
 				expiredDate,
-				modalData.id
+				modalData.id ?? null
 			)
 			reset()
 		}
 	}
 
-	const handleNoteTagsChanged = e => {
+	const handleNoteTagsChanged = (e: ChangeEvent<HTMLInputElement>) => {
 		setNoteTags(e.target.value)
 	}
 
@@ -122,12 +135,12 @@ export const ModalNoteContent = ({ modalData }) => {
 		setNoteTags('')
 	}
 
-	const handleCategoryChange = value => {
+	const handleCategoryChange = (value: string) => {
 		const categoryName = value
 		setSelectedCategory(categoryName)
 	}
 
-	const handleFolderChange = value => {
+	const handleFolderChange = (value: string) => {
 		setSelectedFolder(value)
 	}
 
@@ -147,7 +160,6 @@ export const ModalNoteContent = ({ modalData }) => {
 				<FormRow label='Content'>
 					<textarea
 						className='w-100'
-						type='text'
 						name='noteContent'
 						id='noteContent'
 						value={noteContent}

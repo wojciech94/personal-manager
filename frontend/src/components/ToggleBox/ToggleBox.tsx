@@ -1,7 +1,7 @@
-import { useState } from 'react'
+import { ReactNode, useState } from 'react'
 import { Filter } from 'react-feather'
 
-export const ToggleBox = ({ children }) => {
+export const ToggleBox = ({ children }: { children: ReactNode }) => {
 	const [isOpen, setIsOpen] = useState(false)
 
 	return (

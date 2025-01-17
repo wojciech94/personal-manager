@@ -1,4 +1,13 @@
-export function Pagination({ currentPage, totalPages, nextPage, prevPage, goToPage, onSetItemsPerPage }) {
+type Props = {
+	currentPage: number
+	totalPages: number
+	nextPage: () => void
+	prevPage: () => void
+	goToPage: (num: number) => void
+	onSetItemsPerPage: (val: number) => void
+}
+
+export function Pagination({ currentPage, totalPages, nextPage, prevPage, goToPage, onSetItemsPerPage }: Props) {
 	const prev2Button = currentPage > 2
 	const prevCondition = currentPage > 1
 	const nextCondition = currentPage < totalPages
@@ -53,7 +62,7 @@ export function Pagination({ currentPage, totalPages, nextPage, prevPage, goToPa
 						className='w-50px'
 						name='itemsSelect'
 						id='itemsSelect'
-						onChange={e => onSetItemsPerPage(e.target.value)}>
+						onChange={e => onSetItemsPerPage(Number(e.target.value))}>
 						<option value='5'>5</option>
 						<option value='10'>10</option>
 						<option value='20'>20</option>

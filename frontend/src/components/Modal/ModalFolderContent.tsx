@@ -1,13 +1,14 @@
-import { useContext } from 'react'
 import { useEffect, useState } from 'react'
 import { Check, Edit, X } from 'react-feather'
 import { useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
-import { ModalContext } from '../../contexts/ModalContext'
+import { useModalContext } from '../../contexts/ModalContext'
 import { FormRow } from '../FormRow/FormRow'
+import { DataProps } from './types'
+import { Folder } from '../Folders/Folders'
 
-export function ModalFolderContent({ modalData }) {
-	const [folders, setFolders] = useState([])
+export function ModalFolderContent({ modalData }: { modalData: DataProps }) {
+	const [folders, setFolders] = useState<Folder[]>([])
 	const [addInputValue, setAddInputValue] = useState('')
 	const { dashboardId } = useParams()
 	const { setActiveModal } = useModalContext()
@@ -30,19 +31,29 @@ export function ModalFolderContent({ modalData }) {
 		}
 	}
 
-	const action = () => {
-		setActiveModal(null)
-		modalData.action()
+	const modalAction = () => {
+		if (modalData.action && typeof modalData.action === 'function' && modalData.action.length === 0) {
+			const action = modalData.action as () => Promise<void>
+			action()
+			setActiveModal(null)
+		}
+	}
+
+	const handleAddFolderAction = () => {
+		if (modalData.addAction && typeof modalData.addAction === 'function' && modalData.addAction.length === 1) {
+			const action = modalData.addAction as (arg: string) => Promise<void>
+			action(addInputValue)
+		}
 	}
 
 	return (
 		<>
 			<div className='card-content pt-0 d-flex flex-column gap-3'>
-				{folders && folders.length > 0 && (
+				{dashboardId && folders && folders.length > 0 && (
 					<>
 						<div className='card-subtitle border-top-none'>Modify folders</div>
 						{folders.map(f => (
-							<FolderRow key={f.name} folder={f} action={action} dashboardId={dashboardId} />
+							<FolderRow key={f.name} folder={f} action={modalAction} dashboardId={dashboardId} />
 						))}
 					</>
 				)}
@@ -57,7 +68,7 @@ export function ModalFolderContent({ modalData }) {
 			</div>
 			{modalData?.addAction && (
 				<div className='card-footer border-light'>
-					<button className='btn btn-success d-block w-100' onClick={() => modalData.addAction(addInputValue)}>
+					<button className='btn btn-success d-block w-100' onClick={handleAddFolderAction}>
 						Add folder
 					</button>
 				</div>
@@ -66,7 +77,13 @@ export function ModalFolderContent({ modalData }) {
 	)
 }
 
-function FolderRow({ folder, action, dashboardId }) {
+type FolderRowProps = {
+	folder: Folder
+	action: () => void
+	dashboardId: string
+}
+
+function FolderRow({ folder, action, dashboardId }: FolderRowProps) {
 	const [isEdit, setIsEdit] = useState(false)
 	const [inputValue, setInputValue] = useState(folder.name)
 	const token = localStorage.getItem('token')

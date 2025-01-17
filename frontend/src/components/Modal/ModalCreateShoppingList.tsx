@@ -1,11 +1,11 @@
-import { useContext } from 'react'
 import { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
-import { ModalContext } from '../../contexts/ModalContext'
+import { useModalContext } from '../../contexts/ModalContext'
 import { FormRow } from '../FormRow/FormRow'
+import { DataProps } from './types'
 
-export function ModalCreateShoppingList({ modalData }) {
+export function ModalCreateShoppingList({ modalData }: { modalData: DataProps }) {
 	const [nameValue, setNameValue] = useState('')
 	const { dashboardId } = useParams()
 	const { setActiveModal } = useModalContext()
@@ -24,9 +24,10 @@ export function ModalCreateShoppingList({ modalData }) {
 			const errorData = await res.json()
 			console.error(errorData.message)
 		} else {
-			setActiveModal(null)
-			if (modalData?.action) {
-				modalData.action()
+			if (modalData.action && typeof modalData.action === 'function' && modalData.action.length === 0) {
+				const action = modalData.action as () => Promise<void>
+				action()
+				setActiveModal(null)
 			}
 		}
 	}

@@ -1,16 +1,17 @@
-import { useContext } from 'react'
 import { useState } from 'react'
-import { ModalContext } from '../../contexts/ModalContext'
+import { useModalContext } from '../../contexts/ModalContext'
 import { FormRow } from '../FormRow/FormRow'
+import { DataProps } from './types'
 
-export const ModalAddUserContent = ({ modalData }) => {
+export const ModalAddUserContent = ({ modalData }: { modalData: DataProps }) => {
 	const [userInput, setUserInput] = useState('')
 	const { setActiveModal } = useModalContext()
 
 	const handleAddUser = () => {
-		if (modalData.action) {
+		if (modalData.action && typeof modalData.action === 'function' && modalData.action.length === 1) {
+			const action = modalData.action as (str: string) => Promise<void>
+			action(userInput)
 			setActiveModal(null)
-			modalData.action(userInput)
 		}
 	}
 

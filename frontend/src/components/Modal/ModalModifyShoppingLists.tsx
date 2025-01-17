@@ -1,13 +1,15 @@
-import { useContext } from 'react'
 import { useState, useEffect } from 'react'
 import { Check, Edit, X } from 'react-feather'
 import { useNavigate, useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
-import { ModalContext } from '../../contexts/ModalContext'
+import { useModalContext } from '../../contexts/ModalContext'
+import { ApiError } from '../../main'
+import { ShoppingLists } from '../ShoppingLists/ShoppingLists'
+import { DataProps } from './types'
 
-export function ModalModifyShoppingLists({ modalData }) {
-	const [shoppingLists, setShoppingLists] = useState([])
-	const [editedListId, setEditedListId] = useState(null)
+export function ModalModifyShoppingLists({ modalData }: { modalData: DataProps }) {
+	const [shoppingLists, setShoppingLists] = useState<ShoppingLists>([])
+	const [editedListId, setEditedListId] = useState<string | null>(null)
 	const [nameValue, setNameValue] = useState('')
 	const { setActiveModal } = useModalContext()
 	const { dashboardId } = useParams()
@@ -34,7 +36,7 @@ export function ModalModifyShoppingLists({ modalData }) {
 		}
 	}
 
-	const updateShoppingList = async id => {
+	const updateShoppingList = async (id: string) => {
 		if (token) {
 			const res = await fetch(`${API_URL}shopping-lists/${id}`, {
 				method: 'PATCH',
@@ -56,21 +58,22 @@ export function ModalModifyShoppingLists({ modalData }) {
 							}
 						})
 					)
-					if (modalData?.action) {
-						modalData.action()
+					if (modalData.action && typeof modalData.action === 'function' && modalData.action.length === 0) {
+						const action = modalData.action as () => Promise<void>
+						action()
 					}
 					setActiveModal(null)
 					navigate(`dashboards/${dashboardId}/shopping/list/${id}`, { replace: true })
 				}
 			} else {
-				const errorData = await res.json()
+				const errorData: ApiError = await res.json()
 				console.error(errorData.message)
 			}
 			setEditedListId(null)
 		}
 	}
 
-	const deleteShoppingList = async id => {
+	const deleteShoppingList = async (id: string) => {
 		if (token) {
 			const res = await fetch(`${API_URL}dashboards/${dashboardId}/delete/${id}`, {
 				method: 'DELETE',
@@ -83,14 +86,15 @@ export function ModalModifyShoppingLists({ modalData }) {
 				console.error(errorData.message)
 			} else {
 				setShoppingLists(prevList => prevList.filter(l => l._id !== id))
-				if (modalData?.action) {
-					modalData.action()
+				if (modalData.action && typeof modalData.action === 'function' && modalData.action.length === 0) {
+					const action = modalData.action as () => Promise<void>
+					action()
 				}
 			}
 		}
 	}
 
-	const setEditedList = id => {
+	const setEditedList = (id: string) => {
 		const list = shoppingLists.find(l => l._id === id)
 		if (list) {
 			setNameValue(list.name)

@@ -4,16 +4,13 @@ import { NavLink, Outlet, useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
 import { useModalContext } from '../../contexts/ModalContext'
 import { ExpandableMenu } from '../ExpandableMenu/ExpandableMenu'
+import { ShoppingList } from '../ShoppingList/ShoppingList'
 
-type ShoppingList = {
-	list: string[]
-	name: string
-	_id: string
-}
+export type ShoppingLists = ShoppingList[]
 
 export function ShoppingLists() {
 	const { setActiveModal } = useModalContext()
-	const [shoppingLists, setShoppingLists] = useState<ShoppingList[]>([] as ShoppingList[])
+	const [shoppingLists, setShoppingLists] = useState<ShoppingLists>([])
 	const token = localStorage.getItem('token')
 	const { dashboardId } = useParams()
 

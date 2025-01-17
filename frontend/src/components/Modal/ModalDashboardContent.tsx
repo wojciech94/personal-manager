@@ -1,12 +1,14 @@
 import { useState } from 'react'
 import { FormRow } from '../FormRow/FormRow'
+import { DataProps } from './types'
 
-export const ModalDashboardContent = ({ modalData }) => {
+export const ModalDashboardContent = ({ modalData }: { modalData: DataProps }) => {
 	const [dashboardName, setDashboardName] = useState('')
 
 	const handleCreateDashboard = () => {
-		if (modalData.action) {
-			modalData.action(dashboardName)
+		if (modalData.action && typeof modalData.action === 'function' && modalData.action.length === 1) {
+			const action = modalData.action as (args: string) => Promise<void>
+			action(dashboardName)
 		}
 	}
 

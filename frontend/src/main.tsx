@@ -127,10 +127,6 @@ const Main = () => {
 									path: 'products',
 									element: <Products />,
 								},
-								{
-									path: 'receipts',
-									element: <>Receipts</>,
-								},
 							],
 						},
 						{

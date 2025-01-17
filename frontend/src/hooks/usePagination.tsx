@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Product } from '../components/Products/Products'
 
-export function usePagination(items: Product[], itemsPerPage: number) {
+export function usePagination<T>(items: T[], itemsPerPage: number) {
 	const [currentPage, setCurrentPage] = useState(1)
 
 	useEffect(() => {

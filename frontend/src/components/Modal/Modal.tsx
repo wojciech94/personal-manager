@@ -22,23 +22,23 @@ export const Modal: React.FC<ModalDataProps> = ({ name, title, data }): JSX.Elem
 
 	switch (name) {
 		case 'createDashboard':
-			modalContent = <ModalDashboardContent modalData={data} />
+			if (data) modalContent = <ModalDashboardContent modalData={data} />
 			break
 		case 'addUser':
-			modalContent = <ModalAddUserContent modalData={data} />
+			if (data) modalContent = <ModalAddUserContent modalData={data} />
 			break
 		case 'addNoteCategory':
 			modalContent = <ModalAddCategoryContent />
 			break
 		case 'createNote':
 		case 'editNote':
-			modalContent = <ModalNoteContent modalData={data} />
+			if (data) modalContent = <ModalNoteContent modalData={data} />
 			break
 		case 'editFolder':
-			modalContent = <ModalFolderContent modalData={data} />
+			if (data) modalContent = <ModalFolderContent modalData={data} />
 			break
 		case 'modifyTodoGroup':
-			modalContent = <ModalModifyTodoGroup modalData={data} />
+			if (data) modalContent = <ModalModifyTodoGroup modalData={data} />
 			break
 		case 'addTask':
 			if (data) modalContent = <ModalAddTask modalData={data} />
@@ -50,10 +50,10 @@ export const Modal: React.FC<ModalDataProps> = ({ name, title, data }): JSX.Elem
 			modalContent = <ModalAddListItem />
 			break
 		case 'createShoppingList':
-			modalContent = <ModalCreateShoppingList modalData={data} />
+			if (data) modalContent = <ModalCreateShoppingList modalData={data} />
 			break
 		case 'modifyShoppingLists':
-			modalContent = <ModalModifyShoppingLists modalData={data} />
+			if (data) modalContent = <ModalModifyShoppingLists modalData={data} />
 			break
 		case 'addShoppingItem':
 			modalContent = <ModalAddShoppingItem />

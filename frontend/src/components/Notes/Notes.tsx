@@ -96,7 +96,7 @@ export const Notes = () => {
 		folder_id: string,
 		is_favourite: boolean,
 		expired_at: string | null,
-		noteId: string
+		noteId: string | null
 	) => {
 		let noteTags
 		if (typeof tags === 'string') {
