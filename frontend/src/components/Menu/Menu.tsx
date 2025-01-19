@@ -13,11 +13,6 @@ export const Menu: React.FC = (): JSX.Element => {
 			</NavLink>
 			<NavLink
 				className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}
-				to={`/dashboards/${dashboardId}/calendar`}>
-				Calendar
-			</NavLink>
-			<NavLink
-				className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}
 				to={`/dashboards/${dashboardId}/todo`}>
 				To do list
 			</NavLink>
@@ -30,11 +25,6 @@ export const Menu: React.FC = (): JSX.Element => {
 				className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}
 				to={`/dashboards/${dashboardId}/shopping/list`}>
 				Shopping
-			</NavLink>
-			<NavLink
-				className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}
-				to={`/dashboards/${dashboardId}/linktree`}>
-				linktree
 			</NavLink>
 		</div>
 	)
