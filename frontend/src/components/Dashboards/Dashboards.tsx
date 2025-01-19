@@ -11,7 +11,7 @@ interface Props {
 
 export const Dashboards: React.FC<Props> = ({ dashboards }): JSX.Element => {
 	return (
-		<nav className='d-flex flex-1 gap-5 justify-center align-center'>
+		<nav className='d-flex flex-1 gap-5 justify-center align-center py-1'>
 			{dashboards &&
 				dashboards.length > 0 &&
 				dashboards.map(d => (

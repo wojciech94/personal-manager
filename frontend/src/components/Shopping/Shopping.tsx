@@ -1,7 +1,14 @@
-import { NavLink, Outlet } from 'react-router-dom'
+import { useEffect } from 'react'
+import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { Card } from '../Card/Card'
 
 export function Shopping() {
+	const navigate = useNavigate()
+
+	useEffect(() => {
+		navigate('list')
+	}, [])
+
 	return (
 		<>
 			<div className='d-flex gap-3 align-center mb-4'>

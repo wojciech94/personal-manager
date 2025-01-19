@@ -24,7 +24,7 @@ export function Products() {
 	const [filteredProducts, setFilteredProducts] = useState<Product[]>([])
 	const [selectedCategory, setSelectedCategory] = useState('')
 	const { dashboardId } = useParams()
-	const [itemsPerPage, setItemsPerPage] = useState(5)
+	const [itemsPerPage, setItemsPerPage] = useState(10)
 
 	const { currentItems, currentPage, totalPages, nextPage, prevPage, goToPage } = usePagination(
 		filteredProducts,
@@ -113,6 +113,7 @@ export function Products() {
 					<Pagination
 						currentPage={currentPage}
 						totalPages={totalPages}
+						itemsPerPage={itemsPerPage}
 						nextPage={nextPage}
 						prevPage={prevPage}
 						goToPage={goToPage}

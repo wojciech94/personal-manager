@@ -8,7 +8,7 @@ import { DataProps } from './types'
 
 export function ModalAddProduct({ modalData }: { modalData: DataProps }) {
 	const [nameValue, setNameValue] = useState('')
-	const [categoryValue, setCategoryValue] = useState('')
+	const [categoryValue, setCategoryValue] = useState('other')
 	const [unitValue, setUnitValue] = useState('')
 	const [priceValue, setPriceValue] = useState('')
 	const [tagsValue, setTagsValue] = useState('')
@@ -40,7 +40,7 @@ export function ModalAddProduct({ modalData }: { modalData: DataProps }) {
 		if (res.ok) {
 			const data = await res.json()
 			if (data) {
-				if (modalData?.action && modalData.action.length) {
+				if (modalData?.action && modalData.action.length === 0) {
 					const action = modalData.action as () => Promise<void>
 					action()
 				} else {

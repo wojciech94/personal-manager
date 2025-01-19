@@ -1,11 +1,11 @@
-import { useState, useEffect, useContext } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
-import { ModalContext, useModalContext } from '../../contexts/ModalContext'
+import { useModalContext } from '../../contexts/ModalContext'
 
 export function ModalAddShoppingItem(): JSX.Element {
-	const [products, setProducts] = useState<IProduct[]>([])
-	const [activeProductId, setActiveProductId] = useState<string | null>(null)
+	const [products, setProducts] = useState<Product[]>([])
+	const [activeProductId, setActiveProductId] = useState<Product | null>(null)
 	const { dashboardId, shoppingListId } = useParams()
 	const [unitValue, setUnitValue] = useState<string>('')
 	const [priceValue, setPriceValue] = useState<number>(0)
@@ -15,7 +15,7 @@ export function ModalAddShoppingItem(): JSX.Element {
 	const { setActiveModal } = useModalContext()
 	const navigate = useNavigate()
 
-	interface IProduct {
+	type Product = {
 		_id: string
 		unit: string
 		price: number
@@ -73,7 +73,7 @@ export function ModalAddShoppingItem(): JSX.Element {
 
 	const handleSelectItem = (id: string): void => {
 		const activeProduct = products.find(p => p._id === id)
-		setActiveProductId(id || null)
+		setActiveProductId(activeProduct || null)
 		setUnitValue(activeProduct?.unit || '')
 		setPriceValue(activeProduct?.price || 0)
 	}
@@ -89,7 +89,11 @@ export function ModalAddShoppingItem(): JSX.Element {
 					{products && products.length > 0 && (
 						<div className='d-flex flex-column gap-1'>
 							<div>Product</div>
-							<select name='productsSelect' id='productsSelect' onChange={e => handleSelectItem(e.target.value)}>
+							<select
+								name='productsSelect'
+								id='productsSelect'
+								onChange={e => handleSelectItem(e.target.value)}
+								value={activeProductId?._id}>
 								{products.map(p => (
 									<option key={p._id} value={p._id}>
 										{p.name}

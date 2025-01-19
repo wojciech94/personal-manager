@@ -23,7 +23,7 @@ export const Menu: React.FC = (): JSX.Element => {
 			</NavLink>
 			<NavLink
 				className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}
-				to={`/dashboards/${dashboardId}/shopping/list`}>
+				to={`/dashboards/${dashboardId}/shopping`}>
 				Shopping
 			</NavLink>
 		</div>

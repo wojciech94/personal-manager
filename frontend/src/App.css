@@ -64,6 +64,10 @@ nav .link:not(.active):hover::after {
 	transform: translateY(-50%);
 }
 
+.h-30px {
+	height: 30px;
+}
+
 .h-70px {
 	height: 70px;
 }
