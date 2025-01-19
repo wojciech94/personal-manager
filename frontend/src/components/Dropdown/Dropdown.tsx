@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { User } from 'react-feather'
 
 type ItemsProps = {
 	name: string
@@ -10,7 +11,7 @@ type DropdownProps = {
 	items: ItemsProps[]
 }
 
-export const Dropdown: React.FC<DropdownProps> = ({ title, items }): JSX.Element => {
+export const Dropdown: React.FC<DropdownProps> = ({ items }): JSX.Element => {
 	const [expanded, setExpanded] = useState(false)
 
 	const handleSetAction = (action: () => void): void => {
@@ -21,8 +22,9 @@ export const Dropdown: React.FC<DropdownProps> = ({ title, items }): JSX.Element
 	return (
 		<div className='dropdown'>
 			<button className='dropdown-btn' onClick={() => setExpanded(prevState => !prevState)}>
-				<div className='dropdown-title'>{title}</div>
-				<div className='dropdown-avatar'></div>
+				<div className='dropdown-avatar'>
+					<User size={20} />
+				</div>
 			</button>
 			{expanded && (
 				<div className='dropdown-menu'>

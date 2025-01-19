@@ -125,14 +125,14 @@ export const Home = () => {
 						<Link to={'/'}>
 							<img src='/logo.png' width={40} alt='' />
 						</Link>
-						<div className='d-flex flex-1 justify-center'>
+						<div className='d-flex flex-1 justify-start align-center gap-4 scroll-x-auto'>
 							<Dashboards dashboards={dashboards}></Dashboards>
-							<button className='btn btn-primary d-flex gap-2 align-center' onClick={openModal}>
-								<Plus size={16} />
-								<span className='d-none d-inline-sm'>Add dashboard</span>
-							</button>
 						</div>
-						<Dropdown title='User' items={dropdownItems}></Dropdown>
+						<button className='btn btn-mobile-icon btn-primary d-flex gap-2 align-center' onClick={openModal}>
+							<Plus size={16} />
+							<span className='d-none d-inline-sm'>Add dashboard</span>
+						</button>
+						<Dropdown items={dropdownItems}></Dropdown>
 					</header>
 					<main className='flex-1'>
 						{isExactMatch ? (
