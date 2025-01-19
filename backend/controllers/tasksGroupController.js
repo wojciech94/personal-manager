@@ -53,7 +53,7 @@ exports.getTasksGroup = async (req, res) => {
 
 		const todoGroups = await TaskGroup.find({ _id: { $in: todoGroupsIds } })
 
-		res.status(200).json({ todoGroups })
+		res.status(200).json(todoGroups)
 	} catch (error) {
 		res.status(500).json({ message: error.message })
 	}
