@@ -116,14 +116,6 @@ export const Dashboard = () => {
 			},
 		]
 		if (dashboard?.isOwner) {
-			const removeAction = {
-				action: () => removeUser(null),
-				icon: <Trash2 size={16} />,
-				label: 'Drop dashboard',
-				btnClass: 'btn-danger',
-			}
-			actionsArray.push(removeAction)
-		} else {
 			const deleteAction = {
 				action: deleteDashboard,
 				icon: <Trash2 size={16} />,
@@ -131,6 +123,14 @@ export const Dashboard = () => {
 				btnClass: 'btn-danger',
 			}
 			actionsArray.push(deleteAction)
+		} else {
+			const removeAction = {
+				action: () => removeUser(null),
+				icon: <Trash2 size={16} />,
+				label: 'Drop dashboard',
+				btnClass: 'btn-danger',
+			}
+			actionsArray.push(removeAction)
 		}
 
 		return actionsArray
