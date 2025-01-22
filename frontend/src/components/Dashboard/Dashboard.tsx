@@ -1,5 +1,5 @@
 import { Menu } from '../Menu/Menu'
-import { Outlet, useLocation, useMatch, useNavigate, useParams } from 'react-router-dom'
+import { Outlet, useMatch, useNavigate, useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
 import { Card, CardHeader } from '../Card/Card'
 import { useEffect, useState } from 'react'
@@ -8,7 +8,6 @@ import { Check, Plus, Repeat, Trash2, User, X } from 'react-feather'
 import { useModalContext } from '../../contexts/ModalContext'
 import { useFetchDashboardsContext } from '../../contexts/FetchDashboardsContext'
 import { Logs } from '../Logs/Logs'
-import { usePagination } from '../../hooks/usePagination'
 
 type DashboardDetails = {
 	dashboard: DashboardType | null

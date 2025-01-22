@@ -31,7 +31,7 @@ export type ShoppingList = {
 export function ShoppingList() {
 	const data: ShoppingList = useLoaderData() as ShoppingList
 	const { setActiveModal } = useModalContext()
-	const { shoppingListId } = useParams()
+	const { shoppingListId, dashboardId } = useParams()
 	const productsToBuy = data.list.filter(p => p.isPurchased === false).length
 	const { revalidate } = useRevalidator()
 
@@ -49,14 +49,17 @@ export function ShoppingList() {
 			console.warn('Token not available')
 			return
 		}
-		const res = await fetch(`${API_URL}shoppingLists/${shoppingListId}/shopping-items/${id}`, {
-			method: 'PATCH',
-			headers: {
-				Authorization: `Bearer ${token}`,
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(data),
-		})
+		const res = await fetch(
+			`${API_URL}dashboards/${dashboardId}/shoppingLists/${shoppingListId}/shopping-items/${id}`,
+			{
+				method: 'PATCH',
+				headers: {
+					Authorization: `Bearer ${token}`,
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(data),
+			}
+		)
 		if (!res.ok) {
 			const errorData: ApiError = await res.json()
 			console.error(errorData.message)
@@ -68,12 +71,15 @@ export function ShoppingList() {
 	const handleDeleteListItem = async (id: string) => {
 		const token = localStorage.getItem('token')
 		if (token) {
-			const res = await fetch(`${API_URL}shoppingLists/${shoppingListId}/shopping-items/${id}`, {
-				method: 'DELETE',
-				headers: {
-					Authorization: `Bearer ${token}`,
-				},
-			})
+			const res = await fetch(
+				`${API_URL}dashboards/${dashboardId}/shoppingLists/${shoppingListId}/shopping-items/${id}`,
+				{
+					method: 'DELETE',
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			)
 			if (!res.ok) {
 				const errorData = await res.json()
 				console.error(errorData.message)

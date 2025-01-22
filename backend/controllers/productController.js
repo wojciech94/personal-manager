@@ -1,10 +1,12 @@
 const Dashboard = require('../models/Dashboard')
 const Product = require('../models/Product')
 const mongoose = require('mongoose')
+const { addLog } = require('./logsController')
 
 exports.addProduct = async (req, res) => {
 	try {
 		const { dashboardId } = req.params
+		const userId = req.user.userId
 
 		if (!dashboardId || !mongoose.Types.ObjectId.isValid(dashboardId)) {
 			return res.status(400).json({ message: 'Missing or invalid dashboardId' })
@@ -27,6 +29,9 @@ exports.addProduct = async (req, res) => {
 		dashboard.productsIds.push(product._id)
 
 		await dashboard.save()
+
+		const message = `New product created (${name})`
+		await addLog(dashboard.logsId, userId, message)
 
 		res.status(201).json(product)
 	} catch (error) {
@@ -57,6 +62,7 @@ exports.getProducts = async (req, res) => {
 exports.updateProducts = async (req, res) => {
 	try {
 		const { dashboardId, productId } = req.params
+		const userId = req.user.userId
 
 		if (!dashboardId || !mongoose.Types.ObjectId.isValid(dashboardId)) {
 			return res.status(400).json({ message: 'Missing or invalid dashboardId' })
@@ -85,6 +91,9 @@ exports.updateProducts = async (req, res) => {
 
 		await product.save()
 
+		const message = `Updated product (${name})`
+		await addLog(dashboard.logsId, userId, message)
+
 		res.status(200).json(product)
 	} catch (error) {
 		res.status(500).json({ message: error.message })
@@ -94,6 +103,8 @@ exports.updateProducts = async (req, res) => {
 exports.deleteProduct = async (req, res) => {
 	try {
 		const { dashboardId, id } = req.params
+		const userId = req.user.userId
+
 		if (!dashboardId || !mongoose.Types.ObjectId.isValid(dashboardId)) {
 			return res.status(400).json({ message: 'Missing or invalid dashboardId' })
 		}
@@ -114,6 +125,9 @@ exports.deleteProduct = async (req, res) => {
 
 		dashboard.productsIds = dashboard.productsIds.filter(p => p.toString() !== id)
 		await dashboard.save()
+
+		const message = `Product deleted (${product.name})`
+		await addLog(dashboard.logsId, userId, message)
 
 		res.status(204).send()
 	} catch (error) {

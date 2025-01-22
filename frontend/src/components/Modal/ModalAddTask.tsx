@@ -18,13 +18,13 @@ export function ModalAddTask({ modalData }: { modalData: DataProps }) {
 	const { setActiveModal } = useModalContext()
 
 	useEffect(() => {
-		if (modalData.initValue && typeof modalData.initValue === 'string') {
-			setTaskGroup(modalData.initValue)
-		} else {
-			if (modalData.groups && modalData.groups.length > 0) {
-				setGroups(modalData.groups)
+		if (modalData.groups) {
+			if (modalData.initValue && typeof modalData.initValue === 'string') {
+				setTaskGroup(modalData.initValue)
+			} else if (modalData.groups.length > 0) {
 				setTaskGroup(modalData.groups[0]._id)
 			}
+			setGroups(modalData.groups)
 		}
 	}, [modalData])
 

@@ -1,12 +1,25 @@
 const ShoppingItem = require('../models/ShoppingItem')
 const ShoppingList = require('../models/ShoppingList')
+const { addLog } = require('./logsController')
 
 const mongoose = require('mongoose')
+const Dashboard = require('../models/Dashboard')
 
 exports.addItem = async (req, res) => {
 	try {
-		const { shoppingListId } = req.params
+		const { shoppingListId, dashboardId } = req.params
 		const { quantity, notes, customUnit, customPrice, isPurchased, productId } = req.body
+		const userId = req.user.userId
+
+		if (!dashboardId || !mongoose.Types.ObjectId.isValid(dashboardId)) {
+			return res.status(400).json({ message: 'Missing or invalid dashboard Id' })
+		}
+
+		const dashboard = await Dashboard.findById(dashboardId)
+
+		if (!dashboard) {
+			return res.status(404).json({ message: 'Cannot find dashboard for provided Id' })
+		}
 
 		if (!quantity) {
 			return res.status(400).json({ message: 'Quantity is a required filed' })
@@ -27,6 +40,9 @@ exports.addItem = async (req, res) => {
 		shoppingList.list.push(shoppingItem)
 
 		await shoppingList.save()
+
+		const message = `Added new shopping item (${productId.toString()}) into ${shoppingList.name}`
+		await addLog(dashboard.logsId, userId, message)
 
 		res.status(201).json(shoppingItem)
 	} catch (error) {
@@ -55,11 +71,22 @@ exports.getItems = async (req, res) => {
 
 exports.updateItem = async (req, res) => {
 	try {
-		const { shoppingListId, id } = req.params
+		const { dashboardId, shoppingListId, id } = req.params
 		const { quantity, notes, customUnit, customPrice, isPurchased } = req.body
+		const userId = req.user.userId
 
 		if (!id || !mongoose.Types.ObjectId.isValid(id)) {
 			return res.status(400).json({ message: 'Missing or invalid shopping item Id' })
+		}
+
+		if (!dashboardId || !mongoose.Types.ObjectId.isValid(dashboardId)) {
+			return res.status(400).json({ message: 'Missing or invalid dashboard Id' })
+		}
+
+		const dashboard = await Dashboard.findById(dashboardId)
+
+		if (!dashboard) {
+			return res.status(404).json({ message: 'Cannot find dashboard for provided Id' })
 		}
 
 		const shoppingItem = await ShoppingItem.findById(id)
@@ -84,6 +111,9 @@ exports.updateItem = async (req, res) => {
 		shoppingList.updatedAt = new Date()
 		await shoppingList.save()
 
+		const message = `Update shopping item (${id})`
+		await addLog(dashboard.logsId, userId, message)
+
 		res.status(200).json(shoppingItem)
 	} catch (error) {
 		res.status(500).json({ message: error.message })
@@ -92,9 +122,21 @@ exports.updateItem = async (req, res) => {
 
 exports.deleteItem = async (req, res) => {
 	try {
-		const { id, shoppingListId } = req.params
+		const { dashboardId, id, shoppingListId } = req.params
+		const userId = req.user.userId
+
 		if (!id || !mongoose.Types.ObjectId.isValid(id)) {
 			return res.status(400).json({ message: 'Missing or invalid shopping item Id' })
+		}
+
+		if (!dashboardId || !mongoose.Types.ObjectId.isValid(dashboardId)) {
+			return res.status(400).json({ message: 'Missing or invalid dashboard Id' })
+		}
+
+		const dashboard = await Dashboard.findById(dashboardId)
+
+		if (!dashboard) {
+			return res.status(404).json({ message: 'Cannot find dashboard for provided Id' })
 		}
 
 		if (!shoppingListId || !mongoose.Types.ObjectId.isValid(shoppingListId)) {
@@ -114,6 +156,9 @@ exports.deleteItem = async (req, res) => {
 
 		shoppingList.list = shoppingList.list.filter(el => el._id !== id)
 		await shoppingList.save()
+
+		const message = `Delete shopping item (${id})`
+		await addLog(dashboard.logsId, userId, message)
 
 		res.status(204).send()
 	} catch (error) {

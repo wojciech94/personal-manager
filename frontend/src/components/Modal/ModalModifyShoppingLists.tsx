@@ -38,7 +38,7 @@ export function ModalModifyShoppingLists({ modalData }: { modalData: DataProps }
 
 	const updateShoppingList = async (id: string) => {
 		if (token) {
-			const res = await fetch(`${API_URL}shopping-lists/${id}`, {
+			const res = await fetch(`${API_URL}dashboards/${dashboardId}/shopping-lists/${id}`, {
 				method: 'PATCH',
 				headers: {
 					Authorization: `Bearer ${token}`,
