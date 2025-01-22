@@ -364,6 +364,7 @@ a.active,
 }
 
 .card-header {
+	min-height: 65px;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -379,6 +380,7 @@ a.active,
 }
 
 .card-subtitle {
+	min-height: 60px;
 	display: flex;
 	justify-content: space-between;
 	gap: 1rem;
