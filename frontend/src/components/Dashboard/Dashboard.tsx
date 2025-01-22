@@ -1,5 +1,5 @@
 import { Menu } from '../Menu/Menu'
-import { Outlet, useMatch, useNavigate, useParams } from 'react-router-dom'
+import { Outlet, useLocation, useMatch, useNavigate, useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
 import { Card, CardHeader } from '../Card/Card'
 import { useEffect, useState } from 'react'
@@ -7,6 +7,8 @@ import { FormRow } from '../FormRow/FormRow'
 import { Check, Plus, Repeat, Trash2, User, X } from 'react-feather'
 import { useModalContext } from '../../contexts/ModalContext'
 import { useFetchDashboardsContext } from '../../contexts/FetchDashboardsContext'
+import { Logs } from '../Logs/Logs'
+import { usePagination } from '../../hooks/usePagination'
 
 type DashboardDetails = {
 	dashboard: DashboardType | null
@@ -20,6 +22,17 @@ type User = {
 	name: string
 }
 
+type LogsObject = {
+	logs: Log[]
+}
+
+export type Log = {
+	timestamps: string
+	initiatorId: User
+	message: string
+	_id: string
+}
+
 type DashboardType = {
 	_id: string
 	name: string
@@ -27,6 +40,7 @@ type DashboardType = {
 	creatorId: User
 	userIds: User[]
 	created_at: string
+	logsId: LogsObject
 }
 
 export const Dashboard = () => {
@@ -55,8 +69,10 @@ export const Dashboard = () => {
 	}
 
 	useEffect(() => {
-		getDetails()
-	}, [dashboardId])
+		if (isExactMatch) {
+			getDetails()
+		}
+	}, [dashboardId, isExactMatch])
 
 	const removeUser = async (id: string | null) => {
 		if (token) {
@@ -256,7 +272,7 @@ const DashboardDetails: React.FC<DashboardDetails> = ({ dashboard, editMode, get
 					<FormRow className='mb-2' label={'Creation date'} content={dashboard?.created_at?.split('T')[0]} />
 					{dashboard.userIds && dashboard.userIds.length > 0 && (
 						<div className='d-flex flex-column gap-2'>
-							<div className='d-flex justify-between align-center text-bold gap-2 card-subtitle mb-2'>
+							<div className='d-flex justify-between align-center text-bold gap-2 card-subtitle'>
 								Users
 								<div className='d-flex gap-2'>
 									{dashboard.isOwner && (
@@ -268,7 +284,7 @@ const DashboardDetails: React.FC<DashboardDetails> = ({ dashboard, editMode, get
 									)}
 								</div>
 							</div>
-							<div className='d-flex gap-2'>
+							<div className='d-flex gap-2 py-2'>
 								{dashboard.userIds.map(u => (
 									<Card key={u._id} contentClass='border-none'>
 										<div className='d-flex align-center gap-2'>
@@ -284,6 +300,7 @@ const DashboardDetails: React.FC<DashboardDetails> = ({ dashboard, editMode, get
 							</div>
 						</div>
 					)}
+					{dashboard.logsId && dashboard.logsId.logs.length > 0 && <Logs logs={dashboard.logsId.logs}></Logs>}
 					{editMode && (
 						<div className='d-flex justify-center border-top border-light pt-4 mt-2 mx-n4'>
 							<button className='btn btn-success d-flex gap-2' onClick={updateDashboard}>

@@ -9,7 +9,7 @@ router.post('/dashboards/:dashboardId/add-folder', folderController.addFolder)
 
 router.get('/dashboards/:dashboardId/folders', folderController.getFolders)
 
-router.patch('/folders/:folderId', folderController.updateFolder)
+router.patch('/dashboards/:dashboardId/folders/:folderId', folderController.updateFolder)
 
 router.delete('/dashboards/:dashboardId/folders/:folderId', folderController.deleteFolder)
 

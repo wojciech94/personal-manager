@@ -44,7 +44,7 @@ export function ModalAddTask({ modalData }: { modalData: DataProps }) {
 		})
 		if (res.ok) {
 			await res.json()
-			if (modalData?.action && modalData.action.length) {
+			if (modalData?.action && modalData.action.length === 0) {
 				const action = modalData.action as () => Promise<void>
 				action()
 			} else {

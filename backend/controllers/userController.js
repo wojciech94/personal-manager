@@ -1,11 +1,34 @@
+const mongoose = require('mongoose')
 const Dashboard = require('../models/Dashboard')
 const User = require('../models/User')
+const { addLog } = require('./logsController')
 
-//### Users
+exports.getUserName = async userId => {
+	try {
+		if (!mongoose.Types.ObjectId.isValid(userId)) {
+			console.error(`Invalid user ID: ${userId}`)
+			return null
+		}
+
+		const user = await User.findById(userId)
+		if (!user) {
+			console.error("Couldn't find user for the provided id")
+			return null
+		}
+
+		return user.name
+	} catch (error) {
+		console.error('Error geting user name:', error)
+		return null
+	}
+}
+
+//### Users routes
 exports.addUser = async (req, res) => {
 	try {
 		const { dashboardId } = req.params
 		const { name } = req.body
+		const userId = req.user.userId
 
 		const user = await User.findOne({ name: name })
 		if (!user) {
@@ -22,6 +45,10 @@ exports.addUser = async (req, res) => {
 		}
 
 		dashboard.userIds.push(user._id)
+
+		const message = `Added new user (${name}) to dashboard.`
+		addLog(dashboard.logsId, userId, message)
+
 		await dashboard.save()
 		res.json(dashboard)
 	} catch (error) {
@@ -62,6 +89,11 @@ exports.removeUser = async (req, res) => {
 		const idToDelete = id ? id : userId
 		const initialLength = dashboard.userIds.length
 		dashboard.userIds = dashboard.userIds.filter(id => !id.equals(idToDelete))
+
+		const userName = id ? await exports.getUserName(id) : await exports.getUserName(userId)
+
+		const message = id ? `User (${userName}) was removed from dashboard` : `User (${userName}) dropped the dashboard`
+		addLog(dashboard.logsId, userId, message)
 
 		if (dashboard.userIds.length === 0 && initialLength === 1) {
 			await Dashboard.deleteOne({ _id: dashboardId })

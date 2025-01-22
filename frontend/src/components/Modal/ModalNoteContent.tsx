@@ -93,7 +93,6 @@ export const ModalNoteContent = ({ modalData }: { modalData: DataProps }) => {
 	}
 
 	const handleUpdateNote = () => {
-		console.log(modalData)
 		if (modalData.action && modalData.action.length === 8) {
 			const action = modalData.action as (
 				title: string,

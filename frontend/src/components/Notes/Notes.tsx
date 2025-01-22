@@ -105,7 +105,9 @@ export const Notes = () => {
 			noteTags = tags
 		}
 		noteTags = noteTags.map(tag => tag.trim()).filter(tag => tag.length > 0)
-		const url = !noteId ? `${API_URL}dashboards/${dashboardId}/add-note` : `${API_URL}notes/${noteId}`
+		const url = !noteId
+			? `${API_URL}dashboards/${dashboardId}/add-note`
+			: `${API_URL}dashboards/${dashboardId}/notes/${noteId}`
 		const response = await fetch(url, {
 			method: `${noteId ? 'PATCH' : 'POST'}`,
 			headers: {

@@ -150,10 +150,7 @@ export function Task({ task, fetchTasks, tasksSettings }: Props) {
 							checked={taskData.is_done}
 							onChange={() => updateTask('toggle')}
 						/>
-						<label
-							htmlFor={`task-${taskData._id}`}
-							className={`${taskData.is_done ? 'done' : ''}`}
-							onClick={() => updateTask('toggle')}>
+						<label htmlFor={`task-${taskData._id}`} className={`${taskData.is_done ? 'done' : ''}`}>
 							{taskData.content}
 						</label>
 					</>

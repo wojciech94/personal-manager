@@ -1,11 +1,13 @@
 const TaskGroup = require('../models/TaskGroup')
 const Dashboard = require('../models/Dashboard')
 const mongoose = require('mongoose')
+const { addLog } = require('./logsController')
 
 exports.addTasksGroup = async (req, res) => {
 	try {
 		const { dashboardId } = req.params
 		const { name } = req.body
+		const userId = req.user.userId
 
 		if (!name) {
 			return res.status(500).json({ message: 'No name provided in the request body' })
@@ -26,6 +28,10 @@ exports.addTasksGroup = async (req, res) => {
 
 		dashboard.todoGroupIds.push(newGroup._id)
 		await dashboard.save()
+
+		const message = `Added new tasks group (${name})`
+		await addLog(dashboard.logsId, userId, message)
+
 		res.status(200).json(newGroup)
 	} catch (error) {
 		res.status(500).json({ message: error.message })
@@ -63,6 +69,7 @@ exports.updateTasksGroup = async (req, res) => {
 	try {
 		const { dashboardId } = req.params
 		const { id, name } = req.body
+		const userId = req.user.userId
 
 		if (!name || !id) {
 			return res.status(400).json({ message: 'No name or id were provided in the request body' })
@@ -83,6 +90,9 @@ exports.updateTasksGroup = async (req, res) => {
 			return res.status(404).json({ message: 'Dashboard not found' })
 		}
 
+		const message = `Task group updated (new name: ${name})`
+		await addLog(dashboard.logsId, userId, message)
+
 		res.status(200).json(dashboard.todoGroupIds)
 	} catch (error) {
 		res.status(500).json({ message: error.message })
@@ -93,6 +103,7 @@ exports.deleteTasksGroup = async (req, res) => {
 	try {
 		const { dashboardId } = req.params
 		const { id } = req.body
+		const userId = req.user.userId
 
 		if (!mongoose.Types.ObjectId.isValid(dashboardId)) {
 			return res.status(400).json({ message: 'Invalid dashboard ID format' })
@@ -121,6 +132,9 @@ exports.deleteTasksGroup = async (req, res) => {
 		await dashboard.save()
 
 		await dashboard.populate('todoGroupIds')
+
+		const message = `Removed task group (${todoGroup.name})`
+		await addLog(dashboard.logsId, userId, message)
 
 		res.status(200).json(dashboard.todoGroupIds)
 	} catch (error) {

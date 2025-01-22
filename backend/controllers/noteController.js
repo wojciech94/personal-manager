@@ -2,11 +2,13 @@ const Dashboard = require('../models/Dashboard')
 const Note = require('../models/Note')
 const NoteCategory = require('../models/NoteCategory')
 const User = require('../models/User')
+const { addLog } = require('./logsController')
 
 exports.addNote = async (req, res) => {
 	try {
 		const { dashboardId } = req.params
 		const { title, content, category, tags, folder_id, is_favourite, expired_at } = req.body
+		const userId = req.user.userId
 
 		if (!title || !content) {
 			return res.status(400).json({ message: 'Title and content are required.' })
@@ -31,6 +33,9 @@ exports.addNote = async (req, res) => {
 
 		dashboard.notesIds.push(newNote._id)
 		await dashboard.save()
+
+		const message = `Added new note (${title})`
+		await addLog(dashboard.logsId, userId, message)
 
 		res.json(newNote)
 	} catch (error) {
@@ -164,11 +169,17 @@ exports.updateNote = async (req, res) => {
 	try {
 		const userId = req.user.userId
 
-		const { noteId } = req.params
+		const { noteId, dashboardId } = req.params
 		const note = await Note.findById(noteId)
 
 		if (!note) {
 			return res.status(404).json({ message: 'Note not found' })
+		}
+
+		const dashboard = await Dashboard.findById(dashboardId).populate('userIds')
+
+		if (!dashboard) {
+			return res.status(404).json({ message: 'Dashboard not found' })
 		}
 
 		const { title, content, category, tags, folder_id, is_favourite, expired_at } = req.body
@@ -183,6 +194,9 @@ exports.updateNote = async (req, res) => {
 
 		await note.save()
 
+		const message = `Note updated (${title})`
+		await addLog(dashboard.logsId, userId, message)
+
 		return res.status(200).json({ message: 'Note updated successfully', note })
 	} catch (error) {
 		res.status(500).json({ message: error.message })
@@ -193,6 +207,7 @@ exports.deleteNote = async (req, res) => {
 	try {
 		const { dashboardId } = req.params
 		const { id } = req.body
+		const userId = req.user.userId
 
 		const dashboard = await Dashboard.findById(dashboardId)
 		if (!dashboard) {
@@ -207,7 +222,13 @@ exports.deleteNote = async (req, res) => {
 
 		await dashboard.save()
 
-		await Note.deleteOne({ _id: id })
+		const note = await Note.findByIdAndDelete(id)
+		if (!note) {
+			return res.status(404).json({ message: 'Note not found' })
+		}
+
+		const message = `Note deleted (${note.title})`
+		await addLog(dashboard.logsId, userId, message)
 
 		return res.status(200).json({ message: 'Note removed successfully from dashboard' })
 	} catch (error) {
