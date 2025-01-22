@@ -1092,8 +1092,20 @@ td {
 	border: inherit;
 }
 
+ul {
+	padding: 0;
+}
+
 tbody tr.border-bottom:last-child {
 	border-bottom: 0;
+}
+
+.zebra > *:nth-child(2n + 1) {
+	background-color: white;
+}
+
+.zebra > *:nth-child(2n) {
+	background-color: lightgray;
 }
 
 .text-bold {

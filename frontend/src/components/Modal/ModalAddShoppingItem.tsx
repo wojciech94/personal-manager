@@ -44,7 +44,7 @@ export function ModalAddShoppingItem(): JSX.Element {
 
 	const addShoppingItem = async (): Promise<void> => {
 		if (token) {
-			const res = await fetch(`${API_URL}shoppingLists/${shoppingListId}/shopping-items`, {
+			const res = await fetch(`${API_URL}dashboards/${dashboardId}/shoppingLists/${shoppingListId}/shopping-items`, {
 				method: 'POST',
 				headers: {
 					Authorization: `Bearer ${token}`,

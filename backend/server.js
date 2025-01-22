@@ -13,6 +13,7 @@ const taskRoutes = require('./routes/taskRoutes')
 const productRoutes = require('./routes/productRoutes')
 const shoppingListRoutes = require('./routes/shoppingListRoutes')
 const shoppingItemRoutes = require('./routes/shoppingItemRoutes')
+const logsRoutes = require('./routes/logsRoutes')
 
 const app = express()
 const PORT = process.env.PORT || 5000
@@ -52,6 +53,7 @@ app.use('/', taskRoutes)
 app.use('/', productRoutes)
 app.use('/', shoppingListRoutes)
 app.use('/', shoppingItemRoutes)
+app.use('/', logsRoutes)
 
 app.listen(PORT, () => {
 	console.log(`Server running on port ${PORT}`)

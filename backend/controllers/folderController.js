@@ -1,6 +1,7 @@
 const Dashboard = require('../models/Dashboard')
 const Folder = require('../models/Folder')
 const mongoose = require('mongoose')
+const { addLog } = require('./logsController')
 
 exports.addFolder = async (req, res) => {
 	try {
@@ -28,6 +29,9 @@ exports.addFolder = async (req, res) => {
 		const folderId = existingFolder ? existingFolder._id : newFolder._id
 		dashboard.foldersIds.push(folderId)
 		await dashboard.save()
+
+		const message = `Added new folder (${name}) to notes panel.`
+		await addLog(dashboard.logsId, userId, message)
 
 		res.status(200).json({ message: 'Folder added successfully', folderId: folderId })
 	} catch (error) {
@@ -67,7 +71,7 @@ exports.updateFolder = async (req, res) => {
 	try {
 		const userId = req.user.userId
 
-		const { folderId } = req.params
+		const { folderId, dashboardId } = req.params
 		const { name } = req.body
 
 		const folder = await Folder.findById(folderId)
@@ -75,6 +79,15 @@ exports.updateFolder = async (req, res) => {
 		if (!folder) {
 			return res.status(404).json({ message: 'Folder not found' })
 		}
+
+		const dashboard = await Dashboard.findById(dashboardId)
+
+		if (!dashboard) {
+			return res.status(404).json({ message: 'Dashboard not found' })
+		}
+
+		const message = `Changed folder name from ${folder.name} to ${name}`
+		await addLog(dashboard.logsId, userId, message)
 
 		folder.name = name
 
@@ -89,6 +102,7 @@ exports.updateFolder = async (req, res) => {
 exports.deleteFolder = async (req, res) => {
 	try {
 		const { dashboardId, folderId } = req.params
+		const userId = req.user.userId
 
 		const dashboard = await Dashboard.findById(dashboardId)
 		if (!dashboard) {
@@ -103,7 +117,10 @@ exports.deleteFolder = async (req, res) => {
 
 		await dashboard.save()
 
-		await Folder.deleteOne({ _id: folderId })
+		const folder = await Folder.findByIdAndDelete({ _id: folderId })
+
+		const message = `Deleted folder ${folder.name}`
+		await addLog(dashboard.logsId, userId, message)
 
 		return res.status(200).json({ message: 'Folder removed successfully from dashboard' })
 	} catch (error) {

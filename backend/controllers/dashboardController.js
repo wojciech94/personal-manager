@@ -1,6 +1,7 @@
 const Dashboard = require('../models/Dashboard')
 const TasksSettings = require('../models/TasksSettings')
-const Folder = require('../models/Folder')
+const { createLogs, addLog } = require('./logsController')
+const { getUserName } = require('./userController')
 
 //### Dashboards
 exports.getDashboards = async (req, res) => {
@@ -30,12 +31,15 @@ exports.addDashboard = async (req, res) => {
 		const newTasksSettings = new TasksSettings()
 		await newTasksSettings.save()
 
+		const newLog = await createLogs(userId, `Created new dashboard with name '${name}'`)
+
 		const newDashboard = new Dashboard({
 			name,
 			creatorId: userId,
 			userIds: [userId],
 			notesIds: [],
 			tasksSettingsId: newTasksSettings._id,
+			logsId: newLog._id,
 		})
 
 		await newDashboard.save()
@@ -59,6 +63,13 @@ exports.getDashboardDetails = async (req, res) => {
 		const dashboard = await Dashboard.findById(dashboardId)
 			.populate('creatorId', 'name')
 			.populate('userIds', 'name')
+			.populate({
+				path: 'logsId',
+				populate: {
+					path: 'logs.initiatorId',
+					select: 'name',
+				},
+			})
 			.lean()
 
 		if (!dashboard) {
@@ -78,16 +89,39 @@ exports.updateDashboard = async (req, res) => {
 	try {
 		const { dashboardId } = req.params
 		const { name, creatorId, tasksArchiveTime, tasksRemoveTime } = req.body
+		const userId = req.user.userId
 
 		const dashboard = await Dashboard.findById(dashboardId)
 		if (!dashboard) {
 			return res.status(404).json({ message: 'Dashboard not found' })
 		}
 
-		if (name) dashboard.name = name
-		if (creatorId) dashboard.creatorId = creatorId
-		if (tasksArchiveTime) dashboard.tasksArchiveTime = tasksArchiveTime
-		if (tasksRemoveTime) dashboard.tasksRemoveTime = tasksRemoveTime
+		let logDetails = ''
+
+		if (name && dashboard.name !== name) {
+			dashboard.name = name
+			logDetails += `new name: ${name} `
+		}
+		if (creatorId && dashboard.creatorId.toString() !== creatorId) {
+			dashboard.creatorId = creatorId
+			const userName = await getUserName(creatorId)
+			logDetails += `new owner: ${userName} `
+		}
+		if (tasksArchiveTime && dashboard.tasksArchiveTime !== tasksArchiveTime) {
+			dashboard.tasksArchiveTime = tasksArchiveTime
+			logDetails += `new tasks archive time: ${new Date(tasksArchiveTime).toLocaleDateString()}`
+		}
+		if (tasksRemoveTime && dashboard.tasksRemoveTime !== tasksRemoveTime) {
+			dashboard.tasksRemoveTime = tasksRemoveTime
+			logDetails += `new tasks remove time: ${new Date(tasksRemoveTime).toLocaleDateString()}`
+		}
+
+		logDetails = 'Dashboard updated ' + logDetails
+
+		const logsId = dashboard.logsId
+		if (logsId) {
+			await addLog(logsId, userId, logDetails)
+		}
 
 		await dashboard.save()
 		res.status(200).json({ message: 'Dashboard updated', dashboard })
@@ -150,6 +184,7 @@ exports.updateTasksSettings = async (req, res) => {
 	try {
 		const { dashboardId } = req.params
 		const { showDeadline, archivizationTime, removeTime, sortMethod, sortDirection } = req.body
+		const userId = req.user.userId
 
 		if (!dashboardId) {
 			return res.status(404).json({ message: 'No DashboardId' })
@@ -176,6 +211,11 @@ exports.updateTasksSettings = async (req, res) => {
 		if (removeTime) tasksSettings.removeTime = removeTime
 		if (sortMethod) tasksSettings.sortMethod = sortMethod
 		if (sortDirection) tasksSettings.sortDirection = sortDirection
+
+		const logsId = dashboard.logs
+		if (logsId) {
+			await addLog(logsId, userId, 'Tasks settings updated')
+		}
 
 		await tasksSettings.save()
 

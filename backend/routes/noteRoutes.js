@@ -10,7 +10,7 @@ router.post('/notes/add-category', noteController.addNoteCategory)
 router.get('/dashboards/:dashboardId/folders/notes/:folderId?', noteController.getNotes)
 router.get('/notes/:noteId', noteController.getNote)
 router.get('/dashboards/:dashboardId/note-categories', noteController.getNoteCategories)
-router.patch('/notes/:noteId', noteController.updateNote)
+router.patch('/dashboards/:dashboardId/notes/:noteId', noteController.updateNote)
 router.delete('/dashboards/:dashboardId/notes/remove', noteController.deleteNote)
 
 module.exports = router

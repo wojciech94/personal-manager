@@ -2,6 +2,7 @@ const Dashboard = require('../models/Dashboard')
 const Task = require('../models/Task')
 const TaskGroup = require('../models/TaskGroup')
 const mongoose = require('mongoose')
+const { addLog } = require('./logsController')
 
 exports.getTasks = async (req, res) => {
 	try {
@@ -78,7 +79,15 @@ exports.getTasks = async (req, res) => {
 
 exports.addTask = async (req, res) => {
 	try {
+		const { dashboardId } = req.params
 		const { content, priority, groupId, expirationDate } = req.body
+		const userId = req.user.userId
+
+		const dashboard = await Dashboard.findById(dashboardId)
+
+		if (!dashboard) {
+			return res.status(404).json({ message: 'Dashboard not found' })
+		}
 
 		if (!content) {
 			return res.status(400).json({ message: 'No content provided in the request body' })
@@ -94,6 +103,9 @@ exports.addTask = async (req, res) => {
 		taskGroup.tasks.push(task)
 		await taskGroup.save()
 
+		const message = `Added new task (${task._id})`
+		await addLog(dashboard.logsId, userId, message)
+
 		res.status(201).json(task)
 	} catch (error) {
 		res.status(500).json({ message: error.message })
@@ -103,10 +115,17 @@ exports.addTask = async (req, res) => {
 exports.updateTask = async (req, res) => {
 	try {
 		const { content, is_done, priority, expired_at, archived_at, removed_at } = req.body
-		const { id } = req.params
+		const { id, dashboardId } = req.params
+		const userId = req.user.userId
 
 		if (!mongoose.Types.ObjectId.isValid(id)) {
 			return res.status(400).json({ message: 'Invalid task ID format' })
+		}
+
+		const dashboard = await Dashboard.findById(dashboardId)
+
+		if (!dashboard) {
+			return res.status(404).json({ message: 'Dashboard not found' })
 		}
 
 		const task = await Task.findById(id)
@@ -124,6 +143,9 @@ exports.updateTask = async (req, res) => {
 
 		await task.save()
 
+		const message = `Update task (${task._id})`
+		await addLog(dashboard.logsId, userId, message)
+
 		res.status(200).json(task)
 	} catch (error) {
 		res.status(500).json({ message: error.message })
@@ -132,10 +154,17 @@ exports.updateTask = async (req, res) => {
 
 exports.deleteTask = async (req, res) => {
 	try {
-		const { id } = req.params
+		const { id, dashboardId } = req.params
+		const userId = req.user.userId
 
 		if (!mongoose.Types.ObjectId.isValid(id)) {
 			return res.status(400).json({ message: 'Invalid ID format' })
+		}
+
+		const dashboard = await Dashboard.findById(dashboardId)
+
+		if (!dashboard) {
+			return res.status(404).json({ message: 'Dashboard not found' })
 		}
 
 		const task = await Task.findById(id)
@@ -152,6 +181,9 @@ exports.deleteTask = async (req, res) => {
 		await taskGroup.save()
 
 		await Task.deleteOne({ _id: id })
+
+		const message = `Task deleted (${id})`
+		await addLog(dashboard.logsId, userId, message)
 
 		res.status(204).send()
 	} catch (error) {

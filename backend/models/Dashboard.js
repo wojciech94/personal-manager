@@ -53,6 +53,10 @@ const dashboardSchema = new mongoose.Schema({
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'TasksSettings',
 	},
+	logsId: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'Logs',
+	},
 })
 
 const Dashboard = mongoose.model('Dashboard', dashboardSchema)

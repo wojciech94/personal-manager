@@ -89,7 +89,7 @@ function FolderRow({ folder, action, dashboardId }: FolderRowProps) {
 	const token = localStorage.getItem('token')
 
 	const handleSave = async () => {
-		const res = await fetch(`${API_URL}folders/${folder._id}`, {
+		const res = await fetch(`${API_URL}dashboards/${dashboardId}/folders/${folder._id}`, {
 			method: 'PATCH',
 			headers: {
 				'Content-Type': 'application/json',

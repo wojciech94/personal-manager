@@ -31,7 +31,7 @@ type Props = {
 }
 
 export const Note: React.FC<Props> = ({ note, updateNote, fetchNotes }): JSX.Element => {
-	const { setActiveModal } = useModalContext() ?? {}
+	const { setActiveModal } = useModalContext()
 	const { dashboardId } = useParams()
 
 	const removeNote = async (id: string): Promise<void> => {

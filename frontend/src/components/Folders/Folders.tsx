@@ -49,8 +49,8 @@ export const Folders = () => {
 		})
 
 		if (res.ok) {
-			const data = await res.json()
-			setData(data)
+			const data: LoaderData = await res.json()
+			setData(data || [])
 		}
 	}
 
