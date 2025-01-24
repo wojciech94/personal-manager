@@ -54,7 +54,7 @@ exports.getTasksGroup = async (req, res) => {
 
 		const todoGroupsIds = dashboard.todoGroupIds
 		if (!todoGroupsIds || todoGroupsIds.length === 0) {
-			return res.status(200).json({ message: 'No task groups found' })
+			return res.status(404).json({ message: 'No task groups found' })
 		}
 
 		const todoGroups = await TaskGroup.find({ _id: { $in: todoGroupsIds } })
