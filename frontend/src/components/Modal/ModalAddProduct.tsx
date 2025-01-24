@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
 import { CATEGORIES } from '../../constants/appConstants'
 import { useModalContext } from '../../contexts/ModalContext'
+import { Button } from '../Button/Button'
 import { FormRow } from '../FormRow/FormRow'
 import { DataProps } from './types'
 
@@ -108,9 +109,9 @@ export function ModalAddProduct({ modalData }: { modalData: DataProps }) {
 				</FormRow>
 			</div>
 			<div className='card-footer'>
-				<button className='btn btn-success d-block w-100' onClick={addProduct}>
+				<Button variant='success' className='w-100' onClick={addProduct}>
 					Add product
-				</button>
+				</Button>
 			</div>
 		</>
 	)

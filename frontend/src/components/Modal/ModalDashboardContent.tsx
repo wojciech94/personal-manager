@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Button } from '../Button/Button'
 import { FormRow } from '../FormRow/FormRow'
 import { DataProps } from './types'
 
@@ -26,9 +27,9 @@ export const ModalDashboardContent = ({ modalData }: { modalData: DataProps }) =
 				</FormRow>
 			</div>
 			<div className='card-footer'>
-				<button className='btn btn-success d-block w-100' onClick={handleCreateDashboard}>
+				<Button variant='success' className='w-100' onClick={handleCreateDashboard}>
 					{modalData.actionName}
-				</button>
+				</Button>
 			</div>
 		</>
 	)

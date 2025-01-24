@@ -7,6 +7,8 @@ import { ProductsList } from '../ProductsList/ProductsList'
 import { CATEGORIES } from '../../constants/appConstants'
 import { usePagination } from '../../hooks/usePagination'
 import { Pagination } from '../Pagination/Pagination'
+import { Alert } from '../Alert/Alert'
+import { Button } from '../Button/Button'
 
 export type Product = {
 	_id: string
@@ -55,7 +57,7 @@ export function Products() {
 
 	useEffect(() => {
 		fetchProducts()
-	}, [])
+	}, [products])
 
 	const modalData = {
 		title: 'Add product',
@@ -101,14 +103,14 @@ export function Products() {
 					</div>
 				</div>
 				<div className='d-flex gap-2 align-center'>
-					<button className='btn btn-primary d-flex gap-1' onClick={() => setActiveModal(modalData)}>
+					<Button onClick={() => setActiveModal(modalData)}>
 						<Plus size={16} />
 						Add product
-					</button>
+					</Button>
 				</div>
 			</div>
-			{currentItems && currentItems.length > 0 && (
-				<>
+			{products && currentItems && currentItems.length > 0 ? (
+				<div className='mx-n4 mb-n4'>
 					<ProductsList products={currentItems} />
 					<Pagination
 						currentPage={currentPage}
@@ -119,7 +121,15 @@ export function Products() {
 						goToPage={goToPage}
 						onSetItemsPerPage={handleSetItemsPerPage}
 					/>
-				</>
+				</div>
+			) : (
+				<div className='mx-n4 mt-4 mb-n4 border-top border-light'>
+					<Alert variant='primary'>
+						<div>
+							Add products to your database or <Button variant='link'>import</Button> default data.
+						</div>
+					</Alert>
+				</div>
 			)}
 		</>
 	)

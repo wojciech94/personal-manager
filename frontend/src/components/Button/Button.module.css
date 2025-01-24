@@ -1,0 +1,163 @@
+.btn {
+	font-family: 'Roboto', 'Trebuchet MS', Arial, sans-serif;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 6px;
+	min-height: 32px;
+	min-width: 32px;
+	border: 1px solid transparent;
+	border-radius: 8px;
+	font-size: 14px;
+	line-height: 1.2;
+	font-weight: 400;
+	box-sizing: border-box;
+	cursor: pointer;
+	transition: background-color 0.25s ease-in-out, color 0.25s ease-in-out;
+}
+
+.btn--xs {
+	min-height: 28px;
+	padding: 3px 6px;
+	gap: 4px;
+	font-size: 12px;
+}
+
+.btn--sm {
+	padding: 4px 8px;
+	gap: 4px;
+	font-size: 14px;
+}
+
+.btn--md {
+	padding: 8px 16px;
+	font-size: 15px;
+}
+
+.btn--lg {
+	padding: 12px 24px;
+	gap: 10px;
+	font-size: 18px;
+}
+
+.btn--xl {
+	padding: 14px 28px;
+	gap: 12px;
+	font-size: 22px;
+}
+
+.btn--icon {
+	padding: 0;
+	width: 32px;
+	height: 32px;
+}
+
+.btn--icon svg {
+	flex-shrink: 0;
+}
+
+.btn--primary {
+	background-color: hsl(210, 100%, 56%);
+	color: white;
+}
+
+.btn--primary:hover {
+	background-color: hsl(210, 100%, 42%);
+}
+
+.btn--light {
+	background-color: hsl(0, 0%, 98%);
+	color: hsl(210, 10%, 15%);
+	border: 1px solid hsl(0, 0%, 80%);
+}
+
+.btn--light:hover {
+	background-color: hsl(0, 0%, 90%);
+	color: hsl(210, 10%, 10%);
+}
+
+.btn--secondary {
+	background-color: hsl(210, 10%, 50%);
+	color: hsl(0, 0%, 100%);
+}
+
+.btn--secondary:hover {
+	background-color: hsl(210, 10%, 45%);
+}
+
+.btn--danger {
+	background-color: hsl(360, 70%, 50%);
+	color: hsl(0, 0%, 100%);
+}
+
+.btn--danger:hover {
+	background-color: hsl(360, 70%, 45%);
+}
+
+.btn--success {
+	background-color: hsl(120, 60%, 40%);
+	color: hsl(0, 0%, 100%);
+}
+
+.btn--success:hover {
+	background-color: hsl(120, 60%, 35%);
+}
+
+.btn--warning {
+	background-color: hsl(45, 100%, 60%);
+	color: hsl(210, 10%, 15%);
+}
+
+.btn--warning:hover {
+	background-color: hsl(45, 100%, 55%);
+	color: hsl(210, 10%, 10%);
+}
+
+.btn--link {
+	background-color: transparent;
+	color: hsl(210, 100%, 50%);
+	border: none;
+	text-decoration: underline;
+	padding: 0;
+	font-size: inherit;
+}
+
+.btn--link:hover {
+	color: hsl(210, 100%, 40%);
+	text-decoration: none;
+}
+
+.btn--link:global(.active) {
+	font-weight: bold;
+}
+
+.btn--text {
+	background-color: transparent;
+	padding: 0;
+	font-size: inherit;
+}
+
+.loading {
+	position: relative;
+	opacity: 0.7;
+}
+
+.spinner {
+	width: 16px;
+	height: 16px;
+	border: 2px solid transparent;
+	border-top-color: #fff;
+	border-radius: 50%;
+	animation: spin 0.8s linear infinite;
+}
+
+button:disabled {
+	opacity: 0.7;
+	pointer-events: none;
+}
+
+@keyframes spin {
+	to {
+		transform: rotate(360deg);
+	}
+}

@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { useState } from 'react'
 import { Check, Edit, Trash2 } from 'react-feather'
+import { Button } from '../Button/Button'
 import { Product } from '../Products/Products'
 import { IsShoppingPurchased, ShoppingItem } from '../ShoppingList/ShoppingList'
 
@@ -97,18 +98,17 @@ export function ShoppingProduct({ data, onListItemUpdate, onListItemDelete }: Pr
 					<td>
 						<div className='d-flex gap-2'>
 							{editedId && editedId === data._id ? (
-								<button className='btn btn-icon btn-success' onClick={handleListItemUpdate}>
+								<Button onlyIcon={true} variant='success' onClick={handleListItemUpdate}>
 									<Check size={16} />
-								</button>
+								</Button>
 							) : (
-								<button className='btn btn-icon btn-primary' onClick={() => setEditedId(data._id)}>
+								<Button onlyIcon={true} onClick={() => setEditedId(data._id)}>
 									<Edit size={16} />
-								</button>
+								</Button>
 							)}
-
-							<button className='btn btn-icon btn-danger' onClick={deleteProduct}>
+							<Button onlyIcon={true} variant='danger' onClick={deleteProduct}>
 								<Trash2 size={16} />
-							</button>
+							</Button>
 						</div>
 					</td>
 				</tr>

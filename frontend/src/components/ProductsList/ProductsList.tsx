@@ -3,7 +3,7 @@ import { Edit, Star, Trash2, Check } from 'react-feather'
 import { useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
 import { CATEGORIES } from '../../constants/appConstants'
-import { Alert } from '../Alert/Alert'
+import { Button } from '../Button/Button'
 import { Product } from '../Products/Products'
 
 type UpdateProduct = Omit<Product, '_id'>
@@ -98,8 +98,8 @@ export function ProductsList({ products }: { products: Product[] }) {
 	}
 
 	return (
-		<div className='products-list mx-n4'>
-			{productsData && productsData.length > 0 ? (
+		<div className='products-list'>
+			{productsData && productsData.length > 0 && (
 				<>
 					<div className='w-100 overflow-x-auto'>
 						<table className='min-w-500px' cellSpacing={0}>
@@ -118,11 +118,9 @@ export function ProductsList({ products }: { products: Product[] }) {
 								{productsData.map(p => (
 									<tr key={p._id} className='product-row'>
 										<td>
-											<button
-												className='btn btn-icon'
-												onClick={() => handleUpdate(p._id, { isFavourite: !p.isFavourite })}>
-												<Star size={20} color={p.isFavourite ? 'gold' : 'gray'} />{' '}
-											</button>
+											<Button variant='text' onClick={() => handleUpdate(p._id, { isFavourite: !p.isFavourite })}>
+												<Star size={20} color={p.isFavourite ? 'gold' : 'gray'} />
+											</Button>
 										</td>
 										{p._id === editedProduct ? (
 											<>
@@ -184,17 +182,17 @@ export function ProductsList({ products }: { products: Product[] }) {
 										<td>
 											<div className='d-flex gap-1'>
 												{p._id === editedProduct ? (
-													<button className='btn btn-icon btn-success' onClick={() => handleUpdate(p._id, productData)}>
+													<Button onlyIcon={true} variant='success' onClick={() => handleUpdate(p._id, productData)}>
 														<Check size={16} />
-													</button>
+													</Button>
 												) : (
-													<button className='btn btn-icon btn-primary' onClick={() => handleEditProduct(p._id)}>
+													<Button onlyIcon={true} onClick={() => handleEditProduct(p._id)}>
 														<Edit size={16} />
-													</button>
+													</Button>
 												)}
-												<button className='btn btn-icon btn-danger' onClick={() => handleDelete(p._id)}>
+												<Button onlyIcon={true} variant='danger' onClick={() => handleDelete(p._id)}>
 													<Trash2 size={16} />
-												</button>
+												</Button>
 											</div>
 										</td>
 									</tr>
@@ -202,10 +200,6 @@ export function ProductsList({ products }: { products: Product[] }) {
 							</tbody>
 						</table>
 					</div>
-				</>
-			) : (
-				<>
-					<Alert variant='primary'>Empty products list!</Alert>
 				</>
 			)}
 		</div>

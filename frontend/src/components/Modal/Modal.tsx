@@ -14,6 +14,7 @@ import { ModalCreateShoppingList } from './ModalCreateShoppingList'
 import { ModalModifyShoppingLists } from './ModalModifyShoppingLists'
 import { ModalAddShoppingItem } from './ModalAddShoppingItem'
 import { ModalDataProps } from './types'
+import { Button } from '../Button/Button'
 
 export const Modal: React.FC<ModalDataProps> = ({ name, title, data }): JSX.Element => {
 	const { setActiveModal } = useModalContext()
@@ -72,11 +73,11 @@ export const Modal: React.FC<ModalDataProps> = ({ name, title, data }): JSX.Elem
 	return (
 		<div className='modal-backdrop'>
 			<div className='modal'>
-				<div className='d-flex gap-4 justify-end p-4'>
-					{title && <div className='flex-1 modal-title p-2'>{title}</div>}
-					<button onClick={() => setActiveModal?.(null)}>
+				<div className='d-flex gap-4 justify-end align-center p-4'>
+					{title && <div className='flex-1 modal-title'>{title}</div>}
+					<Button variant='text' onClick={() => setActiveModal(null)}>
 						<X size={20} />
-					</button>
+					</Button>
 				</div>
 				{modalContent}
 			</div>

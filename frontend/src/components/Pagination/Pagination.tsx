@@ -1,3 +1,6 @@
+import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'react-feather'
+import { Button } from '../Button/Button'
+
 type Props = {
 	currentPage: number
 	totalPages: number
@@ -24,44 +27,46 @@ export function Pagination({
 
 	return (
 		<>
-			<div className='d-flex gap-2 justify-between align-center border-top mx-n4 border-light px-4 pt-4 bg-lighter pb-4 mb-n4 rounded-bottom-3'>
+			<div className='d-flex gap-2 justify-between align-center border-top border-light px-4 pt-4 bg-lighter pb-4 rounded-bottom-3'>
 				<div>{`Page ${currentPage} of ${totalPages}`}</div>
 				<div className='d-flex gap-2 align-center'>
 					{prevCondition && (
 						<>
-							<button className='btn btn-icon btn-light' onClick={() => goToPage(1)}>
-								{'<<'}
-							</button>
-							<button className='btn btn-icon btn-light' onClick={prevPage}>
-								{'<'}
-							</button>
+							<Button variant='light' onlyIcon={true} onClick={() => goToPage(1)}>
+								<ChevronsLeft size={16} />
+							</Button>
+							<Button variant='light' onlyIcon={true} onClick={prevPage}>
+								<ChevronLeft size={16} />
+							</Button>
 							{prev2Button && (
-								<button className='btn btn-icon btn-light' onClick={() => goToPage(currentPage - 2)}>
+								<Button variant='light' onlyIcon={true} onClick={() => goToPage(currentPage - 2)}>
 									{currentPage - 2}
-								</button>
+								</Button>
 							)}
-							<button className='btn btn-icon btn-light' onClick={() => goToPage(currentPage - 1)}>
+							<Button variant='light' onlyIcon={true} onClick={() => goToPage(currentPage - 1)}>
 								{currentPage - 1}
-							</button>
+							</Button>
 						</>
 					)}
-					<button className='btn btn-icon btn-primary'>{currentPage}</button>
+					<Button disabled variant='primary' onlyIcon={true}>
+						{currentPage}
+					</Button>
 					{nextCondition && (
 						<>
-							<button className='btn btn-icon btn-light' onClick={() => goToPage(currentPage + 1)}>
+							<Button variant='light' onlyIcon={true} onClick={() => goToPage(currentPage + 1)}>
 								{currentPage + 1}
-							</button>
+							</Button>
 							{next2Button && (
-								<button className='btn btn-icon btn-light' onClick={() => goToPage(currentPage + 2)}>
+								<Button variant='light' onlyIcon={true} onClick={() => goToPage(currentPage + 2)}>
 									{currentPage + 2}
-								</button>
+								</Button>
 							)}
-							<button className='btn btn-icon btn-light' onClick={nextPage}>
-								{'>'}
-							</button>
-							<button className='btn btn-icon btn-light' onClick={() => goToPage(totalPages)}>
-								{'>>'}
-							</button>
+							<Button variant='light' onlyIcon={true} onClick={nextPage}>
+								<ChevronRight size={16} />
+							</Button>
+							<Button variant='light' onlyIcon={true} onClick={() => goToPage(totalPages)}>
+								<ChevronsRight size={16} />
+							</Button>
 						</>
 					)}
 				</div>

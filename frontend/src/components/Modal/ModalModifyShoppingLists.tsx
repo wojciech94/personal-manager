@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
 import { useModalContext } from '../../contexts/ModalContext'
 import { ApiError } from '../../main'
+import { Button } from '../Button/Button'
 import { ShoppingLists } from '../ShoppingLists/ShoppingLists'
 import { DataProps } from './types'
 
@@ -120,18 +121,17 @@ export function ModalModifyShoppingLists({ modalData }: { modalData: DataProps }
 							)}
 							<div className='d-flex gap-2 '>
 								{editedListId && editedListId === l._id ? (
-									<button className='btn btn-icon btn-success' onClick={() => updateShoppingList(l._id)}>
+									<Button size='sm' onlyIcon={true} variant='success' onClick={() => updateShoppingList(l._id)}>
 										<Check size={16} />
-									</button>
+									</Button>
 								) : (
-									<button className='btn btn-icon btn-primary' onClick={() => setEditedList(l._id)}>
+									<Button size='sm' onlyIcon={true} onClick={() => setEditedList(l._id)}>
 										<Edit size={16} />
-									</button>
+									</Button>
 								)}
-
-								<button className='btn btn-icon btn-danger' onClick={() => deleteShoppingList(l._id)}>
+								<Button size='sm' onlyIcon={true} variant='danger' onClick={() => deleteShoppingList(l._id)}>
 									<X size={16} />
-								</button>
+								</Button>
 							</div>
 						</div>
 					))}

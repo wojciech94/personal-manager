@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useModalContext } from '../../contexts/ModalContext'
+import { Button } from '../Button/Button'
 import { FormRow } from '../FormRow/FormRow'
 import { SortMethods, TasksSettings } from '../Task/Task'
 import { DataProps } from './types'
@@ -86,9 +87,9 @@ export function ModalTasksSettingsContent({ modalData }: { modalData: DataProps 
 			</div>
 			{modalData.actionName && (
 				<div className='card-footer mt-4'>
-					<button className='btn btn-success d-block w-100' onClick={handleSetTasksSettings}>
+					<Button variant='success' className='w-100' onClick={handleSetTasksSettings}>
 						{modalData.actionName}
-					</button>
+					</Button>
 				</div>
 			)}
 		</>

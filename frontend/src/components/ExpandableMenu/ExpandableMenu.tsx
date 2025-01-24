@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { MoreVertical } from 'react-feather'
+import { Button } from '../Button/Button'
 import styles from './ExpandableMenu.module.css'
 
 type ItemsProps = {
@@ -39,17 +40,15 @@ export const ExpandableMenu: React.FC<Props> = ({ title, items }): JSX.Element =
 
 	return (
 		<div ref={expandableRef} className={`${styles.expandable}`}>
-			<button
-				className={`btn btn-light ${!title ? 'btn-icon' : ''}`}
-				onClick={() => setIsExpanded(prevState => !prevState)}>
+			<Button variant='light' onlyIcon={!title} onClick={() => setIsExpanded(prevState => !prevState)}>
 				{title ? <>{title}</> : <MoreVertical size={16} />}
-			</button>
+			</Button>
 			{items && items.length > 0 && isExpanded && (
 				<div className={`${styles.expandableMenu}`}>
 					{items.map(i => (
-						<button key={i.label} className={`${styles.menuItem}`} onClick={() => handleAction(i.action)}>
+						<Button variant='text' className='dropdown-item text-nowrap' key={i.label} onClick={() => handleAction(i.action)}>
 							{i.label}
-						</button>
+						</Button>
 					))}
 				</div>
 			)}

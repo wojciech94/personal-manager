@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { API_URL } from '../../config'
 import { useModalContext } from '../../contexts/ModalContext'
+import { Button } from '../Button/Button'
 import { FormRow } from '../FormRow/FormRow'
 
 export const ModalAddCategoryContent = () => {
@@ -38,9 +39,9 @@ export const ModalAddCategoryContent = () => {
 				</FormRow>
 			</div>
 			<div className='card-footer'>
-				<button className='btn btn-success d-block w-100' onClick={addCategory}>
+				<Button size='sm' variant='success' className='w-100' onClick={addCategory}>
 					Add category
-				</button>
+				</Button>
 			</div>
 		</>
 	)

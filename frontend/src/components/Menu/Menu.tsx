@@ -1,6 +1,6 @@
 import { NavLink, useParams } from 'react-router-dom'
 
-export const Menu: React.FC = (): JSX.Element => {
+export const Menu = () => {
 	const { dashboardId } = useParams()
 
 	return (

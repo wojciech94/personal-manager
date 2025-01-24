@@ -1,13 +1,14 @@
 import { Menu } from '../Menu/Menu'
 import { Outlet, useMatch, useNavigate, useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
-import { Card, CardHeader } from '../Card/Card'
+import { Card, CardHeader, HeaderDataProps } from '../Card/Card'
 import { useEffect, useState } from 'react'
 import { FormRow } from '../FormRow/FormRow'
 import { Check, Plus, Repeat, Trash2, User, X } from 'react-feather'
 import { useModalContext } from '../../contexts/ModalContext'
 import { useFetchDashboardsContext } from '../../contexts/FetchDashboardsContext'
 import { Logs } from '../Logs/Logs'
+import { Button } from '../Button/Button'
 
 type DashboardDetails = {
 	dashboard: DashboardType | null
@@ -122,28 +123,28 @@ export const Dashboard = () => {
 	}
 
 	const headerActions = () => {
-		const actionsArray = [
+		const actionsArray: HeaderDataProps[] = [
 			{
 				action: () => setEditMode(prevVal => !prevVal),
 				icon: <Repeat size={16} />,
 				label: editMode ? 'Details mode' : 'Edit mode',
-				btnClass: 'btn-light',
+				btnVariant: 'light',
 			},
 		]
 		if (dashboard?.isOwner) {
-			const deleteAction = {
+			const deleteAction: HeaderDataProps = {
 				action: deleteDashboard,
 				icon: <Trash2 size={16} />,
 				label: 'Delete dashboard',
-				btnClass: 'btn-danger',
+				btnVariant: 'danger',
 			}
 			actionsArray.push(deleteAction)
 		} else {
-			const removeAction = {
+			const removeAction: HeaderDataProps = {
 				action: () => removeUser(null),
 				icon: <Trash2 size={16} />,
 				label: 'Drop dashboard',
-				btnClass: 'btn-danger',
+				btnVariant: 'danger',
 			}
 			actionsArray.push(removeAction)
 		}
@@ -158,7 +159,7 @@ export const Dashboard = () => {
 			<Menu />
 			<div className='flex-1 content-container'>
 				{isExactMatch ? (
-					<Card headerComponent={cardHeader}>
+					<Card className='card-p0' headerComponent={cardHeader}>
 						<DashboardDetails
 							dashboard={dashboard}
 							editMode={editMode}
@@ -265,33 +266,31 @@ const DashboardDetails: React.FC<DashboardDetails> = ({ dashboard, editMode, get
 	return (
 		<>
 			{dashboard && (
-				<div className='d-flex flex-column gap-2'>
+				<div className='d-flex flex-column gap-2 pt-4'>
 					<FormRow label={'Name'} content={nameContent} />
 					<FormRow label={'Owner'} content={ownerContent} />
 					<FormRow className='mb-2' label={'Creation date'} content={dashboard?.created_at?.split('T')[0]} />
 					{dashboard.userIds && dashboard.userIds.length > 0 && (
 						<div className='d-flex flex-column gap-2'>
-							<div className='d-flex justify-between align-center text-bold gap-2 card-subtitle'>
+							<div className='card-subtitle'>
 								Users
 								<div className='d-flex gap-2'>
 									{dashboard.isOwner && (
-										<button
-											className='btn btn-primary d-flex align-center gap-2'
-											onClick={() => setActiveModal(addUserModalData)}>
+										<Button onClick={() => setActiveModal(addUserModalData)}>
 											<Plus size={16} /> Add user
-										</button>
+										</Button>
 									)}
 								</div>
 							</div>
-							<div className='d-flex gap-2 py-2'>
+							<div className='d-flex gap-2 py-2 px-4'>
 								{dashboard.userIds.map(u => (
 									<Card key={u._id} contentClass='border-none'>
 										<div className='d-flex align-center gap-2'>
 											<User size={16} /> {u.name}
 											{dashboard.isOwner && editMode && (
-												<button className='btn btn-icon p-0' onClick={() => removeUser(u._id)}>
+												<Button variant='text' onClick={() => removeUser(u._id)}>
 													<X size={16} />
-												</button>
+												</Button>
 											)}
 										</div>
 									</Card>
@@ -302,9 +301,9 @@ const DashboardDetails: React.FC<DashboardDetails> = ({ dashboard, editMode, get
 					{dashboard.logsId && dashboard.logsId.logs.length > 0 && <Logs logs={dashboard.logsId.logs}></Logs>}
 					{editMode && (
 						<div className='d-flex justify-center border-top border-light pt-4 mt-2 mx-n4'>
-							<button className='btn btn-success d-flex gap-2' onClick={updateDashboard}>
+							<Button variant='success' onClick={updateDashboard}>
 								<Check size={16} /> Save dashboard
-							</button>
+							</Button>
 						</div>
 					)}
 				</div>

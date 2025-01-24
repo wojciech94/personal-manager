@@ -6,6 +6,8 @@ import { useModalContext } from '../../contexts/ModalContext'
 import { ShoppingProduct } from '../ShoppingProduct/ShoppingProduct'
 import { ApiError } from '../../main'
 import { Product } from '../Products/Products'
+import { getLocaleDateTime } from '../../utils/helpers'
+import { Button } from '../Button/Button'
 
 export type ShoppingItem = {
 	productId: Product
@@ -110,12 +112,12 @@ export function ShoppingList() {
 							<div>
 								Left to buy: {productsToBuy} {`${productsToBuy === 1 ? 'product' : 'products'}`}
 							</div>
-							<div className='text-gray fs-sm'>Last update: {data.updatedAt.split('.')[0].replace('T', ' ')}</div>
+							<div className='text-gray fs-sm'>Last update: {getLocaleDateTime(data.updatedAt)}</div>
 						</div>
-						<button className='btn btn-primary d-flex align-center gap-2' onClick={openAddItemModal}>
+						<Button onClick={openAddItemModal}>
 							<Plus size={16} />
 							Add item
-						</button>
+						</Button>
 					</div>
 					<div className='mx-n4 mb-n4'>
 						<table cellSpacing={0} className='overflow-hidden rounded-bottom-3'>
@@ -157,9 +159,7 @@ export function ShoppingList() {
 				</>
 			) : (
 				<Alert>
-					<div>
-						Your shopping list is still empty. Click <button className='btn btn-link link'>here</button>
-					</div>
+					<div>Your shopping list is empty.</div>
 				</Alert>
 			)}
 		</>

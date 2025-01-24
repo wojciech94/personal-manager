@@ -1,3 +1,5 @@
+import { Button, ButtonVariant } from '../Button/Button'
+
 type Props = {
 	title?: string
 	footer?: React.ReactNode
@@ -7,9 +9,9 @@ type Props = {
 	contentClass?: string
 }
 
-type HeaderDataProps = {
+export type HeaderDataProps = {
 	label: string
-	btnClass?: string
+	btnVariant?: ButtonVariant
 	icon?: React.ReactNode
 	action: () => void
 }
@@ -38,10 +40,10 @@ export const CardHeader: React.FC<HeaderProps> = ({ title, data, className }) =>
 			{data && data.length > 0 && (
 				<div className='d-flex gap-2 align-center flex-wrap'>
 					{data.map(d => (
-						<button key={d.label} className={`btn d-flex gap-2 align-center ${d.btnClass}`} onClick={d.action}>
+						<Button key={d.label} variant={d.btnVariant} onClick={d.action}>
 							{d.icon}
 							{d.label}
-						</button>
+						</Button>
 					))}
 				</div>
 			)}

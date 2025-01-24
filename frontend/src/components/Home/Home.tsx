@@ -10,6 +10,7 @@ import { Plus } from 'react-feather'
 import { getTokenExpiration } from '../../utils/helpers'
 import { WELCOME_SLIDES } from '../../constants/appConstants'
 import { ModalDataProps } from '../Modal/types'
+import { Button } from '../Button/Button'
 
 export const Home = () => {
 	const [dashboards, setDashboards] = useState([])
@@ -128,10 +129,10 @@ export const Home = () => {
 						<div className='d-flex flex-1 justify-start align-center gap-4 scroll-x-auto'>
 							<Dashboards dashboards={dashboards}></Dashboards>
 						</div>
-						<button className='btn btn-mobile-icon btn-primary d-flex gap-2 align-center' onClick={openModal}>
+						<Button className='btn-mobile-icon' onClick={openModal}>
 							<Plus size={16} />
 							<span className='d-none d-inline-sm'>Add dashboard</span>
-						</button>
+						</Button>
 						<Dropdown items={dropdownItems}></Dropdown>
 					</header>
 					<main className='flex-1'>
@@ -179,11 +180,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ isNew, createDashboardMod
 			<div className='bg-welcome wrapper rounded-4 overflow-hidden d-flex flex-column flex-center shadow p-8'>
 				<div className='max-w-95 bg-dark-transparent text-white p-8 rounded-4 m-10 fs-xl d-flex flex-column align-center'>
 					<h1>Organize your life like never before</h1>
-					{isNew && (
-						<button className='btn btn-primary btn-lg mt-4' onClick={createDashboardModal}>
-							Create your first dashboard
-						</button>
-					)}
+					{isNew && <Button onClick={createDashboardModal}>Create your first dashboard</Button>}
 				</div>
 				<div className='carousel w-100 m-8'>
 					<div

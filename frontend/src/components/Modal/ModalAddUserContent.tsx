@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useModalContext } from '../../contexts/ModalContext'
+import { Button } from '../Button/Button'
 import { FormRow } from '../FormRow/FormRow'
 import { DataProps } from './types'
 
@@ -23,9 +24,9 @@ export const ModalAddUserContent = ({ modalData }: { modalData: DataProps }) => 
 				</FormRow>
 			</div>
 			<div className='card-footer'>
-				<button className='btn btn-success d-block w-100' onClick={handleAddUser}>
+				<Button variant='success' className='w-100' onClick={handleAddUser}>
 					Add user to dashboard
-				</button>
+				</Button>
 			</div>
 		</>
 	)

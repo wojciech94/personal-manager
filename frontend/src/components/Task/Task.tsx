@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Check, Clock, Edit, Trash2 } from 'react-feather'
 import { useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
+import { Button } from '../Button/Button'
 
 enum TaskPriorities {
 	LOW = 'low',
@@ -164,17 +165,18 @@ export function Task({ task, fetchTasks, tasksSettings }: Props) {
 			)}
 			<div className='d-flex gap-2 align-center'>
 				{isEdit ? (
-					<button className='btn btn-success btn-icon' onClick={() => updateTask('update')}>
+					<Button variant='success' onlyIcon={true} onClick={() => updateTask('update')}>
 						<Check size={16} />
-					</button>
+					</Button>
 				) : (
-					<button className='btn btn-primary btn-icon' onClick={() => setIsEdit(true)}>
+					<Button onlyIcon={true} onClick={() => setIsEdit(true)}>
 						<Edit size={16} />
-					</button>
+					</Button>
 				)}
-				<button className='btn btn-danger btn-icon' onClick={() => updateTask('delete')}>
+				<Button onlyIcon={true} variant='danger' onClick={() => updateTask('delete')}>
+					{' '}
 					<Trash2 size={16} />
-				</button>
+				</Button>
 			</div>
 		</div>
 	)

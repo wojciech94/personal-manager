@@ -3,6 +3,7 @@ import { Check, Edit, Trash } from 'react-feather'
 import { useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
 import { useModalContext } from '../../contexts/ModalContext'
+import { Button } from '../Button/Button'
 import { TodoGroup } from '../Todos/Todos'
 import { DataProps } from './types'
 
@@ -135,17 +136,21 @@ export function ModalModifyTodoGroup({ modalData }: { modalData: DataProps }) {
 								)}
 								<div className='d-flex gap-2 align-center'>
 									{g.isEdit ? (
-										<button className='btn btn-icon btn-success' onClick={() => saveInput(g._id, inputValues[g._id])}>
+										<Button
+											size='sm'
+											onlyIcon={true}
+											variant='success'
+											onClick={() => saveInput(g._id, inputValues[g._id])}>
 											<Check size={16} />
-										</button>
+										</Button>
 									) : (
-										<button className='btn btn-icon btn-primary' onClick={() => setEdit(g._id, g.name)}>
+										<Button size='sm' onlyIcon={true} onClick={() => setEdit(g._id, g.name)}>
 											<Edit size={16} />
-										</button>
+										</Button>
 									)}
-									<button className='btn btn-icon btn-danger' onClick={() => removeTodoGroup(g._id)}>
+									<Button size='sm' onlyIcon={true} variant='danger' onClick={() => removeTodoGroup(g._id)}>
 										<Trash size={16} />
-									</button>
+									</Button>
 								</div>
 							</div>
 						))}
@@ -162,9 +167,9 @@ export function ModalModifyTodoGroup({ modalData }: { modalData: DataProps }) {
 				</div>
 			</div>
 			<div className='card-footer'>
-				<button className='btn btn-success d-block w-100' onClick={addTodoGroup}>
+				<Button variant='success' className='w-100' onClick={addTodoGroup}>
 					{modalData.actionName}
-				</button>
+				</Button>
 			</div>
 		</>
 	)

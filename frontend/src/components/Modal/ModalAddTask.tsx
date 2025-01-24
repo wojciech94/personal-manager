@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
 import { useModalContext } from '../../contexts/ModalContext'
+import { Button } from '../Button/Button'
 
 import { FormRow } from '../FormRow/FormRow'
 import { TodoGroup } from '../Todos/Todos'
@@ -108,9 +109,9 @@ export function ModalAddTask({ modalData }: { modalData: DataProps }) {
 			</div>
 			{modalData?.actionName && (
 				<div className='card-footer'>
-					<button className='btn btn-success d-block w-100' onClick={handleAddTask}>
+					<Button variant='success' className='w-100' onClick={handleAddTask}>
 						{modalData.actionName}
-					</button>
+					</Button>
 				</div>
 			)}
 		</>

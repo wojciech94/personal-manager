@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
 import { useModalContext } from '../../contexts/ModalContext'
+import { Button } from '../Button/Button'
 
 export function ModalAddShoppingItem(): JSX.Element {
 	const [products, setProducts] = useState<Product[]>([])
@@ -121,9 +122,9 @@ export function ModalAddShoppingItem(): JSX.Element {
 				</div>
 			</div>
 			<div className='card-footer'>
-				<button className='btn btn-success d-block w-100' onClick={addShoppingItem}>
+				<Button variant='success' className='w-100' onClick={addShoppingItem}>
 					Add item
-				</button>
+				</Button>
 			</div>
 		</>
 	)

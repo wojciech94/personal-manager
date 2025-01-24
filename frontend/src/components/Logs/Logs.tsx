@@ -17,11 +17,11 @@ export const Logs = ({ logs }: { logs: Log[] }) => {
 
 	return (
 		<div className='d-flex flex-column gap-2'>
-			<div className='d-flex justify-between align-center text-bold gap-2 card-subtitle'>Logs</div>
-			<table cellSpacing={0} className='w-100'>
+			<div className='card-subtitle'>Logs</div>
+			<table cellSpacing={0} className='w-100 mb-n2'>
 				<thead>
 					<tr className='border-bottom'>
-						<th>Details</th>
+						<th className='ps-4'>Details</th>
 						<th className='text-center'>Time</th>
 						<th className='text-end'>Author</th>
 					</tr>

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
 import { useModalContext } from '../../contexts/ModalContext'
+import { Button } from '../Button/Button'
 import { FormRow } from '../FormRow/FormRow'
 import { DataProps } from './types'
 
@@ -34,13 +35,15 @@ export function ModalCreateShoppingList({ modalData }: { modalData: DataProps })
 
 	return (
 		<>
-			<FormRow label='Name' className='mb-4'>
-				<input type='text' value={nameValue} onChange={e => setNameValue(e.target.value)} />
-			</FormRow>
+			<div className='card-content'>
+				<FormRow label='Name'>
+					<input type='text' value={nameValue} onChange={e => setNameValue(e.target.value)} />
+				</FormRow>
+			</div>
 			<div className='card-footer'>
-				<button className='btn btn-success d-block w-100' onClick={createShoppingList}>
+				<Button variant='success' className='w-100' onClick={createShoppingList}>
 					Create shopping list
-				</button>
+				</Button>
 			</div>
 		</>
 	)

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, ChangeEvent } from 'react'
 import { useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
+import { Button } from '../Button/Button'
 import { Folder } from '../Folders/Folders'
 import { FormRow } from '../FormRow/FormRow'
 import { DataProps } from './types'
@@ -222,9 +223,9 @@ export const ModalNoteContent = ({ modalData }: { modalData: DataProps }) => {
 				</FormRow>
 			</div>
 			<div className='card-footer'>
-				<button className='btn btn-success d-block w-100' onClick={handleUpdateNote}>
+				<Button variant='success' className='w-100' onClick={handleUpdateNote}>
 					{modalData.actionName}
-				</button>
+				</Button>
 			</div>
 		</>
 	)

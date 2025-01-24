@@ -8,6 +8,7 @@ import { ToggleBox } from '../ToggleBox/ToggleBox'
 import { Note, NoteProps } from '../Note/Note'
 import { ExpandableMenu } from '../ExpandableMenu/ExpandableMenu'
 import { Alert } from '../Alert/Alert'
+import { Button } from '../Button/Button'
 
 type Notes = NoteProps[]
 
@@ -204,7 +205,7 @@ export const Notes = () => {
 
 	return (
 		<>
-			<div className='w-100 d-flex justify-between'>
+			<div className='w-100 d-flex justify-between align-center'>
 				<div className='d-flex gap-2 flex-1'>
 					<input
 						className='w-50'
@@ -216,9 +217,9 @@ export const Notes = () => {
 					<ToggleBox>
 						<div className='d-flex justify-between align-center gap-2'>
 							<div className='toggle-subtitle'>Settings</div>
-							<button className='btn btn-link' onClick={handleChangeOptions}>
+							<Button variant='success' size='xs' onClick={handleChangeOptions}>
 								Save
-							</button>
+							</Button>
 						</div>
 						<div className='toggle-title'>Filter</div>
 						<div className='toggle-subtitle'>Filter rule</div>
@@ -290,11 +291,11 @@ export const Notes = () => {
 						</select>
 					</ToggleBox>
 				</div>
-				<div className='d-flex gap-2'>
-					<button className='btn btn-primary d-flex align-center gap-2' onClick={() => setActiveModal(newModal)}>
+				<div className='d-flex gap-2 align-center'>
+					<Button onClick={() => setActiveModal(newModal)}>
 						<Plus size={16} />
 						<span>Add note</span>
-					</button>
+					</Button>
 					<ExpandableMenu
 						items={[
 							{

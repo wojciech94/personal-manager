@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { User } from 'react-feather'
+import { Button } from '../Button/Button'
 
 type ItemsProps = {
 	name: string
@@ -21,11 +22,11 @@ export const Dropdown: React.FC<DropdownProps> = ({ items }): JSX.Element => {
 
 	return (
 		<div className='dropdown'>
-			<button className='dropdown-btn' onClick={() => setExpanded(prevState => !prevState)}>
+			<Button variant='text' className='dropdown-btn' onClick={() => setExpanded(prevState => !prevState)}>
 				<div className='dropdown-avatar'>
 					<User size={20} />
 				</div>
-			</button>
+			</Button>
 			{expanded && (
 				<div className='dropdown-menu'>
 					{items &&
@@ -45,8 +46,8 @@ export const DropdownItem: React.FC<ItemsProps> = ({ name, action }): JSX.Elemen
 	}
 
 	return (
-		<button className='dropdown-item' onClick={handleAction}>
+		<Button variant='text' className='dropdown-item rounded-0' onClick={handleAction}>
 			{name}
-		</button>
+		</Button>
 	)
 }

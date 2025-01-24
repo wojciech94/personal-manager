@@ -17,8 +17,8 @@ export function debounce<T extends unknown[]>(fun: (...args: T) => void, delay =
 
 export function getLocaleDateTime(date: string) {
 	const newDate = new Date(date)
-	const hours = newDate.getHours()
-	const minutes: string = newDate.getMinutes().toString().padStart(2, '0')
+	const hours = newDate.getHours().toString().padStart(2, '0')
+	const minutes = newDate.getMinutes().toString().padStart(2, '0')
 	const dateTime = `${newDate.toLocaleDateString()} ${hours}:${minutes}`
 	return dateTime
 }

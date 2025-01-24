@@ -6,6 +6,7 @@ import { useModalContext } from '../../contexts/ModalContext'
 import { FormRow } from '../FormRow/FormRow'
 import { DataProps } from './types'
 import { Folder } from '../Folders/Folders'
+import { Button } from '../Button/Button'
 
 export function ModalFolderContent({ modalData }: { modalData: DataProps }) {
 	const [folders, setFolders] = useState<Folder[]>([])
@@ -48,7 +49,7 @@ export function ModalFolderContent({ modalData }: { modalData: DataProps }) {
 
 	return (
 		<>
-			<div className='card-content pt-0 d-flex flex-column gap-3'>
+			<div className='card-content d-flex flex-column gap-3 pt-0'>
 				{dashboardId && folders && folders.length > 0 && (
 					<>
 						<div className='card-subtitle border-top-none'>Modify folders</div>
@@ -68,9 +69,9 @@ export function ModalFolderContent({ modalData }: { modalData: DataProps }) {
 			</div>
 			{modalData?.addAction && (
 				<div className='card-footer border-light'>
-					<button className='btn btn-success d-block w-100' onClick={handleAddFolderAction}>
+					<Button variant='success' className='w-100' onClick={handleAddFolderAction}>
 						Add folder
-					</button>
+					</Button>
 				</div>
 			)}
 		</>
@@ -81,9 +82,10 @@ type FolderRowProps = {
 	folder: Folder
 	action: () => void
 	dashboardId: string
+	className?: string
 }
 
-function FolderRow({ folder, action, dashboardId }: FolderRowProps) {
+function FolderRow({ folder, action, dashboardId, className }: FolderRowProps) {
 	const [isEdit, setIsEdit] = useState(false)
 	const [inputValue, setInputValue] = useState(folder.name)
 	const token = localStorage.getItem('token')
@@ -125,24 +127,24 @@ function FolderRow({ folder, action, dashboardId }: FolderRowProps) {
 	}
 
 	return (
-		<div className='d-flex justify-between align-center gap-2 px-2'>
+		<div className='d-flex justify-between align-center gap-2 px-4'>
 			{isEdit ? (
 				<div className='d-flex gap-2'>
 					<input type={'text'} value={inputValue} onChange={e => setInputValue(e.target.value)} />
-					<button className='btn btn-icon btn-success' onClick={handleSave}>
+					<Button size='sm' variant='success' onClick={handleSave}>
 						<Check size={16} />
-					</button>
+					</Button>
 				</div>
 			) : (
 				<div>{folder.name}</div>
 			)}
 			<div className='d-flex gap-2'>
-				<button className='btn btn-icon btn-primary d-flex gap-1' onClick={() => setIsEdit(prevEdit => !prevEdit)}>
+				<Button size='sm' onClick={() => setIsEdit(prevEdit => !prevEdit)}>
 					<Edit size={16} /> Edit
-				</button>
-				<button className='btn btn-icon btn-danger d-flex gap-1' onClick={handleRemove}>
+				</Button>
+				<Button size='sm' variant='danger' onClick={handleRemove}>
 					<X size={16} /> Remove
-				</button>
+				</Button>
 			</div>
 		</div>
 	)

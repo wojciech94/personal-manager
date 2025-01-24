@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
 import { Edit, Plus, Repeat, Settings } from 'react-feather'
 import { Alert } from '../Alert/Alert'
-import { Card, CardHeader } from '../Card/Card'
+import { Card, CardHeader, HeaderDataProps } from '../Card/Card'
 import { Task, TasksSettings } from '../Task/Task'
 import { useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
 import { useModalContext } from '../../contexts/ModalContext'
+import { Button } from '../Button/Button'
 
 export type TodoGroup = {
 	_id: string
@@ -17,7 +18,7 @@ export type TodoGroup = {
 export const Todos = () => {
 	const { dashboardId } = useParams()
 	const token = localStorage.getItem('token')
-	const [todoGroups, setTodoGroups] = useState<TodoGroup[] | null>(null)
+	const [todoGroups, setTodoGroups] = useState<TodoGroup[]>([])
 	const [tasks, setTasks] = useState<Task[] | null>(null)
 	const [archivedTasks, setArchivedTasks] = useState<Task[] | null>(null)
 	const [tasksSettings, setTasksSettings] = useState<TasksSettings | null>(null)
@@ -59,11 +60,12 @@ export const Todos = () => {
 			},
 		})
 		if (res.ok) {
-			const data = await res.json()
+			const data: TodoGroup[] = await res.json()
 			setTodoGroups(data)
 		} else {
 			const errorData = await res.json()
 			console.error(errorData.message)
+			setTodoGroups([])
 		}
 	}
 
@@ -82,7 +84,7 @@ export const Todos = () => {
 		)
 		setActiveGroup(id)
 		if (res.ok) {
-			const data = (await res.json()) as TodoGroup
+			const data: TodoGroup = await res.json()
 			if (data) {
 				const now = new Date()
 				const activeTasks = data.tasks.filter(t => !t.archived_at || new Date(t.archived_at) > now)
@@ -120,19 +122,17 @@ export const Todos = () => {
 	}
 
 	const handleModifyTodoGroupCategory = () => {
-		if (todoGroups && todoGroups.length > 0) {
-			const modifyTodoGroupCategoryModal = {
-				name: 'modifyTodoGroup',
-				data: {
-					action: addGroup,
-					actionName: 'Add group',
-					fetchAction: fetchTodoGroups,
-					groups: todoGroups,
-				},
-				title: 'Modify todo group',
-			}
-			setActiveModal(modifyTodoGroupCategoryModal)
+		const modifyTodoGroupCategoryModal = {
+			name: 'modifyTodoGroup',
+			data: {
+				action: addGroup,
+				actionName: 'Add group',
+				fetchAction: fetchTodoGroups,
+				groups: todoGroups,
+			},
+			title: 'Modify todo group',
 		}
+		setActiveModal(modifyTodoGroupCategoryModal)
 	}
 
 	const handleSetTasksSettings = async (settings: TasksSettings) => {
@@ -154,12 +154,12 @@ export const Todos = () => {
 	}
 
 	const headerActions = () => {
-		const actionsArray = [
+		const actionsArray: HeaderDataProps[] = [
 			{
 				action: () => setShowArchive(prevState => !prevState),
 				icon: <Repeat size={16} />,
 				label: showArchive ? 'Show active tasks' : 'Show archive tasks',
-				btnClass: 'btn-light',
+				btnVariant: 'light',
 			},
 		]
 		if (tasksSettings) {
@@ -177,7 +177,7 @@ export const Todos = () => {
 				action: () => setActiveModal(tasksSettingsModal),
 				icon: <Settings size={16} />,
 				label: 'Settings',
-				btnClass: 'btn-light',
+				btnVariant: 'light',
 			})
 		}
 		if (todoGroups && todoGroups.length > 0) {
@@ -196,7 +196,7 @@ export const Todos = () => {
 				action: () => setActiveModal(addTaskModal),
 				icon: <Plus size={16} />,
 				label: 'Add task',
-				btnClass: 'btn-primary',
+				btnVariant: 'primary',
 			})
 		}
 		return actionsArray
@@ -206,24 +206,28 @@ export const Todos = () => {
 		<Card className='card-p0' headerComponent={<CardHeader title='Tasks to do' data={headerActions()}></CardHeader>}>
 			<div className='card-subtitle border-top-0 flex-wrap'>
 				<div className='d-flex gap-3 scroll-x-auto'>
-					<button onClick={() => fetchTasks('')} className={`btn btn-link link ${activeGroup === '' ? 'active' : ''}`}>
+					<Button
+						variant='link'
+						onClick={() => fetchTasks('')}
+						className={`text-decoration-none ${activeGroup === '' ? 'active' : ''}`}>
 						All tasks
-					</button>
+					</Button>
 					{todoGroups &&
 						todoGroups.length > 0 &&
 						todoGroups.map(tdg => (
-							<button
+							<Button
 								key={tdg._id}
-								className={`btn btn-link link ${tdg._id === activeGroup ? 'active' : ''}`}
+								variant='link'
+								className={`text-decoration-none ${tdg._id === activeGroup ? 'active' : ''}`}
 								onClick={() => fetchTasks(tdg._id)}>
 								{tdg.name}
-							</button>
+							</Button>
 						))}
 				</div>
-				<button className='d-flex gap-2 align-center btn btn-light border' onClick={handleModifyTodoGroupCategory}>
+				<Button variant='secondary' onClick={handleModifyTodoGroupCategory}>
 					<Edit size={16} />
 					Manage groups
-				</button>
+				</Button>
 			</div>
 			{showArchive && <div className='p-4 text-bold border-bottom border-light'>Archived tasks</div>}
 			{visibleTasks && visibleTasks.length > 0 ? (

@@ -2,6 +2,8 @@ import { Edit, X, Clock } from 'react-feather'
 import { useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
 import { useModalContext } from '../../contexts/ModalContext'
+import { getLocaleDateTime } from '../../utils/helpers'
+import { Button } from '../Button/Button'
 
 export type NoteProps = {
 	_id: string
@@ -78,12 +80,12 @@ export const Note: React.FC<Props> = ({ note, updateNote, fetchNotes }): JSX.Ele
 					<div className='badge'>{note.category}</div>
 				</div>
 				<div className='d-flex gap-2 align-center'>
-					<button className='btn btn-icon btn-primary' onClick={() => setActiveModal?.(() => editModal(note._id))}>
+					<Button onlyIcon={true} onClick={() => setActiveModal?.(() => editModal(note._id))}>
 						<Edit size={16} />
-					</button>
-					<button className='btn btn-icon btn-light' onClick={() => removeNote(note._id)}>
+					</Button>
+					<Button onlyIcon={true} variant='danger' onClick={() => removeNote(note._id)}>
 						<X size={16} />
-					</button>
+					</Button>
 				</div>
 			</div>
 			{note.tags && note.tags.length > 0 && (
@@ -99,11 +101,11 @@ export const Note: React.FC<Props> = ({ note, updateNote, fetchNotes }): JSX.Ele
 			<div className='mx-n3 px-3 py-3 border-top border-bottom border-light'>{note.content}</div>
 			<div className='d-flex gap-3 justify-between mx-n3 px-3 pt-2'>
 				<div className='d-flex gap-2 align-center'>
-					<Edit size={20} /> {note.updated_at.replace('T', ' ').replace('Z', '')}
+					<Edit size={20} /> {getLocaleDateTime(note.updated_at)}
 				</div>
 				{note.expired_at ? (
 					<div className='d-flex gap-2 align-center text-gray'>
-						<Clock size={20} /> {note.expired_at.split('T')[0]}
+						<Clock size={20} /> {getLocaleDateTime(note.expired_at)}
 					</div>
 				) : (
 					''

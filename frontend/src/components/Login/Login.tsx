@@ -2,19 +2,22 @@ import { FormEvent, useState } from 'react'
 import { Eye, EyeOff } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { API_URL } from '../../config'
+import { Button } from '../Button/Button'
 import { Card } from '../Card/Card'
 
-export const Login: React.FC = (): JSX.Element => {
+export const Login = () => {
 	const [username, setUsername] = useState('')
 	const [password, setPassword] = useState('')
 	const [showPassword, setShowPassword] = useState(false)
 	const [mode, setMode] = useState('signIn')
 	const [message, setMessage] = useState('')
+	const [isLoading, setIsloading] = useState(false)
 
 	const navigate = useNavigate()
 
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
+		setIsloading(true)
 
 		try {
 			const baseUrl = `${API_URL}`
@@ -47,6 +50,8 @@ export const Login: React.FC = (): JSX.Element => {
 			if (error instanceof Error) {
 				setMessage(error.message)
 			}
+		} finally {
+			setIsloading(false)
 		}
 	}
 
@@ -74,28 +79,28 @@ export const Login: React.FC = (): JSX.Element => {
 								placeholder='Password'
 								required
 							/>
-							<button
+							<Button
+								variant='text'
+								size='xs'
 								type='button'
-								className='btn btn-icon position-absolute absolute-right-centered'
+								className='position-absolute absolute-right-centered mr-2'
 								onClick={() => setShowPassword(prevState => !prevState)}>
 								{showPassword ? <Eye size={12} /> : <EyeOff size={12} />}
-							</button>
+							</Button>
 						</div>
-						<button className='btn btn-primary' type='submit'>
+						<Button isLoading={isLoading} type='submit'>
 							{mode === 'signIn' ? 'Login' : 'Sign up'}
-						</button>
+						</Button>
 						<div className='d-flex gap-2 align-center'>
 							<span className='text-sm text-gray'>
-								{' '}
 								{mode === 'signIn' ? `Don't have an account?` : `Already have an account?`}
 							</span>
-
-							<button
-								type='button'
-								className='btn btn-link link'
+							<Button
+								variant='text'
+								className='link text-hover-primary'
 								onClick={() => setMode(prevMode => (prevMode === 'signIn' ? 'signUp' : 'signIn'))}>
 								{mode === 'signIn' ? 'Sign Up' : 'Login'}
-							</button>
+							</Button>
 						</div>
 						{message && <div>{message}</div>}
 					</form>
