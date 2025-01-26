@@ -41,7 +41,7 @@ exports.addItem = async (req, res) => {
 
 		await shoppingList.save()
 
-		const message = `Added new shopping item (${productId.toString()}) into ${shoppingList.name}`
+		const message = `Added new shopping item (${shoppingItem.productId.name}) to ${shoppingList.name}`
 		await addLog(dashboard.logsId, userId, message)
 
 		res.status(201).json(shoppingItem)
@@ -89,7 +89,7 @@ exports.updateItem = async (req, res) => {
 			return res.status(404).json({ message: 'Cannot find dashboard for provided Id' })
 		}
 
-		const shoppingItem = await ShoppingItem.findById(id)
+		const shoppingItem = await ShoppingItem.findById(id).populate('productId')
 
 		if (!shoppingItem) {
 			return res.status(404).json({ message: 'Cannot find shopping item for provided Id' })
@@ -111,7 +111,7 @@ exports.updateItem = async (req, res) => {
 		shoppingList.updatedAt = new Date()
 		await shoppingList.save()
 
-		const message = `Update shopping item (${id})`
+		const message = `Update shopping item (${shoppingItem.productId.name})`
 		await addLog(dashboard.logsId, userId, message)
 
 		res.status(200).json(shoppingItem)
@@ -148,7 +148,7 @@ exports.deleteItem = async (req, res) => {
 			return res.status(404).json({ message: 'Cannot find shopping list for provided Id' })
 		}
 
-		const shoppingItem = await ShoppingItem.findByIdAndDelete(id)
+		const shoppingItem = await ShoppingItem.findByIdAndDelete(id).populate('productId')
 
 		if (!shoppingItem) {
 			return res.status(404).json({ message: 'Cannot find shopping item for provided Id' })
@@ -157,7 +157,7 @@ exports.deleteItem = async (req, res) => {
 		shoppingList.list = shoppingList.list.filter(el => el._id !== id)
 		await shoppingList.save()
 
-		const message = `Delete shopping item (${id})`
+		const message = `Delete shopping item (${shoppingItem.productId.name})`
 		await addLog(dashboard.logsId, userId, message)
 
 		res.status(204).send()
