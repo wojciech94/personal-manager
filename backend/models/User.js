@@ -17,6 +17,12 @@ const userSchema = new mongoose.Schema({
 			ref: 'NoteCategory',
 		},
 	],
+	notifications: [
+		{
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'Notification',
+		},
+	],
 	created_at: {
 		type: Date,
 		default: Date.now(),

@@ -8,7 +8,7 @@ export const ModalAddUserContent = ({ modalData }: { modalData: DataProps }) => 
 	const [userInput, setUserInput] = useState('')
 	const { setActiveModal } = useModalContext()
 
-	const handleAddUser = () => {
+	const handleInviteUser = () => {
 		if (modalData.action && typeof modalData.action === 'function' && modalData.action.length === 1) {
 			const action = modalData.action as (str: string) => Promise<void>
 			action(userInput)
@@ -24,8 +24,8 @@ export const ModalAddUserContent = ({ modalData }: { modalData: DataProps }) => 
 				</FormRow>
 			</div>
 			<div className='card-footer'>
-				<Button variant='success' className='w-100' onClick={handleAddUser}>
-					Add user to dashboard
+				<Button variant='success' className='w-100' onClick={handleInviteUser}>
+					Invite user to dashboard
 				</Button>
 			</div>
 		</>

@@ -180,6 +180,7 @@ const DashboardDetails: React.FC<DashboardDetails> = ({ dashboard, editMode, get
 	const { fetchUserDashboards } = useFetchDashboardsContext()
 	const [nameValue, setNameValue] = useState('')
 	const [selectedOwner, setSelectedOwner] = useState('')
+	const { dashboardId } = useParams()
 
 	useEffect(() => {
 		if (editMode) {
@@ -218,15 +219,20 @@ const DashboardDetails: React.FC<DashboardDetails> = ({ dashboard, editMode, get
 		}
 	}
 
-	const handleAddUser = async (userName: string) => {
+	const handleInviteUser = async (userName: string) => {
 		const token = localStorage.getItem('token')
-		const res = await fetch(`${API_URL}dashboards/${dashboard?._id}/add-user`, {
+		const res = await fetch(`${API_URL}notifications`, {
 			method: 'POST',
 			headers: {
 				Authorization: `Bearer ${token}`,
 				'Content-Type': 'application/json',
 			},
-			body: JSON.stringify({ name: userName }),
+			body: JSON.stringify({
+				content: `You have been invited to the dashboard (${dashboard?.name})`,
+				type: 'invitation',
+				target: userName,
+				dashboardId: dashboardId,
+			}),
 		})
 
 		if (!res.ok) {
@@ -240,9 +246,9 @@ const DashboardDetails: React.FC<DashboardDetails> = ({ dashboard, editMode, get
 	const addUserModalData = {
 		name: 'addUser',
 		data: {
-			action: handleAddUser,
+			action: handleInviteUser,
 		},
-		title: 'Add user',
+		title: 'Invite user',
 	}
 
 	const nameInput = <input type='text' value={nameValue} onChange={e => setNameValue(e.target.value)} />
@@ -277,7 +283,7 @@ const DashboardDetails: React.FC<DashboardDetails> = ({ dashboard, editMode, get
 								<div className='d-flex gap-2'>
 									{dashboard.isOwner && (
 										<Button onClick={() => setActiveModal(addUserModalData)}>
-											<Plus size={16} /> Add user
+											<Plus size={16} /> Invite user
 										</Button>
 									)}
 								</div>
