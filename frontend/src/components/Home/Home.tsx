@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link, Outlet, useLocation, useMatch, useNavigate } from 'react-router-dom'
+import { Link, Outlet, useLocation, useMatch, useNavigate, useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
 import { Dashboards } from '../Dashboards/Dashboards'
 import { Modal } from '../Modal/Modal'
@@ -101,6 +101,10 @@ export const Home = () => {
 		setActiveModal(createDashboardModalData)
 	}
 
+	const openNotifications = () => {
+		navigate('/notifications')
+	}
+
 	const goToSettings = () => {
 		navigate('/settings')
 	}
@@ -115,6 +119,7 @@ export const Home = () => {
 			name: 'Settings',
 			action: goToSettings,
 		},
+		{ name: 'Notifications', action: openNotifications },
 		{ name: 'Logout', action: logout },
 	]
 

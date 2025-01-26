@@ -13,6 +13,7 @@ import { ShoppingLists } from './components/ShoppingLists/ShoppingLists'
 import { Products } from './components/Products/Products'
 import { ShoppingList } from './components/ShoppingList/ShoppingList'
 import { GlobalError } from './components/GlobalError/GlobalError'
+import { Notifications } from './components/Notifications/Notifications'
 
 export type ApiError = {
 	message: string
@@ -134,6 +135,14 @@ const Main = () => {
 							element: <>Linktree content work in progress</>,
 						},
 					],
+				},
+				{
+					path: 'notifications',
+					element: <Notifications />,
+				},
+				{
+					path: 'settings',
+					element: <div>Settings work in progress</div>,
 				},
 			],
 			errorElement: <GlobalError />,

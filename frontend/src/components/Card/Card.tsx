@@ -18,7 +18,7 @@ export type HeaderDataProps = {
 
 type HeaderProps = {
 	title: string
-	data: HeaderDataProps[]
+	data?: HeaderDataProps[]
 	className?: string
 }
 
