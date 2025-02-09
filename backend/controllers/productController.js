@@ -42,6 +42,7 @@ exports.addProduct = async (req, res) => {
 exports.getProducts = async (req, res) => {
 	try {
 		const { dashboardId } = req.params
+		const { sort_by, direction } = req.query
 
 		if (!dashboardId || !mongoose.Types.ObjectId.isValid(dashboardId)) {
 			return res.status(400).json({ message: 'Missing or invalid dashboardId' })
@@ -53,7 +54,18 @@ exports.getProducts = async (req, res) => {
 			return res.status(404).json({ message: 'Dashboard not found for provided id' })
 		}
 
-		res.status(201).json(dashboard.productsIds)
+		let products = dashboard.productsIds
+
+		if (sort_by === 'name') {
+			const sortDirection = direction === 'desc' ? -1 : 1
+			products = products.sort((a, b) => {
+				if (a[sort_by] < b[sort_by]) return -sortDirection
+				if (a[sort_by] > b[sort_by]) return sortDirection
+				return 0
+			})
+		}
+
+		res.status(201).json(products)
 	} catch (error) {
 		res.status(500).json({ message: error.message })
 	}

@@ -1,5 +1,5 @@
-import { FormEvent, useState } from 'react'
-import { Eye, EyeOff } from 'react-feather'
+import { FormEvent, useEffect, useState } from 'react'
+import { AlertTriangle, Eye, EyeOff } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { API_URL } from '../../config'
 import { Button } from '../Button/Button'
@@ -12,8 +12,20 @@ export const Login = () => {
 	const [mode, setMode] = useState('signIn')
 	const [message, setMessage] = useState('')
 	const [isLoading, setIsloading] = useState(false)
+	const [showLoadingMessage, setShowLoadingMessage] = useState(false)
 
 	const navigate = useNavigate()
+
+	useEffect(() => {
+		let timeout: number
+		if (isLoading) {
+			timeout = window.setTimeout(() => setShowLoadingMessage(true), 5000)
+		}
+
+		return () => {
+			if (timeout) clearTimeout(timeout)
+		}
+	}, [isLoading])
 
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
@@ -91,6 +103,14 @@ export const Login = () => {
 						<Button isLoading={isLoading} type='submit'>
 							{mode === 'signIn' ? 'Login' : 'Sign up'}
 						</Button>
+						{showLoadingMessage && (
+							<div className='d-flex gap-1 text-danger'>
+								<AlertTriangle size={16} className='flex-shrink-0' />
+								<div>
+									Backend is in cold start mode due to server inactivity. This might take a little longer than usual...
+								</div>
+							</div>
+						)}
 						<div className='d-flex gap-2 align-center'>
 							<span className='text-sm text-gray'>
 								{mode === 'signIn' ? `Don't have an account?` : `Already have an account?`}

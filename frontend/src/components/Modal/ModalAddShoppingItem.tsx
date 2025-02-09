@@ -10,7 +10,7 @@ export function ModalAddShoppingItem(): JSX.Element {
 	const { dashboardId, shoppingListId } = useParams()
 	const [unitValue, setUnitValue] = useState<string>('')
 	const [priceValue, setPriceValue] = useState<number>(0)
-	const [quantityValue, setQuantityValue] = useState<number>(0)
+	const [quantityValue, setQuantityValue] = useState<number | null>(1)
 	const [notesValue, setNotesValue] = useState<string>('')
 	const token: string | null = localStorage.getItem('token')
 	const { setActiveModal } = useModalContext()
@@ -25,7 +25,7 @@ export function ModalAddShoppingItem(): JSX.Element {
 
 	const fetchProducts = async (): Promise<void> => {
 		if (token) {
-			const res = await fetch(`${API_URL}dashboards/${dashboardId}/products`, {
+			const res = await fetch(`${API_URL}dashboards/${dashboardId}/products?sort_by=name&direction=asc`, {
 				headers: {
 					Authorization: `Bearer ${token}`,
 				},
@@ -105,7 +105,14 @@ export function ModalAddShoppingItem(): JSX.Element {
 					)}
 					<div className='d-flex flex-column gap-1'>
 						<div>Quantity</div>
-						<input type='number' value={quantityValue} onChange={e => setQuantityValue(Number(e.target.value))} />
+						<input
+							type='number'
+							value={quantityValue === null ? '' : quantityValue}
+							onChange={e => {
+								const value = e.target.value === '' ? null : Number(e.target.value)
+								setQuantityValue(value)
+							}}
+						/>
 					</div>
 					<div className='d-flex flex-column gap-1'>
 						<div>Unit</div>
@@ -115,9 +122,9 @@ export function ModalAddShoppingItem(): JSX.Element {
 						<div>Price</div>
 						<input type='number' value={priceValue} onChange={e => setPriceValue(Number(e.target.value))} />
 					</div>
-					<div className='d-flex flex-column flex-1 gap-1'>
+					<div className='d-flex flex-column flex-1 gap-1 w-100'>
 						<div>Notes</div>
-						<textarea value={notesValue} onChange={e => setNotesValue(e.target.value)} />
+						<textarea className='max-w-100' value={notesValue} onChange={e => setNotesValue(e.target.value)} />
 					</div>
 				</div>
 			</div>

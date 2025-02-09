@@ -954,6 +954,10 @@ a.active,
 	flex: 1;
 }
 
+.flex-shrink-0 {
+	flex-shrink: 0;
+}
+
 .align-center {
 	align-items: center;
 }
@@ -1230,6 +1234,10 @@ tbody tr.border-bottom:last-child {
 	overflow-x: auto;
 	white-space: nowrap;
 	width: auto;
+}
+
+.scroll-item {
+	flex: 0 0 auto;
 }
 
 @media (max-width: 576px) {

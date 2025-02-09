@@ -209,7 +209,7 @@ export const Todos = () => {
 					<Button
 						variant='link'
 						onClick={() => fetchTasks('')}
-						className={`text-decoration-none ${activeGroup === '' ? 'active' : ''}`}>
+						className={`text-decoration-none scroll-item ${activeGroup === '' ? 'active' : ''}`}>
 						All tasks
 					</Button>
 					{todoGroups &&
@@ -218,7 +218,7 @@ export const Todos = () => {
 							<Button
 								key={tdg._id}
 								variant='link'
-								className={`text-decoration-none ${tdg._id === activeGroup ? 'active' : ''}`}
+								className={`text-decoration-none scroll-item ${tdg._id === activeGroup ? 'active' : ''}`}
 								onClick={() => fetchTasks(tdg._id)}>
 								{tdg.name}
 							</Button>
