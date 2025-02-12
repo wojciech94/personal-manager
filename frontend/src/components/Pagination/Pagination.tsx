@@ -28,7 +28,7 @@ export function Pagination({
 	return (
 		<>
 			<div className='d-flex gap-2 justify-between align-center border-top border-light px-4 pt-4 bg-lighter pb-4 rounded-bottom-3'>
-				<div>{`Page ${currentPage} of ${totalPages}`}</div>
+				<div>Page <span className='text-nowrap'>{`${currentPage} of ${totalPages}`}</span></div>
 				<div className='d-flex gap-2 align-center'>
 					{prevCondition && (
 						<>
@@ -39,7 +39,11 @@ export function Pagination({
 								<ChevronLeft size={16} />
 							</Button>
 							{prev2Button && (
-								<Button variant='light' onlyIcon={true} onClick={() => goToPage(currentPage - 2)}>
+								<Button
+									className='d-none d-block-sm'
+									variant='light'
+									onlyIcon={true}
+									onClick={() => goToPage(currentPage - 2)}>
 									{currentPage - 2}
 								</Button>
 							)}
@@ -57,7 +61,11 @@ export function Pagination({
 								{currentPage + 1}
 							</Button>
 							{next2Button && (
-								<Button variant='light' onlyIcon={true} onClick={() => goToPage(currentPage + 2)}>
+								<Button
+									className='d-none d-block-sm'
+									variant='light'
+									onlyIcon={true}
+									onClick={() => goToPage(currentPage + 2)}>
 									{currentPage + 2}
 								</Button>
 							)}

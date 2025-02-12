@@ -56,7 +56,7 @@ exports.getProducts = async (req, res) => {
 
 		let products = dashboard.productsIds
 
-		if (sort_by === 'name') {
+		if (sort_by) {
 			const sortDirection = direction === 'desc' ? -1 : 1
 			products = products.sort((a, b) => {
 				if (a[sort_by] < b[sort_by]) return -sortDirection

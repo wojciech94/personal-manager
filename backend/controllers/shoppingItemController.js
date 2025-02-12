@@ -41,6 +41,8 @@ exports.addItem = async (req, res) => {
 
 		await shoppingList.save()
 
+		await shoppingItem.populate('productId')
+
 		const message = `Added new shopping item (${shoppingItem.productId.name}) to ${shoppingList.name}`
 		await addLog(dashboard.logsId, userId, message)
 

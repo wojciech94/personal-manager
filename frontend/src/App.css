@@ -144,7 +144,7 @@ select {
 
 input[type='text'],
 select {
-	min-width: 125px;
+	min-width: 50px;
 }
 
 textarea {
@@ -327,7 +327,6 @@ a.active,
 
 .card-content {
 	padding: 1rem;
-	border-top: 1px solid lightgray;
 }
 
 .card:not(.card-p0) > .card-content > .card-subtitle,
@@ -1254,6 +1253,14 @@ tbody tr.border-bottom:last-child {
 
 	.d-block-sm {
 		display: block;
+	}
+
+	.d-table-cell-sm {
+		display: table-cell;
+	}
+
+	.justify-start-sm {
+		justify-content: flex-start;
 	}
 
 	.page-wrapper {

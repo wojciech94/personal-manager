@@ -27,6 +27,8 @@ export function Products() {
 	const [selectedCategory, setSelectedCategory] = useState('')
 	const { dashboardId } = useParams()
 	const [itemsPerPage, setItemsPerPage] = useState(10)
+	const [sortBy, setSortBy] = useState<'name' | 'category'>('name')
+	const [sortDir, setSortDir] = useState<'asc' | 'desc'>('asc')
 
 	const { currentItems, currentPage, totalPages, nextPage, prevPage, goToPage } = usePagination(
 		filteredProducts,
@@ -38,7 +40,7 @@ export function Products() {
 		if (!token) {
 			console.error('No token found in localStorage')
 		}
-		const res = await fetch(`${API_URL}dashboards/${dashboardId}/products`, {
+		const res = await fetch(`${API_URL}dashboards/${dashboardId}/products?sort_by=${sortBy}&direction=${sortDir}`, {
 			headers: {
 				Authorization: `Bearer ${token}`,
 			},
@@ -81,9 +83,17 @@ export function Products() {
 
 	return (
 		<>
-			<div className='d-flex justify-between align-center gap-3'>
-				<div className='d-flex gap-5 align-center'>
+			<div className='d-flex flex-wrap justify-between align-center gap-3'>
+				<div className='d-flex gap-4 align-center'>
 					<div className='card-title'>Products</div>
+				</div>
+				<div className='d-flex gap-2 align-center'>
+					<Button className='text-nowrap' onClick={() => setActiveModal(modalData)}>
+						<Plus size={16} />
+						Add product
+					</Button>
+				</div>
+				<div className='d-flex flex-wrap justify-between justify-start-sm gap-4 pt-2 border-top border-light mx-n4 px-4' style={{width: 'calc(100% + 32px)'}}>
 					<div className='d-flex flex-column gap-1'>
 						<div className='text-gray'>Filter:</div>
 						<select
@@ -101,12 +111,28 @@ export function Products() {
 								))}
 						</select>
 					</div>
-				</div>
-				<div className='d-flex gap-2 align-center'>
-					<Button onClick={() => setActiveModal(modalData)}>
-						<Plus size={16} />
-						Add product
-					</Button>
+					<div className='d-flex flex-column gap-1'>
+						<div className='text-gray'>Sort by:</div>
+						<select
+							name='sortby'
+							id='sortby'
+							value={sortBy}
+							onChange={e => setSortBy(e.target.value as 'name' | 'category')}>
+							<option value='name'>Name</option>
+							<option value='category'>Category</option>
+						</select>
+					</div>
+					<div className='d-flex flex-column gap-1'>
+						<div className='text-gray'>Sort direction:</div>
+						<select
+							name='sortdir'
+							id='sortdir'
+							value={sortDir}
+							onChange={e => setSortDir(e.target.value as 'asc' | 'desc')}>
+							<option value='asc'>Ascending</option>
+							<option value='desc'>Descending</option>
+						</select>
+					</div>
 				</div>
 			</div>
 			{products && currentItems && currentItems.length > 0 ? (

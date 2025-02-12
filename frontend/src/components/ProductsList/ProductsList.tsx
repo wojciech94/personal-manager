@@ -110,7 +110,7 @@ export function ProductsList({ products }: { products: Product[] }) {
 									<td>CATEGORY</td>
 									<td>UNIT</td>
 									<td>PRICE</td>
-									<td>TAGS</td>
+									<td className='d-none d-table-cell-sm'>TAGS</td>
 									<td style={{ width: '85px' }}></td>
 								</tr>
 							</thead>
@@ -176,7 +176,7 @@ export function ProductsList({ products }: { products: Product[] }) {
 												<td>{p.category}</td>
 												<td>{p.unit}</td>
 												<td>{p.price}</td>
-												<td>{p.tags}</td>
+												<td className='d-none d-table-cell-sm'>{p.tags}</td>
 											</>
 										)}
 										<td>
