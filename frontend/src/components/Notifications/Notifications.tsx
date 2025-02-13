@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Check, Eye, X } from 'react-feather'
 import { useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
+import { useAuth } from '../../contexts/AuthContext'
 import { ApiError } from '../../main'
 import { Alert } from '../Alert/Alert'
 import { Button } from '../Button/Button'
@@ -15,17 +16,16 @@ type Notification = {
 
 export const Notifications = () => {
 	const [notifications, setNotifications] = useState<Notification[]>([])
-	const token = localStorage.getItem('token')
-
+	const { accessToken } = useAuth()
 	useEffect(() => {
 		fetchNotifications()
 	}, [])
 
 	const fetchNotifications = async () => {
-		if (token) {
+		if (accessToken) {
 			const res = await fetch(`${API_URL}notifications`, {
 				headers: {
-					Authorization: `Bearer ${token}`,
+					Authorization: `Bearer ${accessToken}`,
 				},
 			})
 
@@ -40,11 +40,11 @@ export const Notifications = () => {
 	}
 
 	const acceptInvitation = async (id: string) => {
-		if (token) {
+		if (accessToken) {
 			try {
 				const res = await fetch(`${API_URL}notifications/accept`, {
 					headers: {
-						Authorization: `Bearer ${token}`,
+						Authorization: `Bearer ${accessToken}`,
 						'Content-Type': 'application/json',
 					},
 					method: 'POST',
@@ -64,11 +64,11 @@ export const Notifications = () => {
 	}
 
 	const deleteInvitation = async (id: string) => {
-		if (token) {
+		if (accessToken) {
 			try {
 				const res = await fetch(`${API_URL}notifications`, {
 					headers: {
-						Authorization: `Bearer ${token}`,
+						Authorization: `Bearer ${accessToken}`,
 						'Content-Type': 'application/json',
 					},
 					method: 'DELETE',

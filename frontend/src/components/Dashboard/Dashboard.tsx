@@ -9,6 +9,7 @@ import { useModalContext } from '../../contexts/ModalContext'
 import { useFetchDashboardsContext } from '../../contexts/FetchDashboardsContext'
 import { Logs } from '../Logs/Logs'
 import { Button } from '../Button/Button'
+import { useAuth } from '../../contexts/AuthContext'
 
 type DashboardDetails = {
 	dashboard: DashboardType | null
@@ -49,12 +50,12 @@ export const Dashboard = () => {
 	const [editMode, setEditMode] = useState(false)
 	const navigate = useNavigate()
 	const isExactMatch = useMatch('/dashboards/:dashboardId')
-	const token = localStorage.getItem('token')
+	const { accessToken } = useAuth()
 
 	const getDetails = async () => {
 		const res = await fetch(`${API_URL}dashboards/${dashboardId}`, {
 			headers: {
-				Authorization: `Bearer ${token}`,
+				Authorization: `Bearer ${accessToken}`,
 			},
 		})
 
@@ -75,11 +76,11 @@ export const Dashboard = () => {
 	}, [dashboardId, isExactMatch])
 
 	const removeUser = async (id: string | null) => {
-		if (token) {
+		if (accessToken) {
 			const res = await fetch(`${API_URL}dashboards/${dashboardId}/remove`, {
 				method: 'PATCH',
 				headers: {
-					Authorization: `Bearer ${token}`,
+					Authorization: `Bearer ${accessToken}`,
 					'Content-Type': 'application/json',
 				},
 				body: JSON.stringify({ id: id }),
@@ -100,13 +101,13 @@ export const Dashboard = () => {
 	}
 
 	const deleteDashboard = async () => {
-		if (!token) {
+		if (!accessToken) {
 			return
 		}
 		const res = await fetch(`${API_URL}dashboards/${dashboardId}`, {
 			method: 'DELETE',
 			headers: {
-				Authorization: `Bearer ${token}`,
+				Authorization: `Bearer ${accessToken}`,
 			},
 		})
 		if (!res.ok) {
@@ -181,6 +182,7 @@ const DashboardDetails: React.FC<DashboardDetails> = ({ dashboard, editMode, get
 	const [nameValue, setNameValue] = useState('')
 	const [selectedOwner, setSelectedOwner] = useState('')
 	const { dashboardId } = useParams()
+	const { accessToken } = useAuth()
 
 	useEffect(() => {
 		if (editMode) {
@@ -196,11 +198,10 @@ const DashboardDetails: React.FC<DashboardDetails> = ({ dashboard, editMode, get
 	}, [dashboard])
 
 	const updateDashboard = async () => {
-		const token = localStorage.getItem('token')
 		const res = await fetch(`${API_URL}dashboards/${dashboard?._id}`, {
 			method: 'PATCH',
 			headers: {
-				Authorization: `Bearer ${token}`,
+				Authorization: `Bearer ${accessToken}`,
 				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify({ name: nameValue, creatorId: selectedOwner }),
@@ -220,11 +221,10 @@ const DashboardDetails: React.FC<DashboardDetails> = ({ dashboard, editMode, get
 	}
 
 	const handleInviteUser = async (userName: string) => {
-		const token = localStorage.getItem('token')
 		const res = await fetch(`${API_URL}notifications`, {
 			method: 'POST',
 			headers: {
-				Authorization: `Bearer ${token}`,
+				Authorization: `Bearer ${accessToken}`,
 				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify({

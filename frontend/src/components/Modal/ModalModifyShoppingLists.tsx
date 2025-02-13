@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Check, Edit, X } from 'react-feather'
 import { useNavigate, useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
+import { useAuth } from '../../contexts/AuthContext'
 import { useModalContext } from '../../contexts/ModalContext'
 import { ApiError } from '../../main'
 import { Button } from '../Button/Button'
@@ -14,18 +15,18 @@ export function ModalModifyShoppingLists({ modalData }: { modalData: DataProps }
 	const [nameValue, setNameValue] = useState('')
 	const { setActiveModal } = useModalContext()
 	const { dashboardId } = useParams()
-	const token = localStorage.getItem('token')
 	const navigate = useNavigate()
+	const { accessToken } = useAuth()
 
 	useEffect(() => {
 		fetchShoppingLists()
 	}, [])
 
 	const fetchShoppingLists = async () => {
-		if (token) {
+		if (accessToken) {
 			const res = await fetch(`${API_URL}dashboards/${dashboardId}/shopping-lists`, {
 				headers: {
-					Authorization: `Bearer ${token}`,
+					Authorization: `Bearer ${accessToken}`,
 				},
 			})
 			if (res.ok) {
@@ -38,11 +39,11 @@ export function ModalModifyShoppingLists({ modalData }: { modalData: DataProps }
 	}
 
 	const updateShoppingList = async (id: string) => {
-		if (token) {
+		if (accessToken) {
 			const res = await fetch(`${API_URL}dashboards/${dashboardId}/shopping-lists/${id}`, {
 				method: 'PATCH',
 				headers: {
-					Authorization: `Bearer ${token}`,
+					Authorization: `Bearer ${accessToken}`,
 					'Content-Type': 'application/json',
 				},
 				body: JSON.stringify({ name: nameValue }),
@@ -75,11 +76,11 @@ export function ModalModifyShoppingLists({ modalData }: { modalData: DataProps }
 	}
 
 	const deleteShoppingList = async (id: string) => {
-		if (token) {
+		if (accessToken) {
 			const res = await fetch(`${API_URL}dashboards/${dashboardId}/delete/${id}`, {
 				method: 'DELETE',
 				headers: {
-					Authorization: `Bearer ${token}`,
+					Authorization: `Bearer ${accessToken}`,
 				},
 			})
 			if (!res.ok) {

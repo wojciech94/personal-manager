@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
+import { useAuth } from '../../contexts/AuthContext'
 import { useModalContext } from '../../contexts/ModalContext'
 import { Button } from '../Button/Button'
 
@@ -12,9 +13,9 @@ export function ModalAddShoppingItem(): JSX.Element {
 	const [priceValue, setPriceValue] = useState<number>(0)
 	const [quantityValue, setQuantityValue] = useState<number | null>(1)
 	const [notesValue, setNotesValue] = useState<string>('')
-	const token: string | null = localStorage.getItem('token')
 	const { setActiveModal } = useModalContext()
 	const navigate = useNavigate()
+	const { accessToken } = useAuth()
 
 	type Product = {
 		_id: string
@@ -24,10 +25,10 @@ export function ModalAddShoppingItem(): JSX.Element {
 	}
 
 	const fetchProducts = async (): Promise<void> => {
-		if (token) {
+		if (accessToken) {
 			const res = await fetch(`${API_URL}dashboards/${dashboardId}/products?sort_by=name&direction=asc`, {
 				headers: {
-					Authorization: `Bearer ${token}`,
+					Authorization: `Bearer ${accessToken}`,
 				},
 			})
 			if (res.ok) {
@@ -44,11 +45,11 @@ export function ModalAddShoppingItem(): JSX.Element {
 	}
 
 	const addShoppingItem = async (): Promise<void> => {
-		if (token) {
+		if (accessToken) {
 			const res = await fetch(`${API_URL}dashboards/${dashboardId}/shoppingLists/${shoppingListId}/shopping-items`, {
 				method: 'POST',
 				headers: {
-					Authorization: `Bearer ${token}`,
+					Authorization: `Bearer ${accessToken}`,
 					'Content-Type': 'application/json',
 				},
 				body: JSON.stringify({

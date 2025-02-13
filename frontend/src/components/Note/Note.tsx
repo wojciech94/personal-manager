@@ -1,6 +1,7 @@
 import { Edit, X, Clock } from 'react-feather'
 import { useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
+import { useAuth } from '../../contexts/AuthContext'
 import { useModalContext } from '../../contexts/ModalContext'
 import { getLocaleDateTime } from '../../utils/helpers'
 import { Button } from '../Button/Button'
@@ -35,6 +36,7 @@ type Props = {
 export const Note: React.FC<Props> = ({ note, updateNote, fetchNotes }): JSX.Element => {
 	const { setActiveModal } = useModalContext()
 	const { dashboardId } = useParams()
+	const { accessToken } = useAuth()
 
 	const removeNote = async (id: string): Promise<void> => {
 		if (id) {
@@ -42,7 +44,7 @@ export const Note: React.FC<Props> = ({ note, updateNote, fetchNotes }): JSX.Ele
 				method: 'DELETE',
 				headers: {
 					'Content-Type': 'application/json',
-					Authorization: `Bearer ${localStorage.getItem('token')}`,
+					Authorization: `Bearer ${accessToken}`,
 				},
 				body: JSON.stringify({ id }),
 			})

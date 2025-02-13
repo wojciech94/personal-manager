@@ -7,6 +7,7 @@ import { useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
 import { useModalContext } from '../../contexts/ModalContext'
 import { Button } from '../Button/Button'
+import { useAuth } from '../../contexts/AuthContext'
 
 export type TodoGroup = {
 	_id: string
@@ -17,7 +18,7 @@ export type TodoGroup = {
 
 export const Todos = () => {
 	const { dashboardId } = useParams()
-	const token = localStorage.getItem('token')
+
 	const [todoGroups, setTodoGroups] = useState<TodoGroup[]>([])
 	const [tasks, setTasks] = useState<Task[] | null>(null)
 	const [archivedTasks, setArchivedTasks] = useState<Task[] | null>(null)
@@ -25,6 +26,8 @@ export const Todos = () => {
 	const [activeGroup, setActiveGroup] = useState('')
 	const [showArchive, setShowArchive] = useState(false)
 	const { setActiveModal } = useModalContext()
+	const { accessToken } = useAuth()
+
 	const visibleTasks = showArchive ? archivedTasks : tasks
 
 	useEffect(() => {
@@ -41,7 +44,7 @@ export const Todos = () => {
 	const fetchTasksSettings = async () => {
 		const res = await fetch(`${API_URL}dashboards/${dashboardId}/tasks-settings`, {
 			headers: {
-				Authorization: `Bearer ${token}`,
+				Authorization: `Bearer ${accessToken}`,
 			},
 		})
 		if (res.ok) {
@@ -56,7 +59,7 @@ export const Todos = () => {
 	const fetchTodoGroups = async () => {
 		const res = await fetch(`${API_URL}dashboards/${dashboardId}/tasks-groups`, {
 			headers: {
-				Authorization: `Bearer ${token}`,
+				Authorization: `Bearer ${accessToken}`,
 			},
 		})
 		if (res.ok) {
@@ -78,7 +81,7 @@ export const Todos = () => {
 			`${API_URL}dashboards/${dashboardId}/tasks/${id}?sortBy=${tasksSettings.sortMethod}&order=${tasksSettings.sortDirection}`,
 			{
 				headers: {
-					Authorization: `Bearer ${token}`,
+					Authorization: `Bearer ${accessToken}`,
 				},
 			}
 		)
@@ -99,11 +102,11 @@ export const Todos = () => {
 	}
 
 	const addGroup = async (name: string) => {
-		if (token && dashboardId && name) {
+		if (accessToken && dashboardId && name) {
 			const res = await fetch(`${API_URL}dashboards/${dashboardId}/add-todo-group`, {
 				method: 'POST',
 				headers: {
-					Authorization: `Bearer ${token}`,
+					Authorization: `Bearer ${accessToken}`,
 					'Content-Type': 'application/json',
 				},
 				body: JSON.stringify({
@@ -139,7 +142,7 @@ export const Todos = () => {
 		const res = await fetch(`${API_URL}dashboards/${dashboardId}/tasks-settings`, {
 			method: 'PATCH',
 			headers: {
-				Authorization: `Bearer ${token}`,
+				Authorization: `Bearer ${accessToken}`,
 				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify(settings),

@@ -9,6 +9,7 @@ import { usePagination } from '../../hooks/usePagination'
 import { Pagination } from '../Pagination/Pagination'
 import { Alert } from '../Alert/Alert'
 import { Button } from '../Button/Button'
+import { useAuth } from '../../contexts/AuthContext'
 
 export type Product = {
 	_id: string
@@ -29,6 +30,7 @@ export function Products() {
 	const [itemsPerPage, setItemsPerPage] = useState(10)
 	const [sortBy, setSortBy] = useState<'name' | 'category'>('name')
 	const [sortDir, setSortDir] = useState<'asc' | 'desc'>('asc')
+	const { accessToken } = useAuth()
 
 	const { currentItems, currentPage, totalPages, nextPage, prevPage, goToPage } = usePagination(
 		filteredProducts,
@@ -36,13 +38,12 @@ export function Products() {
 	)
 
 	const fetchProducts = async () => {
-		const token = localStorage.getItem('token')
-		if (!token) {
+		if (!accessToken) {
 			console.error('No token found in localStorage')
 		}
 		const res = await fetch(`${API_URL}dashboards/${dashboardId}/products?sort_by=${sortBy}&direction=${sortDir}`, {
 			headers: {
-				Authorization: `Bearer ${token}`,
+				Authorization: `Bearer ${accessToken}`,
 			},
 		})
 		if (res.ok) {

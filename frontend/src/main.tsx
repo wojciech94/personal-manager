@@ -14,12 +14,14 @@ import { Products } from './components/Products/Products'
 import { ShoppingList } from './components/ShoppingList/ShoppingList'
 import { GlobalError } from './components/GlobalError/GlobalError'
 import { Notifications } from './components/Notifications/Notifications'
+import { AuthProvider, useAuth } from './contexts/AuthContext'
 
 export type ApiError = {
 	message: string
 }
 
 const Main = () => {
+	const { accessToken } = useAuth()
 	const router = createBrowserRouter([
 		{
 			path: '/',
@@ -42,15 +44,14 @@ const Main = () => {
 							element: <Folders />,
 							loader: async ({ params }: LoaderFunctionArgs) => {
 								const { dashboardId } = params
-								const token = localStorage.getItem('token')
 
-								if (!token) {
+								if (!accessToken) {
 									throw new Error('No token found')
 								}
 
 								const response = await fetch(`${API_URL}dashboards/${dashboardId}/folders`, {
 									headers: {
-										Authorization: `Bearer ${token}`,
+										Authorization: `Bearer ${accessToken}`,
 									},
 								})
 
@@ -71,9 +72,8 @@ const Main = () => {
 									element: <Notes />,
 									loader: async ({ params }: LoaderFunctionArgs) => {
 										const { dashboardId, folderId } = params
-										const token = localStorage.getItem('token')
 
-										if (!token) {
+										if (!accessToken) {
 											throw new Error('No token found')
 										}
 
@@ -81,7 +81,7 @@ const Main = () => {
 
 										const response = await fetch(`${API_URL}dashboards/${dashboardId}/folders/notes${folderUrl}`, {
 											headers: {
-												Authorization: `Bearer ${token}`,
+												Authorization: `Bearer ${accessToken}`,
 											},
 										})
 
@@ -108,10 +108,10 @@ const Main = () => {
 											element: <ShoppingList />,
 											loader: async ({ params }: LoaderFunctionArgs) => {
 												const { shoppingListId } = params
-												const token = localStorage.getItem('token')
+
 												const response = await fetch(`${API_URL}shopping-lists/${shoppingListId}`, {
 													headers: {
-														Authorization: `bearer ${token}`,
+														Authorization: `bearer ${accessToken}`,
 													},
 												})
 												if (!response.ok) {
@@ -129,10 +129,6 @@ const Main = () => {
 									element: <Products />,
 								},
 							],
-						},
-						{
-							path: 'linktree',
-							element: <>Linktree content work in progress</>,
 						},
 					],
 				},
@@ -158,7 +154,11 @@ const Main = () => {
 
 const rootElement = document.getElementById('root')
 if (rootElement) {
-	ReactDOM.createRoot(rootElement).render(<Main />)
+	ReactDOM.createRoot(rootElement).render(
+		<AuthProvider>
+			<Main />
+		</AuthProvider>
+	)
 } else {
 	console.error('Element with id "root" not found')
 }

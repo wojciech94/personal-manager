@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { API_URL } from '../../config'
+import { useAuth } from '../../contexts/AuthContext'
 import { useModalContext } from '../../contexts/ModalContext'
 import { Button } from '../Button/Button'
 import { FormRow } from '../FormRow/FormRow'
@@ -7,14 +8,14 @@ import { FormRow } from '../FormRow/FormRow'
 export const ModalAddCategoryContent = () => {
 	const [nameValue, setNameValue] = useState('')
 	const { setActiveModal } = useModalContext()
+	const { accessToken } = useAuth()
 
 	const addCategory = async () => {
-		const token = localStorage.getItem('token')
-		if (token) {
+		if (accessToken) {
 			const res = await fetch(`${API_URL}notes/add-category`, {
 				method: 'POST',
 				headers: {
-					Authorization: `Bearer ${token}`,
+					Authorization: `Bearer ${accessToken}`,
 					'Content-Type': 'application/json',
 				},
 				body: JSON.stringify({ name: nameValue }),

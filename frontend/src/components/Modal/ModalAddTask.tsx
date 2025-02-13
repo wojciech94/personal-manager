@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
+import { useAuth } from '../../contexts/AuthContext'
 import { useModalContext } from '../../contexts/ModalContext'
 import { Button } from '../Button/Button'
 
@@ -14,9 +15,9 @@ export function ModalAddTask({ modalData }: { modalData: DataProps }) {
 	const [contentValue, setContentValue] = useState('')
 	const [priorityValue, setPriorityValue] = useState('medium')
 	const [expiredDate, setExpiredDate] = useState('')
-	const token = localStorage.getItem('token')
 	const { dashboardId } = useParams()
 	const { setActiveModal } = useModalContext()
+	const { accessToken } = useAuth()
 
 	useEffect(() => {
 		if (modalData.groups) {
@@ -33,7 +34,7 @@ export function ModalAddTask({ modalData }: { modalData: DataProps }) {
 		const res = await fetch(`${API_URL}dashboards/${dashboardId}/add-task`, {
 			method: 'POST',
 			headers: {
-				Authorization: `Bearer ${token}`,
+				Authorization: `Bearer ${accessToken}`,
 				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify({

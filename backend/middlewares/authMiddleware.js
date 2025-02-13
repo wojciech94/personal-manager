@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken')
 const { JWT_SECRET } = process.env
 
 const authMiddleware = (req, res, next) => {
-	const token = req.headers['authorization']?.split(' ')[1] // pobranie tokena z nagłówka
+	const token = req.headers['authorization']?.split(' ')[1]
 
 	if (!token) {
 		return res.status(401).json({ message: 'Access denied. No token provided.' })
@@ -10,10 +10,13 @@ const authMiddleware = (req, res, next) => {
 
 	try {
 		const decoded = jwt.verify(token, JWT_SECRET)
-		req.user = decoded // zapisujemy dane użytkownika w obiekcie request
-		next() // przechodzimy do następnego middleware lub trasy
+		req.user = decoded
+		next()
 	} catch (error) {
-		res.status(400).json({ message: 'Invalid token.' })
+		if (error.name === 'TokenExpiredError') {
+			return res.status(401).json({ message: 'Token expired. Please refresh your token.' })
+		}
+		return res.status(400).json({ message: 'Invalid token.' })
 	}
 }
 

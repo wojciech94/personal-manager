@@ -1,6 +1,7 @@
 require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
+const cookieParser = require('cookie-parser')
 const mongoose = require('mongoose')
 
 const authRoutes = require('./routes/authRoutes')
@@ -28,10 +29,12 @@ const corsOptions = {
 	},
 	methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS'],
 	allowedHeaders: ['Content-Type', 'Authorization'],
+	credentials: true,
 }
 
 app.use(cors(corsOptions))
 app.use(express.json())
+app.use(cookieParser())
 
 const dbUrl = process.env.DB_URL
 

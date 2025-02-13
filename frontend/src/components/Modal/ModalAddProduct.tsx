@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
 import { CATEGORIES } from '../../constants/appConstants'
+import { useAuth } from '../../contexts/AuthContext'
 import { useModalContext } from '../../contexts/ModalContext'
 import { Button } from '../Button/Button'
 import { FormRow } from '../FormRow/FormRow'
@@ -16,17 +17,17 @@ export function ModalAddProduct({ modalData }: { modalData: DataProps }) {
 	const [isFavouriteValue, setIsFavouriteValue] = useState(false)
 	const { dashboardId } = useParams()
 	const { setActiveModal } = useModalContext()
+	const { accessToken } = useAuth()
 
 	const addProduct = async () => {
-		const token = localStorage.getItem('token')
-		if (!token) {
+		if (!accessToken) {
 			console.error('No token found in localStorage')
 		}
 
 		const res = await fetch(`${API_URL}dashboards/${dashboardId}/products`, {
 			method: 'POST',
 			headers: {
-				Authorization: `Bearer ${token}`,
+				Authorization: `Bearer ${accessToken}`,
 				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify({
