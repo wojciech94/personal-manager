@@ -8,6 +8,7 @@ import { ApiError } from '../../main'
 import { Product } from '../Products/Products'
 import { getLocaleDateTime } from '../../utils/helpers'
 import { Button } from '../Button/Button'
+import { useAuth } from '../../contexts/AuthContext'
 
 export type ShoppingItem = {
 	productId: Product
@@ -36,6 +37,7 @@ export function ShoppingList() {
 	const { shoppingListId, dashboardId } = useParams()
 	const productsToBuy = data.list.filter(p => p.isPurchased === false).length
 	const { revalidate } = useRevalidator()
+	const { accessToken } = useAuth()
 
 	const openAddItemModal = () => {
 		const modalData = {
@@ -46,8 +48,7 @@ export function ShoppingList() {
 	}
 
 	const handleUpdateListItem = async (id: string, data: ShoppingItem | IsShoppingPurchased) => {
-		const token = localStorage.getItem('token')
-		if (!token) {
+		if (!accessToken) {
 			console.warn('Token not available')
 			return
 		}
@@ -56,7 +57,7 @@ export function ShoppingList() {
 			{
 				method: 'PATCH',
 				headers: {
-					Authorization: `Bearer ${token}`,
+					Authorization: `Bearer ${accessToken}`,
 					'Content-Type': 'application/json',
 				},
 				body: JSON.stringify(data),
@@ -71,14 +72,13 @@ export function ShoppingList() {
 	}
 
 	const handleDeleteListItem = async (id: string) => {
-		const token = localStorage.getItem('token')
-		if (token) {
+		if (accessToken) {
 			const res = await fetch(
 				`${API_URL}dashboards/${dashboardId}/shoppingLists/${shoppingListId}/shopping-items/${id}`,
 				{
 					method: 'DELETE',
 					headers: {
-						Authorization: `Bearer ${token}`,
+						Authorization: `Bearer ${accessToken}`,
 					},
 				}
 			)

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { MoreVertical, Settings } from 'react-feather'
 import { NavLink, Outlet, useLoaderData, useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
+import { useAuth } from '../../contexts/AuthContext'
 import { useModalContext } from '../../contexts/ModalContext'
 import { Button } from '../Button/Button'
 
@@ -16,14 +17,14 @@ export const Folders = () => {
 	const [data, setData] = useState<LoaderData | null>(loaderData)
 	const { setActiveModal } = useModalContext()
 	const { dashboardId } = useParams()
+	const { accessToken } = useAuth()
 
 	const handleAddFolder = async (val: string) => {
-		const token = localStorage.getItem('token')
 		const res = await fetch(`${API_URL}dashboards/${dashboardId}/add-folder`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
-				Authorization: `Bearer ${token}`,
+				Authorization: `Bearer ${accessToken}`,
 			},
 			body: JSON.stringify({ name: val }),
 		})
@@ -39,13 +40,12 @@ export const Folders = () => {
 	}
 
 	const fetchFolders = async () => {
-		const token = localStorage.getItem('token')
-		if (!token) {
+		if (!accessToken) {
 			return
 		}
 		const res = await fetch(`${API_URL}dashboards/${dashboardId}/folders`, {
 			headers: {
-				Authorization: `Bearer ${token}`,
+				Authorization: `Bearer ${accessToken}`,
 			},
 		})
 

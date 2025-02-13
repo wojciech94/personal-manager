@@ -9,6 +9,7 @@ import { Note, NoteProps } from '../Note/Note'
 import { ExpandableMenu } from '../ExpandableMenu/ExpandableMenu'
 import { Alert } from '../Alert/Alert'
 import { Button } from '../Button/Button'
+import { useAuth } from '../../contexts/AuthContext'
 
 type Notes = NoteProps[]
 
@@ -29,6 +30,7 @@ export const Notes = () => {
 	const [filterOrRule, setFilterOrRule] = useState(true)
 	const [searchValue, setSearchValue] = useState('')
 	const { dashboardId, folderId } = useParams()
+	const { accessToken } = useAuth()
 
 	const debouncedSearchFilter = useCallback(
 		debounce((val: string) => searchFilter(val), 500),
@@ -47,12 +49,10 @@ export const Notes = () => {
 	}, [data])
 
 	async function fetchNotesCategories() {
-		const token = localStorage.getItem('token')
-
 		const response = await fetch(`${API_URL}dashboards/${dashboardId}/note-categories`, {
 			method: 'GET',
 			headers: {
-				Authorization: `Bearer ${token}`,
+				Authorization: `Bearer ${accessToken}`,
 				'Content-Type': 'application/json',
 			},
 		})
@@ -66,8 +66,6 @@ export const Notes = () => {
 	}
 
 	async function fetchNotes() {
-		const token = localStorage.getItem('token')
-
 		let url = `${API_URL}dashboards/${dashboardId}/folders/notes`
 		if (folderId) {
 			url = url + `/${folderId}`
@@ -75,7 +73,7 @@ export const Notes = () => {
 		const response = await fetch(url, {
 			method: 'GET',
 			headers: {
-				Authorization: `Bearer ${token}`,
+				Authorization: `Bearer ${accessToken}`,
 				'Content-Type': 'application/json',
 			},
 		})
@@ -113,7 +111,7 @@ export const Notes = () => {
 			method: `${noteId ? 'PATCH' : 'POST'}`,
 			headers: {
 				'Content-Type': 'application/json',
-				Authorization: `Bearer ${localStorage.getItem('token')}`,
+				Authorization: `Bearer ${accessToken}`,
 			},
 			body: JSON.stringify({ title, content, category, noteTags, folder_id, is_favourite, expired_at }),
 		})

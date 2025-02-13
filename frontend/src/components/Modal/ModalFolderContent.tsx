@@ -7,22 +7,23 @@ import { FormRow } from '../FormRow/FormRow'
 import { DataProps } from './types'
 import { Folder } from '../Folders/Folders'
 import { Button } from '../Button/Button'
+import { useAuth } from '../../contexts/AuthContext'
 
 export function ModalFolderContent({ modalData }: { modalData: DataProps }) {
 	const [folders, setFolders] = useState<Folder[]>([])
 	const [addInputValue, setAddInputValue] = useState('')
 	const { dashboardId } = useParams()
 	const { setActiveModal } = useModalContext()
+	const { accessToken } = useAuth()
 
 	useEffect(() => {
 		fetchFolders()
 	}, [])
 
 	const fetchFolders = async () => {
-		const token = localStorage.getItem('token')
 		const res = await fetch(`${API_URL}dashboards/${dashboardId}/folders`, {
 			headers: {
-				Authorization: `Bearer ${token}`,
+				Authorization: `Bearer ${accessToken}`,
 			},
 		})
 
@@ -88,14 +89,14 @@ type FolderRowProps = {
 function FolderRow({ folder, action, dashboardId, className }: FolderRowProps) {
 	const [isEdit, setIsEdit] = useState(false)
 	const [inputValue, setInputValue] = useState(folder.name)
-	const token = localStorage.getItem('token')
+	const { accessToken } = useAuth()
 
 	const handleSave = async () => {
 		const res = await fetch(`${API_URL}dashboards/${dashboardId}/folders/${folder._id}`, {
 			method: 'PATCH',
 			headers: {
 				'Content-Type': 'application/json',
-				Authorization: `Bearer ${token}`,
+				Authorization: `Bearer ${accessToken}`,
 			},
 			body: JSON.stringify({ name: inputValue }),
 		})
@@ -115,7 +116,7 @@ function FolderRow({ folder, action, dashboardId, className }: FolderRowProps) {
 			method: 'DELETE',
 			headers: {
 				'Content-Type': 'application/json',
-				Authorization: `Bearer ${token}`,
+				Authorization: `Bearer ${accessToken}`,
 			},
 		})
 

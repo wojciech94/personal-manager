@@ -12,6 +12,7 @@ import { WELCOME_SLIDES } from '../../constants/appConstants'
 import { ModalDataProps } from '../Modal/types'
 import { Button } from '../Button/Button'
 import { ScreenContext, ScreenType } from '../../contexts/ScreenContext'
+import { useAuth } from '../../contexts/AuthContext'
 
 export const Home = () => {
 	const [dashboards, setDashboards] = useState([])
@@ -20,18 +21,31 @@ export const Home = () => {
 	const navigate = useNavigate()
 	const location = useLocation()
 	const isExactMatch = useMatch('/')
+	const { accessToken, logout, refreshToken } = useAuth()
 
 	useEffect(() => {
 		let tokenTimeout: number | undefined
-		const checkToken = () => {
-			const token = localStorage.getItem('token')
-			if (token) {
-				const remainingTime = getTokenExpiration(token) - new Date().getTime()
+
+		const checkToken = async () => {
+			if (accessToken) {
+				const remainingTime = getTokenExpiration(accessToken) - new Date().getTime()
+
 				if (remainingTime < 60 * 1000) {
-					logout()
+					try {
+						await refreshToken()
+						console.log('Token refreshed')
+					} catch (error) {
+						console.error('Error refreshing token:', error)
+						logout()
+						navigate('/login')
+					}
+				} else {
+					tokenTimeout = setTimeout(() => {
+						checkToken()
+					}, remainingTime)
+
+					console.log(`Remaining time: ${Math.floor(remainingTime / 60000)} min`)
 				}
-				tokenTimeout = setTimeout(checkToken, remainingTime)
-				console.log(`Remaining time: ${Math.floor(remainingTime / 60000)} min`)
 			} else {
 				navigate('/login')
 			}
@@ -40,7 +54,7 @@ export const Home = () => {
 		checkToken()
 
 		return () => clearTimeout(tokenTimeout)
-	}, [])
+	}, [accessToken, navigate, refreshToken, logout])
 
 	useEffect(() => {
 		fetchUserDashboards()
@@ -57,8 +71,7 @@ export const Home = () => {
 	}, [])
 
 	const fetchUserDashboards = async () => {
-		const token = localStorage.getItem('token')
-		if (!token) {
+		if (!accessToken) {
 			console.warn('Token not provided. Please log in before')
 			return
 		}
@@ -66,7 +79,7 @@ export const Home = () => {
 		const response = await fetch(`${API_URL}dashboards`, {
 			method: 'GET',
 			headers: {
-				Authorization: `Bearer ${token}`,
+				Authorization: `Bearer ${accessToken}`,
 				'Content-Type': 'application/json',
 			},
 		})
@@ -84,7 +97,7 @@ export const Home = () => {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
-				Authorization: `Bearer ${localStorage.getItem('token')}`,
+				Authorization: `Bearer ${accessToken}`,
 			},
 			body: JSON.stringify({ name: dashboardName }),
 		})
@@ -119,11 +132,6 @@ export const Home = () => {
 
 	const goToSettings = () => {
 		navigate('/settings')
-	}
-
-	const logout = () => {
-		localStorage.removeItem('token')
-		navigate('/login')
 	}
 
 	const dropdownItems = [

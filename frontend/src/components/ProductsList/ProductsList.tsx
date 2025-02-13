@@ -3,6 +3,7 @@ import { Edit, Star, Trash2, Check } from 'react-feather'
 import { useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
 import { CATEGORIES } from '../../constants/appConstants'
+import { useAuth } from '../../contexts/AuthContext'
 import { Button } from '../Button/Button'
 import { Product } from '../Products/Products'
 
@@ -17,14 +18,13 @@ export function ProductsList({ products }: { products: Product[] }) {
 	const [unitValue, setUnitValue] = useState('')
 	const [priceValue, setPriceValue] = useState(0)
 	const [tagsValue, setTagsValue] = useState('')
+	const { accessToken } = useAuth()
 
 	const productData = { name: nameValue, category: categoryValue, unit: unitValue, price: priceValue, tags: tagsValue }
 
 	useEffect(() => {
 		setProductsData(products)
 	}, [products])
-
-	const token = localStorage.getItem('token')
 
 	const handleEditProduct = (id: string) => {
 		if (productsData && productsData.length > 0) {
@@ -45,14 +45,14 @@ export function ProductsList({ products }: { products: Product[] }) {
 	}
 
 	const handleUpdate = async (id: string, data: UpdateProduct | { isFavourite: boolean }) => {
-		if (!token) {
+		if (!accessToken) {
 			console.error('No token found in local storage.')
 		}
 
 		const res = await fetch(`${API_URL}dashboards/${dashboardId}/products/${id}`, {
 			method: 'PATCH',
 			headers: {
-				Authorization: `Bearer ${token}`,
+				Authorization: `Bearer ${accessToken}`,
 				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify(data),
@@ -75,14 +75,14 @@ export function ProductsList({ products }: { products: Product[] }) {
 	}
 
 	const handleDelete = async (id: string) => {
-		if (!token) {
+		if (!accessToken) {
 			return
 		}
 
 		const res = await fetch(`${API_URL}dashboards/${dashboardId}/products/${id}`, {
 			method: 'DELETE',
 			headers: {
-				Authorization: `Bearer ${token}`,
+				Authorization: `Bearer ${accessToken}`,
 			},
 		})
 		if (res.ok) {

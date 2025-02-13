@@ -1,6 +1,7 @@
 import React, { useState, useEffect, ChangeEvent } from 'react'
 import { useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
+import { useAuth } from '../../contexts/AuthContext'
 import { Button } from '../Button/Button'
 import { Folder } from '../Folders/Folders'
 import { FormRow } from '../FormRow/FormRow'
@@ -17,6 +18,7 @@ export const ModalNoteContent = ({ modalData }: { modalData: DataProps }) => {
 	const [expiredDate, setExpiredDate] = useState('')
 	const [noteTags, setNoteTags] = useState('')
 	const { dashboardId } = useParams()
+	const { accessToken } = useAuth()
 
 	useEffect(() => {
 		fetchNotesCategories()
@@ -29,12 +31,11 @@ export const ModalNoteContent = ({ modalData }: { modalData: DataProps }) => {
 	useEffect(() => {
 		const noteId = modalData.id
 		if (noteId) {
-			const token = localStorage.getItem('token')
 			const fetchNoteData = async () => {
 				const response = await fetch(`${API_URL}notes/${noteId}`, {
 					method: 'GET',
 					headers: {
-						Authorization: `Bearer ${token}`,
+						Authorization: `Bearer ${accessToken}`,
 						'Content-Type': 'application/json',
 					},
 				})
@@ -58,12 +59,10 @@ export const ModalNoteContent = ({ modalData }: { modalData: DataProps }) => {
 	}, [])
 
 	async function fetchNotesCategories() {
-		const token = localStorage.getItem('token')
-
 		const response = await fetch(`${API_URL}dashboards/${dashboardId}/note-categories`, {
 			method: 'GET',
 			headers: {
-				Authorization: `Bearer ${token}`,
+				Authorization: `Bearer ${accessToken}`,
 			},
 		})
 
@@ -76,12 +75,10 @@ export const ModalNoteContent = ({ modalData }: { modalData: DataProps }) => {
 	}
 
 	async function fetchFolders() {
-		const token = localStorage.getItem('token')
-
 		const response = await fetch(`${API_URL}dashboards/${dashboardId}/folders`, {
 			method: 'GET',
 			headers: {
-				Authorization: `Bearer ${token}`,
+				Authorization: `Bearer ${accessToken}`,
 			},
 		})
 

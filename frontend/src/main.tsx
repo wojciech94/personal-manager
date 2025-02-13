@@ -14,6 +14,7 @@ import { Products } from './components/Products/Products'
 import { ShoppingList } from './components/ShoppingList/ShoppingList'
 import { GlobalError } from './components/GlobalError/GlobalError'
 import { Notifications } from './components/Notifications/Notifications'
+import { AuthProvider, useAuth } from './contexts/AuthContext'
 
 export type ApiError = {
 	message: string
@@ -42,15 +43,15 @@ const Main = () => {
 							element: <Folders />,
 							loader: async ({ params }: LoaderFunctionArgs) => {
 								const { dashboardId } = params
-								const token = localStorage.getItem('token')
+								const { accessToken } = useAuth()
 
-								if (!token) {
+								if (!accessToken) {
 									throw new Error('No token found')
 								}
 
 								const response = await fetch(`${API_URL}dashboards/${dashboardId}/folders`, {
 									headers: {
-										Authorization: `Bearer ${token}`,
+										Authorization: `Bearer ${accessToken}`,
 									},
 								})
 
@@ -71,9 +72,9 @@ const Main = () => {
 									element: <Notes />,
 									loader: async ({ params }: LoaderFunctionArgs) => {
 										const { dashboardId, folderId } = params
-										const token = localStorage.getItem('token')
+										const { accessToken } = useAuth()
 
-										if (!token) {
+										if (!accessToken) {
 											throw new Error('No token found')
 										}
 
@@ -81,7 +82,7 @@ const Main = () => {
 
 										const response = await fetch(`${API_URL}dashboards/${dashboardId}/folders/notes${folderUrl}`, {
 											headers: {
-												Authorization: `Bearer ${token}`,
+												Authorization: `Bearer ${accessToken}`,
 											},
 										})
 
@@ -108,10 +109,11 @@ const Main = () => {
 											element: <ShoppingList />,
 											loader: async ({ params }: LoaderFunctionArgs) => {
 												const { shoppingListId } = params
-												const token = localStorage.getItem('token')
+												const { accessToken } = useAuth()
+
 												const response = await fetch(`${API_URL}shopping-lists/${shoppingListId}`, {
 													headers: {
-														Authorization: `bearer ${token}`,
+														Authorization: `bearer ${accessToken}`,
 													},
 												})
 												if (!response.ok) {
@@ -153,7 +155,11 @@ const Main = () => {
 		},
 	])
 
-	return <RouterProvider router={router} />
+	return (
+		<AuthProvider>
+			<RouterProvider router={router} />
+		</AuthProvider>
+	)
 }
 
 const rootElement = document.getElementById('root')

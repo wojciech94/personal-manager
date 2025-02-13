@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Check, Edit, Trash } from 'react-feather'
 import { useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
+import { useAuth } from '../../contexts/AuthContext'
 import { useModalContext } from '../../contexts/ModalContext'
 import { Button } from '../Button/Button'
 import { TodoGroup } from '../Todos/Todos'
@@ -16,8 +17,7 @@ export function ModalModifyTodoGroup({ modalData }: { modalData: DataProps }) {
 	const [inputVal, setInputVal] = useState('')
 	const [groups, setGroups] = useState<TodoGroup[]>([])
 	const [inputValues, setInputValues] = useState<InputDynamicObject>({})
-
-	const token = localStorage.getItem('token')
+	const { accessToken } = useAuth()
 	const { dashboardId } = useParams()
 
 	useEffect(() => {
@@ -43,14 +43,14 @@ export function ModalModifyTodoGroup({ modalData }: { modalData: DataProps }) {
 	}
 
 	const removeTodoGroup = async (id: string) => {
-		if (!id || !token) {
+		if (!id || !accessToken) {
 			return
 		}
 
 		const res = await fetch(`${API_URL}dashboards/${dashboardId}/tasks-groups`, {
 			method: 'DELETE',
 			headers: {
-				Authorization: `Bearer ${token}`,
+				Authorization: `Bearer ${accessToken}`,
 				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify({ id }),
@@ -83,11 +83,11 @@ export function ModalModifyTodoGroup({ modalData }: { modalData: DataProps }) {
 	}
 
 	const saveInput = async (id: string, val: string) => {
-		if (id && val && token && dashboardId) {
+		if (id && val && accessToken && dashboardId) {
 			const res = await fetch(`${API_URL}dashboards/${dashboardId}/tasks-groups`, {
 				method: 'PATCH',
 				headers: {
-					Authorization: `Bearer ${token}`,
+					Authorization: `Bearer ${accessToken}`,
 					'Content-Type': 'application/json',
 				},
 				body: JSON.stringify({

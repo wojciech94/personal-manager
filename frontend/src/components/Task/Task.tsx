@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Check, Clock, Edit, Trash2 } from 'react-feather'
 import { useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
+import { useAuth } from '../../contexts/AuthContext'
 import { Button } from '../Button/Button'
 
 enum TaskPriorities {
@@ -47,7 +48,7 @@ export function Task({ task, fetchTasks, tasksSettings }: Props) {
 	const [priorityValue, setPriorityValue] = useState(task.priority)
 	const [expirationValue, setExpirationValue] = useState(task.expired_at)
 	const [isEdit, setIsEdit] = useState(false)
-	const token = localStorage.getItem('token')
+	const { accessToken } = useAuth()
 	const { dashboardId } = useParams()
 
 	useEffect(() => {
@@ -87,7 +88,7 @@ export function Task({ task, fetchTasks, tasksSettings }: Props) {
 		const config: RequestInit = {
 			method: action === 'delete' ? 'DELETE' : 'PATCH',
 			headers: {
-				Authorization: `Bearer ${token}`,
+				Authorization: `Bearer ${accessToken}`,
 				'Content-Type': 'application/json',
 			},
 		}

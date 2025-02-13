@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Plus } from 'react-feather'
 import { NavLink, Outlet, useMatch, useNavigate, useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
+import { useAuth } from '../../contexts/AuthContext'
 import { useModalContext } from '../../contexts/ModalContext'
 import { Alert } from '../Alert/Alert'
 import { Button } from '../Button/Button'
@@ -13,20 +14,21 @@ export type ShoppingLists = ShoppingList[]
 export function ShoppingLists() {
 	const { setActiveModal } = useModalContext()
 	const [shoppingLists, setShoppingLists] = useState<ShoppingLists>([])
-	const token = localStorage.getItem('token')
+
 	const { dashboardId } = useParams()
 	const isExactMatch = useMatch('/dashboards/:dashboardId/shopping/list')
 	const navigate = useNavigate()
+	const { accessToken } = useAuth()
 
 	useEffect(() => {
 		fetchShoppingLists()
 	}, [])
 
 	const fetchShoppingLists = async () => {
-		if (token) {
+		if (accessToken) {
 			const res = await fetch(`${API_URL}dashboards/${dashboardId}/shopping-lists`, {
 				headers: {
-					Authorization: `Bearer ${token}`,
+					Authorization: `Bearer ${accessToken}`,
 				},
 			})
 			if (res.ok) {

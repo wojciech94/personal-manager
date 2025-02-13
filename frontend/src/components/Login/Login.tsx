@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { API_URL } from '../../config'
 import { Button } from '../Button/Button'
 import { Card } from '../Card/Card'
+import { useAuth } from '../../contexts/AuthContext'
 
 export const Login = () => {
 	const [username, setUsername] = useState('')
@@ -15,6 +16,7 @@ export const Login = () => {
 	const [showLoadingMessage, setShowLoadingMessage] = useState(false)
 
 	const navigate = useNavigate()
+	const { login } = useAuth()
 
 	useEffect(() => {
 		let timeout: number
@@ -32,13 +34,13 @@ export const Login = () => {
 		setIsloading(true)
 
 		try {
-			const baseUrl = `${API_URL}`
-			const response = await fetch(`${baseUrl}auth/${mode === 'signIn' ? 'login' : 'register'}`, {
+			const response = await fetch(`${API_URL}auth/${mode === 'signIn' ? 'login' : 'register'}`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
 				},
 				body: JSON.stringify({ name: username, password }),
+				credentials: 'include',
 			})
 
 			if (!response.ok && mode === 'signIn') {
@@ -47,9 +49,9 @@ export const Login = () => {
 				throw new Error('Server error')
 			}
 
-			const data = await response.json()
+			const { accessToken } = await response.json()
 			if (mode === 'signIn') {
-				localStorage.setItem('token', data.token)
+				login(accessToken)
 				setMessage('Login successful')
 				navigate('/')
 			} else {
