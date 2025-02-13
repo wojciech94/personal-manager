@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Settings } from 'react-feather'
+import { MoreVertical, Settings } from 'react-feather'
 import { NavLink, Outlet, useLoaderData, useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
 import { useModalContext } from '../../contexts/ModalContext'
@@ -58,7 +58,7 @@ export const Folders = () => {
 	return (
 		<div className='d-flex flex-column gap-5'>
 			<div className='d-flex justify-between align-center gap-3'>
-				<div className='d-flex gap-2 align-center'>
+				<div className='d-flex gap-2 align-center scroll-x-auto'>
 					<NavLink className='btn link' to={`/dashboards/${dashboardId}/folders/notes`} end>
 						All notes
 					</NavLink>
@@ -72,6 +72,7 @@ export const Folders = () => {
 				</div>
 				<Button
 					variant='light'
+					className='btn-mobile-icon'
 					onClick={() =>
 						setActiveModal({
 							name: 'editFolder',
@@ -82,7 +83,8 @@ export const Folders = () => {
 							},
 						})
 					}>
-					<span>Modify folders</span>
+					<MoreVertical className='d-none-sm' size={16} />
+					<span className='d-mobile-none'>Modify folders</span>
 				</Button>
 			</div>
 			<Outlet />

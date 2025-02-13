@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import { Link, Outlet, useLocation, useMatch, useNavigate, useParams } from 'react-router-dom'
+import { useCallback, useEffect, useState } from 'react'
+import { Link, Outlet, useLocation, useMatch, useNavigate } from 'react-router-dom'
 import { API_URL } from '../../config'
 import { Dashboards } from '../Dashboards/Dashboards'
 import { Modal } from '../Modal/Modal'
@@ -7,14 +7,16 @@ import { Dropdown } from '../Dropdown/Dropdown'
 import { ModalContext } from '../../contexts/ModalContext'
 import { FetchDashboardsContext } from '../../contexts/FetchDashboardsContext'
 import { Plus } from 'react-feather'
-import { getTokenExpiration } from '../../utils/helpers'
+import { debounce, getScreenType, getTokenExpiration } from '../../utils/helpers'
 import { WELCOME_SLIDES } from '../../constants/appConstants'
 import { ModalDataProps } from '../Modal/types'
 import { Button } from '../Button/Button'
+import { ScreenContext, ScreenType } from '../../contexts/ScreenContext'
 
 export const Home = () => {
 	const [dashboards, setDashboards] = useState([])
 	const [activeModal, setActiveModal] = useState<ModalDataProps | null>(null)
+	const [screenType, setScreenType] = useState<ScreenType>({ type: getScreenType() })
 	const navigate = useNavigate()
 	const location = useLocation()
 	const isExactMatch = useMatch('/')
@@ -43,6 +45,16 @@ export const Home = () => {
 	useEffect(() => {
 		fetchUserDashboards()
 	}, [location.pathname])
+
+	const handleResize = useCallback(() => {
+		setScreenType({ type: getScreenType() })
+	}, [])
+
+	useEffect(() => {
+		window.addEventListener('resize', debounce(handleResize, 1000))
+
+		return () => window.removeEventListener('resize', handleResize)
+	}, [])
 
 	const fetchUserDashboards = async () => {
 		const token = localStorage.getItem('token')
@@ -124,33 +136,35 @@ export const Home = () => {
 	]
 
 	return (
-		<ModalContext.Provider value={{ activeModal, setActiveModal }}>
-			<FetchDashboardsContext.Provider value={{ fetchUserDashboards }}>
-				<div className='d-flex flex-column'>
-					<header className='topbar'>
-						<Link to={'/'}>
-							<img src='/logo.png' width={40} alt='' />
-						</Link>
-						<div className='d-flex flex-1 justify-start align-center gap-4 scroll-x-auto'>
-							<Dashboards dashboards={dashboards}></Dashboards>
-						</div>
-						<Button className='btn-mobile-icon' onClick={openModal}>
-							<Plus size={16} />
-							<span className='d-none d-inline-sm'>Add dashboard</span>
-						</Button>
-						<Dropdown items={dropdownItems}></Dropdown>
-					</header>
-					<main className='flex-1'>
-						{isExactMatch ? (
-							<WelcomeScreen isNew={dashboards.length === 0} createDashboardModal={openModal} />
-						) : (
-							<Outlet />
-						)}
-					</main>
-					{activeModal && <Modal name={activeModal.name} title={activeModal.title} data={activeModal.data} />}
-				</div>
-			</FetchDashboardsContext.Provider>
-		</ModalContext.Provider>
+		<ScreenContext.Provider value={screenType}>
+			<ModalContext.Provider value={{ activeModal, setActiveModal }}>
+				<FetchDashboardsContext.Provider value={{ fetchUserDashboards }}>
+					<div className='d-flex flex-column'>
+						<header className='topbar'>
+							<Link to={'/'}>
+								<img src='/logo.png' width={40} alt='' />
+							</Link>
+							<div className='d-flex flex-1 justify-start align-center gap-4 scroll-x-auto'>
+								<Dashboards dashboards={dashboards}></Dashboards>
+							</div>
+							<Button className='btn-mobile-icon' onClick={openModal}>
+								<Plus size={16} />
+								<span className='d-none d-inline-sm'>Add dashboard</span>
+							</Button>
+							<Dropdown items={dropdownItems}></Dropdown>
+						</header>
+						<main className='flex-1'>
+							{isExactMatch ? (
+								<WelcomeScreen isNew={dashboards.length === 0} createDashboardModal={openModal} />
+							) : (
+								<Outlet />
+							)}
+						</main>
+						{activeModal && <Modal name={activeModal.name} title={activeModal.title} data={activeModal.data} />}
+					</div>
+				</FetchDashboardsContext.Provider>
+			</ModalContext.Provider>
+		</ScreenContext.Provider>
 	)
 }
 

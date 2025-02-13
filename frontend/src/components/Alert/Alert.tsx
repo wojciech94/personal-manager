@@ -8,7 +8,7 @@ interface AlertProps {
 
 export function Alert({ variant, children, className }: AlertProps) {
 	return (
-		<div className={`alert alert-${variant} ${className ? className : ''}`}>
+		<div className={`alert alert-${variant ? variant : 'primary'} ${className ? className : ''}`}>
 			<Info size={24} color='dodgerblue' />
 			{children}
 		</div>

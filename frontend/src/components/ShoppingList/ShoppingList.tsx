@@ -114,27 +114,26 @@ export function ShoppingList() {
 							</div>
 							<div className='text-gray fs-sm'>Last update: {getLocaleDateTime(data.updatedAt)}</div>
 						</div>
-						<Button onClick={openAddItemModal}>
+						<Button className='btn-mobile-icon text-nowrap' onClick={openAddItemModal}>
 							<Plus size={16} />
 							Add item
 						</Button>
 					</div>
-					<div className='mx-n4 mb-n4'>
-						<table cellSpacing={0} className='overflow-hidden rounded-bottom-3'>
-							<thead className='bg-lighter'>
-								<tr className='border-top border-bottom border-light'>
-									<th style={{ width: '30px' }}></th>
-									<th>Name</th>
-									<th>{'Quantity [unit]'}</th>
-									<th>Price per unit</th>
-									<th>Notes</th>
-									<th style={{ width: '85px' }}></th>
-								</tr>
-							</thead>
-							<tbody>
-								{data.list &&
-									data.list.length > 0 &&
-									data.list.map(p => (
+					{data.list && data.list.length > 0 ? (
+						<div className='mx-n4 mb-n4'>
+							<table cellSpacing={0} className='overflow-hidden rounded-bottom-3'>
+								<thead className='bg-lighter'>
+									<tr className='border-top border-bottom border-light'>
+										<th style={{ width: '30px' }}></th>
+										<th>Name</th>
+										<th>{'Quantity [unit]'}</th>
+										<th>Price per unit</th>
+										<th>Notes</th>
+										<th style={{ width: '85px' }}></th>
+									</tr>
+								</thead>
+								<tbody>
+									{data.list.map(p => (
 										<ShoppingProduct
 											key={p._id}
 											data={p}
@@ -142,8 +141,7 @@ export function ShoppingList() {
 											onListItemDelete={handleDeleteListItem}
 										/>
 									))}
-							</tbody>
-							{data.list && data.list.length > 0 && (
+								</tbody>
 								<tfoot>
 									<tr className='bg-lighter border-top border-light text-bold'>
 										<td colSpan={2} className='px-2'>
@@ -153,9 +151,15 @@ export function ShoppingList() {
 										<td colSpan={3}>{calculateSum()}</td>
 									</tr>
 								</tfoot>
-							)}
-						</table>
-					</div>
+							</table>
+						</div>
+					) : (
+						<div className='mx-n4 mb-n4 border-top border-light'>
+							<Alert>
+								<div>Your shopping list is empty. Add an item to see it on the table.</div>
+							</Alert>
+						</div>
+					)}
 				</>
 			) : (
 				<Alert>

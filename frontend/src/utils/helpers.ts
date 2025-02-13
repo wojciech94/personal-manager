@@ -1,3 +1,4 @@
+import { ScreenSize } from './../contexts/ScreenContext'
 export function getTokenExpiration(token: string) {
 	const payloadBase64 = token.split('.')[1]
 	const decodedPayload = JSON.parse(atob(payloadBase64))
@@ -21,4 +22,14 @@ export function getLocaleDateTime(date: string) {
 	const minutes = newDate.getMinutes().toString().padStart(2, '0')
 	const dateTime = `${newDate.toLocaleDateString()} ${hours}:${minutes}`
 	return dateTime
+}
+
+export function getScreenType() {
+	const width = window.innerWidth
+	if (width > 1200) return ScreenSize.XLARGE
+	if (width > 992) return ScreenSize.LARGE
+	if (width > 768) return ScreenSize.MEDIUM
+	if (width > 576) return ScreenSize.SMALL
+
+	return ScreenSize.XSMALL
 }

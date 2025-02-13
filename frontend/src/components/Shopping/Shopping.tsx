@@ -11,7 +11,7 @@ export function Shopping() {
 
 	return (
 		<>
-			<div className='d-flex gap-3 align-center mb-4'>
+			<div className='d-flex gap-3 align-center mb-4 text-lg'>
 				<NavLink to={'list'} className='btn btn-link'>
 					Lists
 				</NavLink>

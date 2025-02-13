@@ -59,7 +59,7 @@ export function Products() {
 
 	useEffect(() => {
 		fetchProducts()
-	}, [products])
+	}, [sortBy, sortDir])
 
 	const modalData = {
 		title: 'Add product',
@@ -93,7 +93,9 @@ export function Products() {
 						Add product
 					</Button>
 				</div>
-				<div className='d-flex flex-wrap justify-between justify-start-sm gap-4 pt-2 border-top border-light mx-n4 px-4' style={{width: 'calc(100% + 32px)'}}>
+				<div
+					className='d-flex flex-wrap justify-between justify-start-sm gap-4 pt-2 border-top border-light mx-n4 px-4'
+					style={{ width: 'calc(100% + 32px)' }}>
 					<div className='d-flex flex-column gap-1'>
 						<div className='text-gray'>Filter:</div>
 						<select

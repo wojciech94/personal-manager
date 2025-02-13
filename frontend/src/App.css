@@ -96,6 +96,10 @@ nav .link:not(.active):hover::after {
 	width: 300px;
 }
 
+.min-w-125px {
+	min-width: 125px !important;
+}
+
 .min-w-200px {
 	min-width: 200px !important;
 }
@@ -1058,6 +1062,14 @@ tbody tr.border-bottom:last-child {
 	background-color: lightgray;
 }
 
+.text-lg {
+	font-size: 1.25rem;
+}
+
+.text-sm {
+	font-size: 0.925rem;
+}
+
 .text-bold {
 	font-weight: bold;
 }
@@ -1244,6 +1256,10 @@ tbody tr.border-bottom:last-child {
 		display: inline-flex;
 		padding: 0.5rem;
 	}
+
+	.d-mobile-none {
+		display: none;
+	}
 }
 
 @media (min-width: 576px) {
@@ -1257,6 +1273,10 @@ tbody tr.border-bottom:last-child {
 
 	.d-table-cell-sm {
 		display: table-cell;
+	}
+
+	.d-none-sm {
+		display: none;
 	}
 
 	.justify-start-sm {
@@ -1277,7 +1297,7 @@ tbody tr.border-bottom:last-child {
 	}
 
 	.menu {
-		width: 200px;
+		width: 150px;
 		flex-direction: column;
 		flex-shrink: 0;
 		border-radius: 0.75rem;
@@ -1287,5 +1307,11 @@ tbody tr.border-bottom:last-child {
 
 	.menu .menu-item {
 		text-align: start;
+	}
+}
+
+@media (min-width: 992px) {
+	.menu {
+		min-width: 200px;
 	}
 }

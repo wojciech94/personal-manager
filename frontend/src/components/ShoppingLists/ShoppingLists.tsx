@@ -78,8 +78,9 @@ export function ShoppingLists() {
 			<div className='d-flex gap-3 justify-between align-center'>
 				<div className='card-title'>Shopping list</div>
 				<div className='d-flex gap-2 align-center'>
-					<Button onClick={openCreateShoppingListModal}>
-						<Plus size={16} /> Create shopping list
+					<Button className={`text-nowrap btn-mobile-icon`} onClick={openCreateShoppingListModal}>
+						<Plus size={16} />
+						<span className='d-mobile-none'>Create shopping list</span>
 					</Button>
 					<ExpandableMenu items={menuItems} />
 				</div>

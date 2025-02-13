@@ -208,7 +208,7 @@ export const Notes = () => {
 			<div className='w-100 d-flex justify-between align-center'>
 				<div className='d-flex gap-2 flex-1'>
 					<input
-						className='w-50'
+						className='w-50 min-w-125px'
 						type='text'
 						placeholder='Search note'
 						value={searchValue}
