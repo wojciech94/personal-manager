@@ -21,6 +21,7 @@ export type ApiError = {
 }
 
 const Main = () => {
+	const { accessToken } = useAuth()
 	const router = createBrowserRouter([
 		{
 			path: '/',
@@ -43,7 +44,6 @@ const Main = () => {
 							element: <Folders />,
 							loader: async ({ params }: LoaderFunctionArgs) => {
 								const { dashboardId } = params
-								const { accessToken } = useAuth()
 
 								if (!accessToken) {
 									throw new Error('No token found')
@@ -72,7 +72,6 @@ const Main = () => {
 									element: <Notes />,
 									loader: async ({ params }: LoaderFunctionArgs) => {
 										const { dashboardId, folderId } = params
-										const { accessToken } = useAuth()
 
 										if (!accessToken) {
 											throw new Error('No token found')
@@ -109,7 +108,6 @@ const Main = () => {
 											element: <ShoppingList />,
 											loader: async ({ params }: LoaderFunctionArgs) => {
 												const { shoppingListId } = params
-												const { accessToken } = useAuth()
 
 												const response = await fetch(`${API_URL}shopping-lists/${shoppingListId}`, {
 													headers: {
@@ -132,10 +130,6 @@ const Main = () => {
 								},
 							],
 						},
-						{
-							path: 'linktree',
-							element: <>Linktree content work in progress</>,
-						},
 					],
 				},
 				{
@@ -155,16 +149,16 @@ const Main = () => {
 		},
 	])
 
-	return (
-		<AuthProvider>
-			<RouterProvider router={router} />
-		</AuthProvider>
-	)
+	return <RouterProvider router={router} />
 }
 
 const rootElement = document.getElementById('root')
 if (rootElement) {
-	ReactDOM.createRoot(rootElement).render(<Main />)
+	ReactDOM.createRoot(rootElement).render(
+		<AuthProvider>
+			<Main />
+		</AuthProvider>
+	)
 } else {
 	console.error('Element with id "root" not found')
 }
