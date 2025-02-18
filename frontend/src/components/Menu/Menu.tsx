@@ -26,6 +26,11 @@ export const Menu = () => {
 				to={`/dashboards/${dashboardId}/shopping`}>
 				Shopping
 			</NavLink>
+			<NavLink
+				className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}
+				to={`/dashboards/${dashboardId}/community`}>
+				Community
+			</NavLink>
 		</div>
 	)
 }

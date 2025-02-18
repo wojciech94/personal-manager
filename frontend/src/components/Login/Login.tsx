@@ -49,11 +49,12 @@ export const Login = () => {
 				throw new Error('Server error')
 			}
 
-			const { accessToken } = await response.json()
+			const { accessToken, name }: { accessToken: string; name: string } = await response.json()
 			if (mode === 'signIn') {
 				login(accessToken)
 				setMessage('Login successful')
 				navigate('/')
+				sessionStorage.setItem('name', name)
 			} else {
 				setMessage('Register successful')
 				setMode('signIn')

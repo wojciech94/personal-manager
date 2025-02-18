@@ -33,7 +33,6 @@ export const Home = () => {
 				if (remainingTime < 60 * 1000) {
 					try {
 						await refreshToken()
-						console.log('Token refreshed')
 					} catch (error) {
 						console.error('Error refreshing token:', error)
 						logout()

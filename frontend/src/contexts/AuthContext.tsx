@@ -23,6 +23,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
 	const logout = () => {
 		setAccessToken(null)
+		sessionStorage.removeItem('name')
 	}
 
 	const refreshToken = async () => {

@@ -936,6 +936,10 @@ a.active,
 	display: block;
 }
 
+.d-grid {
+	display: grid;
+}
+
 .d-none {
 	display: none;
 }
@@ -1152,7 +1156,7 @@ tbody tr.border-bottom:last-child {
 }
 
 .fs-lg {
-	font-size: 1.25rem;
+	font-size: 1.2rem;
 }
 
 .fs-xl {
@@ -1162,6 +1166,7 @@ tbody tr.border-bottom:last-child {
 .border {
 	border: 1px solid gray;
 }
+
 
 .border-bottom {
 	border-bottom: 1px solid gray;
@@ -1185,6 +1190,10 @@ tbody tr.border-bottom:last-child {
 
 .border-primary {
 	border-color: dodgerblue;
+}
+
+.border-top-dashed {
+	border-top-style: dashed;
 }
 
 .border-none {
@@ -1249,6 +1258,20 @@ tbody tr.border-bottom:last-child {
 
 .scroll-item {
 	flex: 0 0 auto;
+}
+
+.grid-expander {
+	display: grid;
+	grid-template-rows: 0fr;
+	transition: grid-template-rows 250ms ease-in-out;
+}
+
+.grid-expanded {
+	grid-template-rows: 1fr;
+}
+
+.grid-expander > div {
+	overflow: hidden;
 }
 
 @media (max-width: 576px) {

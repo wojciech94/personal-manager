@@ -15,6 +15,8 @@ import { ShoppingList } from './components/ShoppingList/ShoppingList'
 import { GlobalError } from './components/GlobalError/GlobalError'
 import { Notifications } from './components/Notifications/Notifications'
 import { AuthProvider, useAuth } from './contexts/AuthContext'
+import { Community } from './screens/Community'
+import { Posts } from './components/Posts/Posts'
 
 export type ApiError = {
 	message: string
@@ -127,6 +129,16 @@ const Main = () => {
 								{
 									path: 'products',
 									element: <Products />,
+								},
+							],
+						},
+						{
+							path: 'community',
+							element: <Community />,
+							children: [
+								{
+									path: 'posts',
+									element: <Posts />,
 								},
 							],
 						},

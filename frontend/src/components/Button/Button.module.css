@@ -52,6 +52,11 @@
 	height: 32px;
 }
 
+.btn--icon.btn--sm {
+	width: 28px;
+	height: 28px;
+}
+
 .btn--icon svg {
 	flex-shrink: 0;
 }
