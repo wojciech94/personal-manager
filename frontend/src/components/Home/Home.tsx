@@ -129,15 +129,15 @@ export const Home = () => {
 		navigate('/notifications')
 	}
 
-	const goToSettings = () => {
-		navigate('/settings')
-	}
+	// const goToSettings = () => {
+	// 	navigate('/settings')
+	// }
 
 	const dropdownItems = [
-		{
-			name: 'Settings',
-			action: goToSettings,
-		},
+		// {
+		// 	name: 'Settings',
+		// 	action: goToSettings,
+		// },
 		{ name: 'Notifications', action: openNotifications },
 		{ name: 'Logout', action: logout },
 	]
@@ -204,7 +204,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ isNew, createDashboardMod
 	return (
 		<div className='d-flex flex-column gap-4 m-5'>
 			<div className='bg-welcome wrapper rounded-4 overflow-hidden d-flex flex-column flex-center shadow p-8'>
-				<div className='max-w-95 bg-dark-transparent text-white p-8 rounded-4 m-10 fs-xl d-flex flex-column align-center'>
+				<div className='max-w-95 bg-dark-transparent text-white p-8 rounded-4 m-10 fs-xl d-flex flex-column gap-3 align-center'>
 					<h1>Organize your life like never before</h1>
 					{isNew && <Button onClick={createDashboardModal}>Create your first dashboard</Button>}
 				</div>

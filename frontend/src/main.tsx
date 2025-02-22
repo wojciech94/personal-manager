@@ -15,7 +15,6 @@ import { ShoppingList } from './components/ShoppingList/ShoppingList'
 import { GlobalError } from './components/GlobalError/GlobalError'
 import { Notifications } from './components/Notifications/Notifications'
 import { AuthProvider, useAuth } from './contexts/AuthContext'
-import { Community } from './screens/Community'
 import { Posts } from './components/Posts/Posts'
 
 export type ApiError = {
@@ -133,24 +132,14 @@ const Main = () => {
 							],
 						},
 						{
-							path: 'community',
-							element: <Community />,
-							children: [
-								{
-									path: 'posts',
-									element: <Posts />,
-								},
-							],
+							path: 'posts',
+							element: <Posts />,
 						},
 					],
 				},
 				{
 					path: 'notifications',
 					element: <Notifications />,
-				},
-				{
-					path: 'settings',
-					element: <div>Settings work in progress</div>,
 				},
 			],
 			errorElement: <GlobalError />,

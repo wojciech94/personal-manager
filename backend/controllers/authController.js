@@ -34,6 +34,30 @@ exports.login = async (req, res) => {
 	}
 }
 
+exports.testlogin = async (req, res) => {
+	try {
+		const testUser = await User.findOne({ name: 'testowy' })
+		if (!testUser) {
+			return res.status(404).json({ message: 'User not found' })
+		}
+
+		const accessToken = jwt.sign({ userId: testUser._id }, JWT_SECRET, { expiresIn: '1h' })
+
+		const refreshToken = jwt.sign({ userId: testUser._id }, JWT_REFRESH_SECRET, { expiresIn: '7d' })
+
+		res.cookie('refreshToken', refreshToken, {
+			httpOnly: true,
+			secure: process.env.NODE_ENV === 'production',
+			sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Strict',
+			maxAge: 7 * 24 * 60 * 60 * 1000,
+		})
+
+		res.status(200).json({ accessToken, name: testUser.name })
+	} catch (error) {
+		res.status(500).json({ error: error.message })
+	}
+}
+
 exports.register = async (req, res) => {
 	try {
 		const { name, password } = req.body

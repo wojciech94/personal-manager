@@ -16,6 +16,8 @@ const shoppingListRoutes = require('./routes/shoppingListRoutes')
 const shoppingItemRoutes = require('./routes/shoppingItemRoutes')
 const logsRoutes = require('./routes/logsRoutes')
 const notificationRoutes = require('./routes/notificationRoutes')
+const postRoutes = require('./routes/postRoutes')
+const commentRoutes = require('./routes/commentRoutes')
 
 const app = express()
 const PORT = process.env.PORT || 5000
@@ -59,6 +61,8 @@ app.use('/', shoppingListRoutes)
 app.use('/', shoppingItemRoutes)
 app.use('/', logsRoutes)
 app.use('/', notificationRoutes)
+app.use('/', postRoutes)
+app.use('/', commentRoutes)
 
 app.listen(PORT, () => {
 	console.log(`Server running on port ${PORT}`)
