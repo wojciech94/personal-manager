@@ -84,7 +84,7 @@ export const Folders = () => {
 						})
 					}>
 					<MoreVertical className='d-none-sm' size={16} />
-					<span className='d-mobile-none'>Modify folders</span>
+					<span className='d-mobile-none text-nowrap'>Modify folders</span>
 				</Button>
 			</div>
 			<Outlet />

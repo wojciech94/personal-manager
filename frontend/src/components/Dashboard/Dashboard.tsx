@@ -306,7 +306,7 @@ const DashboardDetails: React.FC<DashboardDetails> = ({ dashboard, editMode, get
 					)}
 					{dashboard.logsId && dashboard.logsId.logs.length > 0 && <Logs logs={dashboard.logsId.logs}></Logs>}
 					{editMode && (
-						<div className='d-flex justify-center border-top border-light pt-4 mt-2 mx-n4'>
+						<div className='d-flex justify-center border-top border-light py-4 mt-2'>
 							<Button variant='success' onClick={updateDashboard}>
 								<Check size={16} /> Save dashboard
 							</Button>

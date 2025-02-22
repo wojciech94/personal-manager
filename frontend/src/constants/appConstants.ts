@@ -73,7 +73,7 @@ export const WELCOME_SLIDES = [
 	},
 	{
 		title: 'Plan your tasks',
-		subtitle: 'Stay organized by managing your daily tasks and to-dos.',
+		subtitle: 'Stay organized by managing your daily tasks and to-does.',
 		class: 'gradient-1',
 	},
 	{

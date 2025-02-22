@@ -15,6 +15,7 @@ import { ShoppingList } from './components/ShoppingList/ShoppingList'
 import { GlobalError } from './components/GlobalError/GlobalError'
 import { Notifications } from './components/Notifications/Notifications'
 import { AuthProvider, useAuth } from './contexts/AuthContext'
+import { Posts } from './components/Posts/Posts'
 
 export type ApiError = {
 	message: string
@@ -130,15 +131,15 @@ const Main = () => {
 								},
 							],
 						},
+						{
+							path: 'posts',
+							element: <Posts />,
+						},
 					],
 				},
 				{
 					path: 'notifications',
 					element: <Notifications />,
-				},
-				{
-					path: 'settings',
-					element: <div>Settings work in progress</div>,
 				},
 			],
 			errorElement: <GlobalError />,

@@ -5,6 +5,7 @@ import { API_URL } from '../../config'
 import { Button } from '../Button/Button'
 import { Card } from '../Card/Card'
 import { useAuth } from '../../contexts/AuthContext'
+import { ApiError } from '../../main'
 
 export const Login = () => {
 	const [username, setUsername] = useState('')
@@ -49,11 +50,12 @@ export const Login = () => {
 				throw new Error('Server error')
 			}
 
-			const { accessToken } = await response.json()
+			const { accessToken, name }: { accessToken: string; name: string } = await response.json()
 			if (mode === 'signIn') {
 				login(accessToken)
 				setMessage('Login successful')
 				navigate('/')
+				sessionStorage.setItem('name', name)
 			} else {
 				setMessage('Register successful')
 				setMode('signIn')
@@ -64,6 +66,39 @@ export const Login = () => {
 			if (error instanceof Error) {
 				setMessage(error.message)
 			}
+		} finally {
+			setIsloading(false)
+		}
+	}
+
+	const handleTestLogin = async () => {
+		try {
+			setIsloading(true)
+			const res = await fetch(`${API_URL}auth/testlogin`, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				credentials: 'include',
+			})
+
+			if (!res.ok) {
+				const errorData: ApiError = await res.json()
+				setMessage(errorData.message)
+				setIsloading(false)
+				return
+			}
+
+			const { accessToken, name }: { accessToken: string; name: string } = await res.json()
+			if (accessToken) {
+				console.log(accessToken)
+				login(accessToken)
+				setMessage('Login successful')
+				navigate('/')
+				sessionStorage.setItem('name', name)
+			} else {
+				setMessage('Access token not found')
+			}
+		} catch (error) {
+			setMessage(error as string)
 		} finally {
 			setIsloading(false)
 		}
@@ -105,6 +140,10 @@ export const Login = () => {
 						<Button isLoading={isLoading} type='submit'>
 							{mode === 'signIn' ? 'Login' : 'Sign up'}
 						</Button>
+						<Button isLoading={isLoading} type='button' onClick={handleTestLogin}>
+							Test account
+						</Button>
+						{message && <div className='text-danger'>{message}</div>}
 						{showLoadingMessage && (
 							<div className='d-flex gap-1 text-danger'>
 								<AlertTriangle size={16} className='flex-shrink-0' />
@@ -124,7 +163,6 @@ export const Login = () => {
 								{mode === 'signIn' ? 'Sign Up' : 'Login'}
 							</Button>
 						</div>
-						{message && <div>{message}</div>}
 					</form>
 				</div>
 			</Card>
