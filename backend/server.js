@@ -40,6 +40,11 @@ app.use(cookieParser())
 
 const dbUrl = process.env.DB_URL
 
+if (!dbUrl) {
+  console.error('Błąd: Zmienna DB_URL nie jest zdefiniowana w pliku .env!');
+  process.exit(1);
+}
+
 mongoose
 	.connect(dbUrl)
 	.then(() => {
