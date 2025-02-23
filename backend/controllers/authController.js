@@ -36,13 +36,18 @@ exports.login = async (req, res) => {
 
 exports.testlogin = async (req, res) => {
 	try {
-		const testUser = await User.findOne({ name: 'testowy' })
+		let testUser = await User.findOne({ name: 'testowy' })
+
 		if (!testUser) {
-			return res.status(404).json({ message: 'User not found' })
+			testUser = new User({
+				name: 'testowy',
+				password: 'test123',
+			})
+			await testUser.save()
+			console.log('Utworzono nowego użytkownika testowego')
 		}
 
 		const accessToken = jwt.sign({ userId: testUser._id }, JWT_SECRET, { expiresIn: '1h' })
-
 		const refreshToken = jwt.sign({ userId: testUser._id }, JWT_REFRESH_SECRET, { expiresIn: '7d' })
 
 		res.cookie('refreshToken', refreshToken, {
@@ -54,6 +59,7 @@ exports.testlogin = async (req, res) => {
 
 		res.status(200).json({ accessToken, name: testUser.name })
 	} catch (error) {
+		console.error('Błąd w testlogin:', error)
 		res.status(500).json({ error: error.message })
 	}
 }
