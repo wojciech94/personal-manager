@@ -73,10 +73,7 @@ npm install; cd backend; npm install; cd ../frontend; npm install; cd ..
      ```
      PORT=5000
      DB_URL=mongodb://localhost:27017/personal-manager  # Dla lokalnego MongoDB (Compass lub Community Server)
-     ```
-
-# lub np. mongodb+srv://user:pass@cluster0.mongodb.net/personal-manager?retryWrites=true&w=majority dla Atlas
-
+     # lub np. mongodb+srv://user:pass@cluster0.mongodb.net/personal-manager?retryWrites=true&w=majority dla Atlas
      JWT_SECRET=your_random_64_char_string
      JWT_REFRESH_SECRET=another_random_64_char_string
      ```
