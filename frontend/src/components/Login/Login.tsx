@@ -89,7 +89,6 @@ export const Login = () => {
 
 			const { accessToken, name }: { accessToken: string; name: string } = await res.json()
 			if (accessToken) {
-				console.log(accessToken)
 				login(accessToken)
 				setMessage('Login successful')
 				navigate('/')

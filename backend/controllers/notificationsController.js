@@ -36,17 +36,14 @@ exports.addNotification = async (req, res) => {
 exports.acceptNotification = async (req, res) => {
 	try {
 		const userId = req.user.userId
-
 		const { id } = req.body
 
 		const notification = await Notification.findByIdAndDelete(id)
-
 		if (!notification) {
-			return res.status(500).json({ message: 'Cannot find notification for provided Id.' })
+			return res.status(404).json({ message: 'Cannot find notification for provided Id.' })
 		}
 
 		const user = await User.findById(userId)
-
 		if (!user) {
 			return res.status(404).json({ message: 'Cannot find User.' })
 		}
@@ -59,10 +56,20 @@ exports.acceptNotification = async (req, res) => {
 		user.notifications = user.notifications.filter(n => n.toString() !== id)
 		await user.save()
 
-		dashboard.userIds.push(userId)
-		await dashboard.save()
+		if (!dashboard.userIds.includes(userId)) {
+			dashboard.userIds.push(userId)
+			await dashboard.save()
+		}
 
-		res.status(204).send()
+		const updatedUser = await User.findById(userId).populate({
+			path: 'notifications',
+			populate: {
+				path: 'creatorId',
+				select: 'name',
+			},
+		})
+
+		res.status(200).json(updatedUser.notifications)
 	} catch (error) {
 		res.status(500).json({ message: error.message })
 	}
@@ -75,13 +82,21 @@ exports.getNotifications = async (req, res) => {
 			return res.status(500).json({ message: 'Cannot get userId' })
 		}
 
-		const user = await User.findById(userId).populate('notifications')
+		const user = await User.findById(userId).populate({
+			path: 'notifications',
+			populate: {
+				path: 'creatorId',
+				select: 'name',
+			},
+		})
 
 		if (!user) {
 			return res.status(404).json({ message: 'User not found for provided Id' })
 		}
 
 		const notifications = user.notifications
+
+		console.log(notifications)
 
 		res.status(200).json(notifications)
 	} catch (error) {

@@ -72,6 +72,7 @@ export function ShoppingLists() {
 		{
 			label: 'Modify shopping lists',
 			action: modifyShoppingListsModal,
+			disabled: !shoppingLists || shoppingLists.length === 0,
 		},
 	]
 

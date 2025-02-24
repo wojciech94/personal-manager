@@ -53,7 +53,7 @@ export function ModalFolderContent({ modalData }: { modalData: DataProps }) {
 			<div className='card-content d-flex flex-column gap-3 pt-0'>
 				{dashboardId && folders && folders.length > 0 && (
 					<>
-						<div className='card-subtitle border-top-none'>Modify folders</div>
+						<div className='card-subtitle'>Modify folders</div>
 						{folders.map(f => (
 							<FolderRow key={f.name} folder={f} action={modalAction} dashboardId={dashboardId} />
 						))}
@@ -104,7 +104,6 @@ function FolderRow({ folder, action, dashboardId, className }: FolderRowProps) {
 		if (res.ok) {
 			const data = await res.json()
 			action()
-			console.log(`Folder updated: ${data}`)
 		} else {
 			console.log('Folder update failed')
 		}

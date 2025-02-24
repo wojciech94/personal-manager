@@ -12,13 +12,20 @@ exports.addProduct = async (req, res) => {
 			return res.status(400).json({ message: 'Missing or invalid dashboardId' })
 		}
 
-		const dashboard = await Dashboard.findById(dashboardId)
+		const dashboard = await Dashboard.findById(dashboardId).populate('productsIds')
 
 		if (!dashboard) {
 			return res.status(404).json({ message: 'Dashboard not found for provided id' })
 		}
 
 		const { name, category, unit, price, tags, isFavourite } = req.body
+
+		const dashboardProducts = await Product.find({ _id: { $in: dashboard.productsIds } })
+
+		const productExists = dashboardProducts.some(product => product.name === name)
+		if (productExists) {
+			return res.status(400).json({ message: 'Product with this name already exists in the dashboard' })
+		}
 
 		const product = await Product.create({ name, category, unit, price, tags, isFavourite })
 

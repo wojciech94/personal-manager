@@ -6,6 +6,7 @@ import styles from './ExpandableMenu.module.css'
 type ItemsProps = {
 	label: string
 	action: () => void
+	disabled?: boolean
 }
 
 type Props = {
@@ -38,6 +39,8 @@ export const ExpandableMenu: React.FC<Props> = ({ title, items }): JSX.Element =
 		}
 	}
 
+	console.log(items)
+
 	return (
 		<div ref={expandableRef} className={`${styles.expandable}`}>
 			<Button variant='light' onlyIcon={!title} onClick={() => setIsExpanded(prevState => !prevState)}>
@@ -46,7 +49,12 @@ export const ExpandableMenu: React.FC<Props> = ({ title, items }): JSX.Element =
 			{items && items.length > 0 && isExpanded && (
 				<div className={`${styles.expandableMenu}`}>
 					{items.map(i => (
-						<Button variant='text' className='dropdown-item text-nowrap' key={i.label} onClick={() => handleAction(i.action)}>
+						<Button
+							disabled={i.disabled}
+							variant='text'
+							className='dropdown-item text-nowrap'
+							key={i.label}
+							onClick={() => handleAction(i.action)}>
 							{i.label}
 						</Button>
 					))}

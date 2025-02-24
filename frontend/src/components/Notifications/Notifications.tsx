@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Check, Eye, X } from 'react-feather'
-import { useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
 import { useAuth } from '../../contexts/AuthContext'
+import { useFetchDashboardsContext } from '../../contexts/FetchDashboardsContext'
 import { ApiError } from '../../main'
 import { Alert } from '../Alert/Alert'
 import { Button } from '../Button/Button'
@@ -16,7 +16,9 @@ type Notification = {
 
 export const Notifications = () => {
 	const [notifications, setNotifications] = useState<Notification[]>([])
+	const { fetchUserDashboards } = useFetchDashboardsContext()
 	const { accessToken } = useAuth()
+
 	useEffect(() => {
 		fetchNotifications()
 	}, [])
@@ -54,8 +56,12 @@ export const Notifications = () => {
 				if (!res.ok) {
 					const errorData: ApiError = await res.json()
 					console.error(errorData.message)
-				} else {
-					console.log(`Invitation accepted`)
+					return
+				}
+				const data: Notification[] = await res.json()
+				if (data) {
+					await fetchUserDashboards()
+					setNotifications(data)
 				}
 			} catch (error) {
 				console.error(error)
@@ -77,9 +83,9 @@ export const Notifications = () => {
 				if (!res.ok) {
 					const errorData: ApiError = await res.json()
 					console.error(errorData.message)
-				} else {
-					fetchNotifications()
+					return
 				}
+				fetchNotifications()
 			} catch (error) {
 				console.error(error)
 			}

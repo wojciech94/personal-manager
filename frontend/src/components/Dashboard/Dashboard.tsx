@@ -208,7 +208,6 @@ const DashboardDetails: React.FC<DashboardDetails> = ({ dashboard, editMode, get
 		})
 		if (res.ok) {
 			const data = await res.json()
-			console.log(data)
 			if (data?.creatorId) {
 				setSelectedOwner(data.creatorId)
 			}
@@ -228,7 +227,7 @@ const DashboardDetails: React.FC<DashboardDetails> = ({ dashboard, editMode, get
 				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify({
-				content: `You have been invited to the dashboard (${dashboard?.name})`,
+				content: `You have been invited to the dashboard (${dashboard?.name}) by ${dashboard?.creatorId.name}`,
 				type: 'invitation',
 				target: userName,
 				dashboardId: dashboardId,
@@ -304,14 +303,14 @@ const DashboardDetails: React.FC<DashboardDetails> = ({ dashboard, editMode, get
 							</div>
 						</div>
 					)}
-					{dashboard.logsId && dashboard.logsId.logs.length > 0 && <Logs logs={dashboard.logsId.logs}></Logs>}
 					{editMode && (
-						<div className='d-flex justify-center border-top border-light py-4 mt-2'>
+						<div className='d-flex justify-center border-top border-light pt-4 pb-2'>
 							<Button variant='success' onClick={updateDashboard}>
 								<Check size={16} /> Save dashboard
 							</Button>
 						</div>
 					)}
+					{dashboard.logsId && dashboard.logsId.logs.length > 0 && <Logs logs={dashboard.logsId.logs}></Logs>}
 				</div>
 			)}
 		</>

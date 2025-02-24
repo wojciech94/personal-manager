@@ -44,7 +44,7 @@ exports.testlogin = async (req, res) => {
 				password: 'test123',
 			})
 			await testUser.save()
-			console.log('Utworzono nowego użytkownika testowego')
+			console.log('Created new test user')
 		}
 
 		const accessToken = jwt.sign({ userId: testUser._id }, JWT_SECRET, { expiresIn: '1h' })
@@ -59,7 +59,7 @@ exports.testlogin = async (req, res) => {
 
 		res.status(200).json({ accessToken, name: testUser.name })
 	} catch (error) {
-		console.error('Błąd w testlogin:', error)
+		console.error('Testlogin error:', error)
 		res.status(500).json({ error: error.message })
 	}
 }
