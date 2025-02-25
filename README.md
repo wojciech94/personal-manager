@@ -2,6 +2,8 @@
 
 Personal manager to pełnoprawna aplikacja fullstack służąca do zarządzania zadaniami indywidualnymi oraz grupowymi. Umożliwia tworzenie współdzielonych dashboardów, które składają się z mini-aplikacji i narzędzi takich jak listy zadań (ToDo), notatki, listy zakupów i wiele więcej.
 
+[Link do strony](https://personal-manager-beta.vercel.app/)
+
 ## Funkcjonalności
 
 - **Tworzenie i zarządzanie dashboardami** – organizuj swoje zadania i narzędzia w spersonalizowanych panelach.
