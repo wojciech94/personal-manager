@@ -105,7 +105,7 @@ exports.deleteComment = async (req, res) => {
 exports.updateComment = async (req, res) => {
 	try {
 		const { dashboardId } = req.params
-		const { id, content } = req.body
+		const { id, content, like } = req.body
 		const userId = req.user.userId
 
 		if (!mongoose.Types.ObjectId.isValid(dashboardId)) {
@@ -133,6 +133,11 @@ exports.updateComment = async (req, res) => {
 		}
 
 		if (content) comment.content = content
+		if (like && !comment.likes.includes(like)) {
+			comment.likes = [...comment.likes, like]
+		} else {
+			comment.likes = comment.likes.filter(l => l.toString() !== like)
+		}
 
 		await comment.save()
 

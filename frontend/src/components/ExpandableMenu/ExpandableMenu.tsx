@@ -39,8 +39,6 @@ export const ExpandableMenu: React.FC<Props> = ({ title, items }): JSX.Element =
 		}
 	}
 
-	console.log(items)
-
 	return (
 		<div ref={expandableRef} className={`${styles.expandable}`}>
 			<Button variant='light' onlyIcon={!title} onClick={() => setIsExpanded(prevState => !prevState)}>

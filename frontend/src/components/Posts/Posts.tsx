@@ -51,7 +51,7 @@ export function Posts() {
 		}
 	}
 
-	const setLikes = async (postId: string, userId: string) => {
+	const setLikes = async (postId: string, like: boolean) => {
 		if (!accessToken) {
 			console.error('Access token not available')
 			return
@@ -63,7 +63,7 @@ export function Posts() {
 				Authorization: `Bearer ${accessToken}`,
 				'Content-Type': 'application/json',
 			},
-			body: JSON.stringify({ postId: postId, like: userId }),
+			body: JSON.stringify({ postId: postId, like: true }),
 		})
 
 		if (!res.ok) {

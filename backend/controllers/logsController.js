@@ -34,7 +34,6 @@ exports.addLog = async (logsId, initiatorId, message) => {
 
 		logsObj.logs.unshift(logEntry)
 		await logsObj.save()
-		console.log('Log added successfully')
 	} catch (error) {
 		console.error('Error adding log:', error)
 		throw error

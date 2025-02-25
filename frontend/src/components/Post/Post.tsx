@@ -28,7 +28,7 @@ export function Post({
 	onSavePost,
 }: {
 	post: PostType
-	setLikes: (postId: string, userId: string) => void
+	setLikes: (postId: string, like: boolean) => void
 	onToggleEditPost: (val: string) => void
 	onDeletePost: (val: string) => void
 	onSavePost: (id: string, val: string) => void
@@ -121,20 +121,19 @@ export function Post({
 		}
 	}
 
-	const handleSaveComment = async (id: string) => {
-		if (editedComments[id] !== undefined) {
-			if (!accessToken) {
-				console.error('Access token is not available')
-				return
-			}
-
-			const res = await fetch(`${API_URL}dashboards/${dashboardId}/posts/${post._id}/comments`, {
+	const handleSaveComment = async (id: string, like?: string) => {
+		if (!accessToken) {
+			console.error('Access token is not available')
+			return
+		}
+		if (editedComments[id] !== undefined || like) {
+			const res = await fetch(`${API_URL}dashboards/${dashboardId}/comments`, {
 				method: 'PATCH',
 				headers: {
 					Authorization: `Bearer ${accessToken}`,
 					'Content-Type': 'application/json',
 				},
-				body: JSON.stringify({ id: id, content: editedComments[id] }),
+				body: JSON.stringify({ id: id, content: editedComments[id], like: like }),
 			})
 			if (!res.ok) {
 				const errorData: ApiError = await res.json()
@@ -204,7 +203,7 @@ export function Post({
 				<Button
 					variant='text'
 					className='rounded-full bg-hover-danger transition-colors size-24px'
-					onClick={() => setLikes(post._id, post.author._id)}>
+					onClick={() => setLikes(post._id, true)}>
 					<Heart size={14} color='red' />
 				</Button>
 				<span className={`px-1 ${post.likes.includes(post.author._id) ? 'text-danger' : ''}`}>{post.likes.length}</span>

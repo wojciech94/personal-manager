@@ -129,10 +129,10 @@ exports.updatePost = async (req, res) => {
 
 		if (content) post.content = content
 		if (like) {
-			if (post.likes.includes(like)) {
-				post.likes = post.likes.filter(l => l.toString() !== like)
+			if (post.likes.includes(userId)) {
+				post.likes = post.likes.filter(l => l.toString() !== userId)
 			} else {
-				post.likes = [...post.likes, like]
+				post.likes = [...post.likes, userId]
 			}
 		}
 		// if (comment) post.comments = comment
