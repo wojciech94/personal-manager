@@ -3,16 +3,11 @@ import { Check, Eye, X } from 'react-feather'
 import { API_URL } from '../../config'
 import { useAuth } from '../../contexts/AuthContext'
 import { useFetchDashboardsContext } from '../../contexts/FetchDashboardsContext'
-import { ApiError } from '../../main'
+import { ApiError } from '../../types/global'
 import { Alert } from '../Alert/Alert'
 import { Button } from '../Button/Button'
 import { Card, CardHeader } from '../Card/Card'
-
-type Notification = {
-	_id: string
-	content: string
-	type: 'invitation' | 'info'
-}
+import { Notification } from './types'
 
 export const Notifications = () => {
 	const [notifications, setNotifications] = useState<Notification[]>([])
@@ -92,10 +87,9 @@ export const Notifications = () => {
 		}
 	}
 
-	const header = <CardHeader title='Notifications' />
 	return (
 		<div className='content-container'>
-			<Card headerComponent={header} className='card-p0'>
+			<Card headerComponent={<CardHeader title='Notifications' />} className='card-p0'>
 				{notifications && notifications.length > 0 ? (
 					<ul className='zebra rounded-3 overflow-hidden'>
 						{notifications.map(n => (

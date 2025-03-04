@@ -1,16 +1,7 @@
 import { useState } from 'react'
 import { User } from 'react-feather'
 import { Button } from '../Button/Button'
-
-type ItemsProps = {
-	name: string
-	action: () => void
-}
-
-type DropdownProps = {
-	title?: string
-	items: ItemsProps[]
-}
+import { DropdownProps, ItemsProps } from './types'
 
 export const Dropdown: React.FC<DropdownProps> = ({ items }): JSX.Element => {
 	const [expanded, setExpanded] = useState(false)

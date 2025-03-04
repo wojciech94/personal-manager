@@ -3,22 +3,10 @@ import { Check, Edit, FileText, Heart, Trash2 } from 'react-feather'
 import { useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
 import { useAuth } from '../../contexts/AuthContext'
-import { ApiError } from '../../main'
 import { getLocaleDateTime } from '../../utils/helpers'
 import { Button } from '../Button/Button'
-import { PostType } from '../../screens/Posts'
-
-export type Comment = {
-	_id: string
-	author: { _id: string; name: string }
-	content: string
-	updatedAt: string
-	isEdit: boolean
-}
-
-export type CommentDataType = {
-	commentId?: string
-}
+import { ApiError } from '../../types/global'
+import { Comment, PostType } from './types'
 
 export function Post({
 	post,

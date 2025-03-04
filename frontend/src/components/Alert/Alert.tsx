@@ -1,10 +1,5 @@
 import { Info } from 'react-feather'
-
-interface AlertProps {
-	variant?: string
-	children?: React.ReactNode
-	className?: string
-}
+import { AlertProps } from './types'
 
 export function Alert({ variant, children, className }: AlertProps) {
 	return (

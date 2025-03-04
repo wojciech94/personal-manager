@@ -1,28 +1,7 @@
-import { Button, ButtonVariant } from '../Button/Button'
+import { Button } from '../Button/Button'
+import { CardProps, HeaderProps } from './types'
 
-type Props = {
-	title?: string
-	footer?: React.ReactNode
-	children?: React.ReactNode
-	headerComponent?: React.ReactNode
-	className?: string
-	contentClass?: string
-}
-
-export type HeaderDataProps = {
-	label: string
-	btnVariant?: ButtonVariant
-	icon?: React.ReactNode
-	action: () => void
-}
-
-type HeaderProps = {
-	title: string
-	data?: HeaderDataProps[]
-	className?: string
-}
-
-export const Card: React.FC<Props> = ({ title, footer, children, headerComponent, className, contentClass }) => {
+export const Card: React.FC<CardProps> = ({ title, footer, children, headerComponent, className, contentClass }) => {
 	return (
 		<div className={`card ${className ? className : ''}`}>
 			{headerComponent && headerComponent}

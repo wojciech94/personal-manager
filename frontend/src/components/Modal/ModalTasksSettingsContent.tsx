@@ -3,7 +3,7 @@ import { useAuth } from '../../contexts/AuthContext'
 import { useModalContext } from '../../contexts/ModalContext'
 import { Button } from '../Button/Button'
 import { FormRow } from '../FormRow/FormRow'
-import { SortMethods, TasksSettings } from '../Task/Task'
+import { SortMethods, TasksSettings } from '../Task/types'
 import { DataProps } from './types'
 
 export function ModalTasksSettingsContent({ modalData }: { modalData: DataProps }) {

@@ -1,4 +1,5 @@
-import { ScreenSize } from './../contexts/ScreenContext'
+import { ScreenSize } from '../types/global'
+
 export function getTokenExpiration(token: string) {
 	const payloadBase64 = token.split('.')[1]
 	const decodedPayload = JSON.parse(atob(payloadBase64))

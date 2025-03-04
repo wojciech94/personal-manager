@@ -2,20 +2,11 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { API_URL } from '../config'
 import { useAuth } from '../contexts/AuthContext'
-import { ApiError } from '../main'
 import { Button } from '../components/Button/Button'
 import { Card, CardHeader } from '../components/Card/Card'
-import { Comment, CommentDataType, Post } from '../components/Post/Post'
-
-export type PostType = {
-	_id: string
-	content: string
-	author: { _id: string; name: string }
-	likes: string[]
-	updatedAt: string
-	isEdit: boolean
-	comments: Comment[]
-}
+import { Post } from '../components/Post/Post'
+import { ApiError } from '../types/global'
+import { PostType } from '../components/Post/types'
 
 export function Posts() {
 	const [posts, setPosts] = useState<PostType[]>([])

@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { usePagination } from '../../hooks/usePagination'
 import { getLocaleDateTime } from '../../utils/helpers'
-import { Log } from '../PageWrapper/PageWrapper'
 import { Pagination } from '../Pagination/Pagination'
+import { Log } from './types'
 
 export const Logs = ({ logs }: { logs: Log[] }) => {
 	const [logsCount, setLogsCount] = useState(10)

@@ -1,5 +1,4 @@
-import { TasksSettings } from '../Task/Task'
-import { TodoGroup } from '../../screens/Todos'
+import { TodoGroup, TasksSettings } from './../Task/types'
 
 export type DataProps = {
 	action?:
@@ -28,4 +27,9 @@ export type ModalDataProps = {
 	name: string
 	title?: string
 	data?: DataProps
+}
+
+export type ModalContextType = {
+	activeModal: ModalDataProps | null
+	setActiveModal: (modal: ModalDataProps | null) => void
 }

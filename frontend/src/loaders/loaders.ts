@@ -1,7 +1,7 @@
 import { ShoppingList } from './../screens/Shopping/ShoppingList'
-import { ApiError } from './../main'
 import { API_URL } from './../config'
 import { LoaderFunctionArgs } from 'react-router-dom'
+import { ApiError } from '../types/global'
 
 export const fetchFolders = async ({ params }: LoaderFunctionArgs, { accessToken }: { accessToken: String | null }) => {
 	const { dashboardId } = params

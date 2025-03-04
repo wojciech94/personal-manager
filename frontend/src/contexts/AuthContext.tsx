@@ -5,14 +5,13 @@ interface AuthContextType {
 	accessToken: string | null
 	login: (token: string) => void
 	logout: () => void
-	refreshToken: () => void
+	refreshToken: () => Promise<void>
 }
-
-const AuthContext = createContext<AuthContextType | undefined>(undefined)
-
 interface AuthProviderProps {
 	children: ReactNode
 }
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 	const [accessToken, setAccessToken] = useState<string | null>(null)

@@ -1,27 +1,22 @@
 import { useEffect, useState } from 'react'
 import { Edit, Plus, Repeat, Settings } from 'react-feather'
 import { Alert } from '../components/Alert/Alert'
-import { Card, CardHeader, HeaderDataProps } from '../components/Card/Card'
-import { Task, TasksSettings } from '../components/Task/Task'
+import { Card, CardHeader } from '../components/Card/Card'
 import { useParams } from 'react-router-dom'
 import { API_URL } from '../config'
 import { useModalContext } from '../contexts/ModalContext'
 import { Button } from '../components/Button/Button'
 import { useAuth } from '../contexts/AuthContext'
-
-export type TodoGroup = {
-	_id: string
-	name: string
-	tasks: Task[]
-	isEdit: boolean
-}
+import { HeaderDataProps } from '../components/Card/types'
+import { TasksSettings, TaskType, TodoGroup } from '../components/Task/types'
+import { Task } from '../components/Task/Task'
 
 export const Todos = () => {
 	const { dashboardId } = useParams()
 
 	const [todoGroups, setTodoGroups] = useState<TodoGroup[]>([])
-	const [tasks, setTasks] = useState<Task[] | null>(null)
-	const [archivedTasks, setArchivedTasks] = useState<Task[] | null>(null)
+	const [tasks, setTasks] = useState<TaskType[] | null>(null)
+	const [archivedTasks, setArchivedTasks] = useState<TaskType[] | null>(null)
 	const [tasksSettings, setTasksSettings] = useState<TasksSettings | null>(null)
 	const [activeGroup, setActiveGroup] = useState('')
 	const [showArchive, setShowArchive] = useState(false)

@@ -6,7 +6,7 @@ import { useModalContext } from '../../contexts/ModalContext'
 import { Button } from '../Button/Button'
 
 import { FormRow } from '../FormRow/FormRow'
-import { TodoGroup } from '../../screens/Todos'
+import { TodoGroup } from '../Task/types'
 import { DataProps } from './types'
 
 export function ModalAddTask({ modalData }: { modalData: DataProps }) {

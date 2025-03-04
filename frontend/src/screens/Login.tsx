@@ -5,7 +5,7 @@ import { API_URL } from '../config'
 import { Button } from '../components/Button/Button'
 import { Card } from '../components/Card/Card'
 import { useAuth } from '../contexts/AuthContext'
-import { ApiError } from '../main'
+import { ApiError } from '../types/global'
 
 export const Login = () => {
 	const [username, setUsername] = useState('')
@@ -56,6 +56,7 @@ export const Login = () => {
 				setMessage('Login successful')
 				navigate('/')
 				sessionStorage.setItem('name', name)
+				console.log('navigate')
 			} else {
 				setMessage('Register successful')
 				setMode('signIn')

@@ -18,10 +18,6 @@ import { Posts } from './screens/Posts'
 import { Dashboard } from './screens/Dashboard'
 import { fetchFolders, fetchNotes, fetchShoppingList } from './loaders/loaders'
 
-export type ApiError = {
-	message: string
-}
-
 const Main = () => {
 	const { accessToken } = useAuth()
 	const router = createBrowserRouter([

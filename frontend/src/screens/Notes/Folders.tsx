@@ -5,16 +5,11 @@ import { API_URL } from '../../config'
 import { useAuth } from '../../contexts/AuthContext'
 import { useModalContext } from '../../contexts/ModalContext'
 import { Button } from '../../components/Button/Button'
-
-export type Folder = {
-	name: string
-	_id: string
-}
-type LoaderData = Folder[]
+import { Folder } from './types'
 
 export const Folders = () => {
-	const loaderData = useLoaderData() as LoaderData
-	const [data, setData] = useState<LoaderData | null>(loaderData)
+	const loaderData = useLoaderData() as Folder[]
+	const [data, setData] = useState<Folder[] | null>(loaderData)
 	const { setActiveModal } = useModalContext()
 	const { dashboardId } = useParams()
 	const { accessToken } = useAuth()
@@ -50,7 +45,7 @@ export const Folders = () => {
 		})
 
 		if (res.ok) {
-			const data: LoaderData = await res.json()
+			const data: Folder[] = await res.json()
 			setData(data || [])
 		}
 	}

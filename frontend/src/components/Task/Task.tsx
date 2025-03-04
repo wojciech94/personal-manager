@@ -4,45 +4,9 @@ import { useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
 import { useAuth } from '../../contexts/AuthContext'
 import { Button } from '../Button/Button'
+import { TaskPriorities, TaskProps } from './types'
 
-enum TaskPriorities {
-	LOW = 'low',
-	MEDIUM = 'medium',
-	HIGH = 'high',
-}
-
-export enum SortMethods {
-	CREATED_AT = 'created_at',
-	EXPIRED_AT = 'expired_at',
-	PRIORITY = 'priority',
-}
-
-type Props = {
-	task: Task
-	fetchTasks: () => void
-	tasksSettings: TasksSettings
-}
-
-export type Task = {
-	_id: string
-	content: string
-	priority: TaskPriorities
-	is_done: boolean
-	created_at: string
-	expired_at: string
-	archived_at: string
-	removed_at: string
-}
-
-export type TasksSettings = {
-	showDeadline: boolean
-	archivizationTime: number
-	removeTime: number
-	sortMethod: SortMethods
-	sortDirection: 'asc' | 'desc'
-}
-
-export function Task({ task, fetchTasks, tasksSettings }: Props) {
+export function Task({ task, fetchTasks, tasksSettings }: TaskProps) {
 	const [taskData, setTaskData] = useState(task)
 	const [contentValue, setContentValue] = useState(task.content)
 	const [priorityValue, setPriorityValue] = useState(task.priority)

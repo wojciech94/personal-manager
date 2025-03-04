@@ -2,19 +2,9 @@ import { useState, useRef, useEffect } from 'react'
 import { MoreVertical } from 'react-feather'
 import { Button } from '../Button/Button'
 import styles from './ExpandableMenu.module.css'
+import { ExpandableMenuProps } from './types'
 
-type ItemsProps = {
-	label: string
-	action: () => void
-	disabled?: boolean
-}
-
-type Props = {
-	title?: string
-	items: ItemsProps[]
-}
-
-export const ExpandableMenu: React.FC<Props> = ({ title, items }): JSX.Element => {
+export const ExpandableMenu: React.FC<ExpandableMenuProps> = ({ title, items }): JSX.Element => {
 	const [isExpanded, setIsExpanded] = useState(false)
 	const expandableRef = useRef<HTMLDivElement>(null)
 

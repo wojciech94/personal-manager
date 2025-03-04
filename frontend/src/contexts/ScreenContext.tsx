@@ -1,16 +1,5 @@
 import { createContext, useContext } from 'react'
-
-export enum ScreenSize {
-	XSMALL = 'extra-small', //576
-	SMALL = 'small', //768
-	MEDIUM = 'medium', //992
-	LARGE = 'large', //1200
-	XLARGE = 'extra-large', //1400
-}
-
-export type ScreenType = {
-	type: ScreenSize
-}
+import { ScreenType } from '../types/global'
 
 export const ScreenContext = createContext<ScreenType | null>(null)
 

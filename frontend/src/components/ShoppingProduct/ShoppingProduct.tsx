@@ -3,17 +3,9 @@ import { useState } from 'react'
 import { Check, Edit, Trash2 } from 'react-feather'
 import { Button } from '../Button/Button'
 import { Product } from '../../screens/Shopping/Products'
-import { IsShoppingPurchased, ShoppingItem } from '../../screens/Shopping/ShoppingList'
+import { ShoppingProductProps } from './types'
 
-type ShoppingItemToUpdate = Omit<ShoppingItem, '_id'>
-
-type Props = {
-	data: ShoppingItem
-	onListItemUpdate: (_id: string, data: ShoppingItemToUpdate | IsShoppingPurchased) => Promise<void>
-	onListItemDelete: (_id: string) => void
-}
-
-export function ShoppingProduct({ data, onListItemUpdate, onListItemDelete }: Props) {
+export function ShoppingProduct({ data, onListItemUpdate, onListItemDelete }: ShoppingProductProps) {
 	const [product, setProduct] = useState<Product>(data.productId)
 	const [editedId, setEditedId] = useState<string | null>(null)
 	const [isPurchasedValue, setIsPurchasedValue] = useState(data.isPurchased)

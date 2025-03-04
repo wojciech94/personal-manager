@@ -1,15 +1,6 @@
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'react-feather'
 import { Button } from '../Button/Button'
-
-type Props = {
-	currentPage: number
-	totalPages: number
-	itemsPerPage: number
-	nextPage: () => void
-	prevPage: () => void
-	goToPage: (num: number) => void
-	onSetItemsPerPage: (val: number) => void
-}
+import { PaginationProps } from './types'
 
 export function Pagination({
 	currentPage,
@@ -19,7 +10,7 @@ export function Pagination({
 	prevPage,
 	goToPage,
 	onSetItemsPerPage,
-}: Props) {
+}: PaginationProps) {
 	const prev2Button = currentPage > 2
 	const prevCondition = currentPage > 1
 	const nextCondition = currentPage < totalPages
@@ -28,7 +19,9 @@ export function Pagination({
 	return (
 		<>
 			<div className='d-flex gap-2 justify-between align-center border-top border-light px-4 pt-4 bg-lighter pb-4 rounded-bottom-3'>
-				<div>Page <span className='text-nowrap'>{`${currentPage} of ${totalPages}`}</span></div>
+				<div>
+					Page <span className='text-nowrap'>{`${currentPage} of ${totalPages}`}</span>
+				</div>
 				<div className='d-flex gap-2 align-center'>
 					{prevCondition && (
 						<>

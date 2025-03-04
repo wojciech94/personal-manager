@@ -6,35 +6,11 @@ import { useAuth } from '../contexts/AuthContext'
 import { useFetchDashboardsContext } from '../contexts/FetchDashboardsContext'
 import { useModalContext } from '../contexts/ModalContext'
 import { Button } from '../components/Button/Button'
-import { Card, CardHeader, HeaderDataProps } from '../components/Card/Card'
+import { Card, CardHeader } from '../components/Card/Card'
 import { FormRow } from '../components/FormRow/FormRow'
 import { Logs } from '../components/Logs/Logs'
-
-type User = {
-	_id: string
-	name: string
-}
-
-type LogsObject = {
-	logs: Log[]
-}
-
-export type Log = {
-	timestamps: string
-	initiatorId: User
-	message: string
-	_id: string
-}
-
-export type DashboardType = {
-	_id: string
-	name: string
-	isOwner: boolean
-	creatorId: User
-	userIds: User[]
-	created_at: string
-	logsId: LogsObject
-}
+import { DashboardType } from '../types/dashboard'
+import { HeaderDataProps } from '../components/Card/types'
 
 export const Dashboard: React.FC = () => {
 	const [editMode, setEditMode] = useState(false)
@@ -231,12 +207,10 @@ export const Dashboard: React.FC = () => {
 		return actionsArray
 	}
 
-	const cardheader = <CardHeader title='Dashboard details' data={headerActions()} />
-
 	return (
 		<>
 			{dashboard && (
-				<Card className='card-p0' headerComponent={cardheader}>
+				<Card className='card-p0' headerComponent={<CardHeader title='Dashboard details' data={headerActions()} />}>
 					<div className='d-flex flex-column gap-2 pt-4'>
 						<FormRow label={'Name'} content={nameContent} />
 						<FormRow label={'Owner'} content={ownerContent} />

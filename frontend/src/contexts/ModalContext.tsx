@@ -1,10 +1,5 @@
 import { createContext, useContext } from 'react'
-import { ModalDataProps } from '../components/Modal/types'
-
-type ModalContextType = {
-	activeModal: ModalDataProps | null
-	setActiveModal: (modal: ModalDataProps | null) => void
-}
+import { ModalContextType } from '../components/Modal/types'
 
 export const ModalContext = createContext<ModalContextType | null>(null)
 

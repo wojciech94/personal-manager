@@ -11,8 +11,9 @@ import { debounce, getScreenType, getTokenExpiration } from '../../utils/helpers
 import { WELCOME_SLIDES } from '../../constants/appConstants'
 import { ModalDataProps } from '../Modal/types'
 import { Button } from '../Button/Button'
-import { ScreenContext, ScreenType } from '../../contexts/ScreenContext'
+import { ScreenContext } from '../../contexts/ScreenContext'
 import { useAuth } from '../../contexts/AuthContext'
+import { ScreenType } from '../../types/global'
 
 export const Home = () => {
 	const [dashboards, setDashboards] = useState([])
@@ -129,15 +130,7 @@ export const Home = () => {
 		navigate('/notifications')
 	}
 
-	// const goToSettings = () => {
-	// 	navigate('/settings')
-	// }
-
 	const dropdownItems = [
-		// {
-		// 	name: 'Settings',
-		// 	action: goToSettings,
-		// },
 		{ name: 'Notifications', action: openNotifications },
 		{ name: 'Logout', action: logout },
 	]

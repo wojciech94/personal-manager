@@ -1,29 +1,18 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useAuth } from '../contexts/AuthContext'
-import { ApiError } from '../main'
-
-type FetchResponse<T> = {
-	data: T | null
-	loading: boolean
-	error: ApiError | null
-	refetch: () => void
-}
-
-interface FetchOptions extends RequestInit {
-	headers?: Record<string, string>
-}
-
-type FetchFunction<T> = () => Promise<T>
+import { ApiError, FetchFunction, FetchOptions, FetchResponse } from '../types/global'
 
 export const useFetch = <T,>(urlOrFn: string | FetchFunction<T>, options: FetchOptions = {}): FetchResponse<T> => {
 	const [data, setData] = useState<T | null>(null)
 	const [loading, setLoading] = useState<boolean>(true)
-	const [error, setError] = useState<Error | null>(null)
+	const [error, setError] = useState<Error | ApiError | null>(null)
+	const [status, setStatus] = useState<number | null>(null)
 	const { accessToken } = useAuth()
 
 	const fetchData = useCallback(async () => {
 		setLoading(true)
 		setError(null)
+		setStatus(null)
 
 		try {
 			let responseData: T
@@ -41,8 +30,12 @@ export const useFetch = <T,>(urlOrFn: string | FetchFunction<T>, options: FetchO
 					},
 				})
 
+				setStatus(response.status)
+
 				if (!response.ok) {
-					throw new Error(`HTTP error! Status: ${response.status}`)
+					const ErrorMessage: ApiError = await response.json()
+					setError(ErrorMessage)
+					throw new Error(ErrorMessage.message)
 				}
 				responseData = await response.json()
 			}
@@ -59,5 +52,5 @@ export const useFetch = <T,>(urlOrFn: string | FetchFunction<T>, options: FetchO
 		fetchData()
 	}, [fetchData])
 
-	return { data, loading, error, refetch: fetchData }
+	return { data, status, loading, error, refetch: fetchData }
 }

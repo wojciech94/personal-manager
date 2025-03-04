@@ -1,15 +1,7 @@
 import { NavLink } from 'react-router-dom'
+import { NavigationProps } from '../../types/dashboard'
 
-type DashboardsProps = {
-	name: string
-	_id: string
-}
-
-type Props = {
-	dashboards: DashboardsProps[]
-}
-
-export const Dashboards: React.FC<Props> = ({ dashboards }) => {
+export const Dashboards: React.FC<NavigationProps> = ({ dashboards }) => {
 	return (
 		<nav className='d-flex flex-1 gap-5 justify-center align-center py-1'>
 			{dashboards &&

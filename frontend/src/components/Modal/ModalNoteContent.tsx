@@ -1,9 +1,9 @@
-import React, { useState, useEffect, ChangeEvent } from 'react'
+import { useState, useEffect, ChangeEvent } from 'react'
 import { useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
 import { useAuth } from '../../contexts/AuthContext'
+import { Folder } from '../../screens/Notes/types'
 import { Button } from '../Button/Button'
-import { Folder } from '../../screens/Notes/Folders'
 import { FormRow } from '../FormRow/FormRow'
 import { DataProps } from './types'
 

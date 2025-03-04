@@ -1,27 +1,23 @@
-import { useState, useEffect, useCallback, ChangeEvent, FormEventHandler, FormEvent } from 'react'
+import { useState, useEffect, useCallback, ChangeEvent } from 'react'
 import { useLoaderData, useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
 import { useModalContext } from '../../contexts/ModalContext'
 import { Plus } from 'react-feather'
 import { debounce } from '../../utils/helpers'
 import { ToggleBox } from '../../components/ToggleBox/ToggleBox'
-import { Note, NoteProps } from '../../components/Note/Note'
+import { Note } from '../../components/Note/Note'
 import { ExpandableMenu } from '../../components/ExpandableMenu/ExpandableMenu'
 import { Alert } from '../../components/Alert/Alert'
 import { Button } from '../../components/Button/Button'
 import { useAuth } from '../../contexts/AuthContext'
-
-type Notes = NoteProps[]
-
-type ErrorType = {
-	message: string
-}
+import { NoteType } from '../../components/Note/types'
+import { ApiError } from '../../types/global'
 
 export const Notes = () => {
-	const data = useLoaderData() as Notes | ErrorType
-	const [notes, setNotes] = useState<Notes>([])
+	const data = useLoaderData() as NoteType[] | ApiError
+	const [notes, setNotes] = useState<NoteType[]>([])
 	const { setActiveModal } = useModalContext()
-	const [filteredNotes, setFilteredNotes] = useState<Notes>([])
+	const [filteredNotes, setFilteredNotes] = useState<NoteType[]>([])
 	const [categoryNames, setCategoryNames] = useState<string[]>([])
 	const [filterCategory, setFilterCategory] = useState('')
 	const [isFavourite, setIsFavourite] = useState(false)
@@ -156,7 +152,8 @@ export const Notes = () => {
 					condition = filterCategory === '' || n.category === filterCategory || n.is_favourite === isFavourite
 					break
 				case false:
-					condition = (filterCategory === '' || n.category === filterCategory) && n.is_favourite === isFavourite
+					condition =
+						(filterCategory === '' || n.category === filterCategory) && n.is_favourite === isFavourite
 					break
 			}
 			return condition

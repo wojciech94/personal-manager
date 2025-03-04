@@ -5,12 +5,9 @@ import { API_URL } from '../../config'
 import { useAuth } from '../../contexts/AuthContext'
 import { useModalContext } from '../../contexts/ModalContext'
 import { Button } from '../Button/Button'
-import { TodoGroup } from '../../screens/Todos'
 import { DataProps } from './types'
-
-type InputDynamicObject = {
-	[key: string]: string
-}
+import { InputDynamicObject } from '../../types/global'
+import { TodoGroup } from '../Task/types'
 
 export function ModalModifyTodoGroup({ modalData }: { modalData: DataProps }) {
 	const { setActiveModal } = useModalContext()

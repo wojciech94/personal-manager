@@ -24,9 +24,8 @@ export const ProductListItem = ({
 	const [priceValue, setPriceValue] = useState(0)
 	const [tagsValue, setTagsValue] = useState('')
 	const { accessToken } = useAuth()
-
-	const productData = { name: nameValue, category: categoryValue, unit: unitValue, price: priceValue, tags: tagsValue }
 	const { dashboardId } = useParams()
+	const productData = { name: nameValue, category: categoryValue, unit: unitValue, price: priceValue, tags: tagsValue }
 
 	const handleEditProduct = (id: string) => {
 		if (productsData && productsData.length > 0) {

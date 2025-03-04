@@ -4,10 +4,10 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
 import { useAuth } from '../../contexts/AuthContext'
 import { useModalContext } from '../../contexts/ModalContext'
-import { ApiError } from '../../main'
 import { Button } from '../Button/Button'
 import { ShoppingLists } from '../../screens/Shopping/ShoppingLists'
 import { DataProps } from './types'
+import { ApiError } from '../../types/global'
 
 export function ModalModifyShoppingLists({ modalData }: { modalData: DataProps }) {
 	const [shoppingLists, setShoppingLists] = useState<ShoppingLists>([])

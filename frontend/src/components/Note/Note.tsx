@@ -5,35 +5,9 @@ import { useAuth } from '../../contexts/AuthContext'
 import { useModalContext } from '../../contexts/ModalContext'
 import { getLocaleDateTime } from '../../utils/helpers'
 import { Button } from '../Button/Button'
+import { NoteProps } from './types'
 
-export type NoteProps = {
-	_id: string
-	title: string
-	category: string
-	is_favourite: boolean
-	tags: string[]
-	content: string
-	updated_at: string
-	created_at: string
-	expired_at: string
-}
-
-type Props = {
-	note: NoteProps
-	updateNote: (
-		title: string,
-		content: string,
-		category: string,
-		tags: string | string[],
-		folder_id: string,
-		is_favourite: boolean,
-		expired_at: string | null,
-		noteId: string
-	) => void
-	fetchNotes: () => void
-}
-
-export const Note: React.FC<Props> = ({ note, updateNote, fetchNotes }): JSX.Element => {
+export const Note: React.FC<NoteProps> = ({ note, updateNote, fetchNotes }): JSX.Element => {
 	const { setActiveModal } = useModalContext()
 	const { dashboardId } = useParams()
 	const { accessToken } = useAuth()

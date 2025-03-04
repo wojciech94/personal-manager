@@ -5,9 +5,9 @@ import { API_URL } from '../../config'
 import { useModalContext } from '../../contexts/ModalContext'
 import { FormRow } from '../FormRow/FormRow'
 import { DataProps } from './types'
-import { Folder } from '../../screens/Notes/Folders'
 import { Button } from '../Button/Button'
 import { useAuth } from '../../contexts/AuthContext'
+import { Folder } from '../../screens/Notes/types'
 
 export function ModalFolderContent({ modalData }: { modalData: DataProps }) {
 	const [folders, setFolders] = useState<Folder[]>([])
