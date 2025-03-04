@@ -4,10 +4,10 @@ import { NavLink, Outlet, useMatch, useNavigate, useParams } from 'react-router-
 import { API_URL } from '../../config'
 import { useAuth } from '../../contexts/AuthContext'
 import { useModalContext } from '../../contexts/ModalContext'
-import { Alert } from '../Alert/Alert'
-import { Button } from '../Button/Button'
-import { ExpandableMenu } from '../ExpandableMenu/ExpandableMenu'
-import { ShoppingList } from '../ShoppingList/ShoppingList'
+import { Alert } from '../../components/Alert/Alert'
+import { Button } from '../../components/Button/Button'
+import { ExpandableMenu } from '../../components/ExpandableMenu/ExpandableMenu'
+import { ShoppingList } from './ShoppingList'
 
 export type ShoppingLists = ShoppingList[]
 

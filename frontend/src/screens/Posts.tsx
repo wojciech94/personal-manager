@@ -1,11 +1,11 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { API_URL } from '../../config'
-import { useAuth } from '../../contexts/AuthContext'
-import { ApiError } from '../../main'
-import { Button } from '../Button/Button'
-import { Card, CardHeader } from '../Card/Card'
-import { Comment, CommentDataType, Post } from '../Post/Post'
+import { API_URL } from '../config'
+import { useAuth } from '../contexts/AuthContext'
+import { ApiError } from '../main'
+import { Button } from '../components/Button/Button'
+import { Card, CardHeader } from '../components/Card/Card'
+import { Comment, CommentDataType, Post } from '../components/Post/Post'
 
 export type PostType = {
 	_id: string
@@ -21,7 +21,6 @@ export function Posts() {
 	const [posts, setPosts] = useState<PostType[]>([])
 	const [postInput, setPostInput] = useState('')
 	const userName = useMemo(() => sessionStorage.getItem('name'), [])
-	const header = <CardHeader title='Posts'></CardHeader>
 	const { dashboardId } = useParams()
 	const { accessToken } = useAuth()
 
@@ -63,7 +62,7 @@ export function Posts() {
 				Authorization: `Bearer ${accessToken}`,
 				'Content-Type': 'application/json',
 			},
-			body: JSON.stringify({ postId: postId, like: true }),
+			body: JSON.stringify({ postId: postId, like: like }),
 		})
 
 		if (!res.ok) {
@@ -211,7 +210,7 @@ export function Posts() {
 	}
 
 	return (
-		<Card className='overflow-hidden' contentClass='p-0' headerComponent={header}>
+		<Card className='overflow-hidden' contentClass='p-0' headerComponent={<CardHeader title='Posts'></CardHeader>}>
 			<div className='d-flex p-4 border-bottom border-light gap-2'>
 				<textarea
 					value={postInput}

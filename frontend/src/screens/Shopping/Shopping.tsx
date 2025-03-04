@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
-import { Card } from '../Card/Card'
+import { Card } from '../../components/Card/Card'
 
 export function Shopping() {
 	const navigate = useNavigate()

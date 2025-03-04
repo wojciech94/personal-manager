@@ -1,5 +1,5 @@
 import { TasksSettings } from '../Task/Task'
-import { TodoGroup } from '../Todos/Todos'
+import { TodoGroup } from '../../screens/Todos'
 
 export type DataProps = {
 	action?:

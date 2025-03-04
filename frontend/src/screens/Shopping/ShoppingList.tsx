@@ -1,13 +1,13 @@
 import { Plus } from 'react-feather'
 import { useLoaderData, useParams, useRevalidator } from 'react-router-dom'
 import { API_URL } from '../../config'
-import { Alert } from '../Alert/Alert'
+import { Alert } from '../../components/Alert/Alert'
 import { useModalContext } from '../../contexts/ModalContext'
-import { ShoppingProduct } from '../ShoppingProduct/ShoppingProduct'
+import { ShoppingProduct } from '../../components/ShoppingProduct/ShoppingProduct'
 import { ApiError } from '../../main'
-import { Product } from '../Products/Products'
+import { Product } from './Products'
 import { getLocaleDateTime } from '../../utils/helpers'
-import { Button } from '../Button/Button'
+import { Button } from '../../components/Button/Button'
 import { useAuth } from '../../contexts/AuthContext'
 
 export type ShoppingItem = {

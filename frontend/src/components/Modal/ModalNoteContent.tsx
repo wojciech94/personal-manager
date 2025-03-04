@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
 import { useAuth } from '../../contexts/AuthContext'
 import { Button } from '../Button/Button'
-import { Folder } from '../Folders/Folders'
+import { Folder } from '../../screens/Notes/Folders'
 import { FormRow } from '../FormRow/FormRow'
 import { DataProps } from './types'
 

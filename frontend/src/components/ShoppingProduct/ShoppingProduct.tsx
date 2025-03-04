@@ -2,8 +2,8 @@ import { useEffect } from 'react'
 import { useState } from 'react'
 import { Check, Edit, Trash2 } from 'react-feather'
 import { Button } from '../Button/Button'
-import { Product } from '../Products/Products'
-import { IsShoppingPurchased, ShoppingItem } from '../ShoppingList/ShoppingList'
+import { Product } from '../../screens/Shopping/Products'
+import { IsShoppingPurchased, ShoppingItem } from '../../screens/Shopping/ShoppingList'
 
 type ShoppingItemToUpdate = Omit<ShoppingItem, '_id'>
 

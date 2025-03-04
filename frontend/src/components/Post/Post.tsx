@@ -6,7 +6,7 @@ import { useAuth } from '../../contexts/AuthContext'
 import { ApiError } from '../../main'
 import { getLocaleDateTime } from '../../utils/helpers'
 import { Button } from '../Button/Button'
-import { PostType } from '../Posts/Posts'
+import { PostType } from '../../screens/Posts'
 
 export type Comment = {
 	_id: string
@@ -226,7 +226,7 @@ export function Post({
 							<div key={c._id} className='border-top border-light border-top-dashed py-3 d-flex flex-column gap-2'>
 								<div className='d-flex gap-4 justify-between'>
 									<span className='text-bold text-primary'>{c.author.name}</span>
-									<span className='text-sm text-gray'>{c.updatedAt}</span>
+									<span className='text-sm text-gray'>{getLocaleDateTime(c.updatedAt)}</span>
 								</div>
 								<div className='d-flex gap-4 justify-between'>
 									<>

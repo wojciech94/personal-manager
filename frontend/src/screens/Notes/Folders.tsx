@@ -4,7 +4,7 @@ import { NavLink, Outlet, useLoaderData, useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
 import { useAuth } from '../../contexts/AuthContext'
 import { useModalContext } from '../../contexts/ModalContext'
-import { Button } from '../Button/Button'
+import { Button } from '../../components/Button/Button'
 
 export type Folder = {
 	name: string

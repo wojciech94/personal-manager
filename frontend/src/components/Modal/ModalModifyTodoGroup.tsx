@@ -5,7 +5,7 @@ import { API_URL } from '../../config'
 import { useAuth } from '../../contexts/AuthContext'
 import { useModalContext } from '../../contexts/ModalContext'
 import { Button } from '../Button/Button'
-import { TodoGroup } from '../Todos/Todos'
+import { TodoGroup } from '../../screens/Todos'
 import { DataProps } from './types'
 
 type InputDynamicObject = {

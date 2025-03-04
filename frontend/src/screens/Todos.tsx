@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react'
 import { Edit, Plus, Repeat, Settings } from 'react-feather'
-import { Alert } from '../Alert/Alert'
-import { Card, CardHeader, HeaderDataProps } from '../Card/Card'
-import { Task, TasksSettings } from '../Task/Task'
+import { Alert } from '../components/Alert/Alert'
+import { Card, CardHeader, HeaderDataProps } from '../components/Card/Card'
+import { Task, TasksSettings } from '../components/Task/Task'
 import { useParams } from 'react-router-dom'
-import { API_URL } from '../../config'
-import { useModalContext } from '../../contexts/ModalContext'
-import { Button } from '../Button/Button'
-import { useAuth } from '../../contexts/AuthContext'
+import { API_URL } from '../config'
+import { useModalContext } from '../contexts/ModalContext'
+import { Button } from '../components/Button/Button'
+import { useAuth } from '../contexts/AuthContext'
 
 export type TodoGroup = {
 	_id: string

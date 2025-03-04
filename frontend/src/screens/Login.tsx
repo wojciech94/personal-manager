@@ -1,11 +1,11 @@
 import { FormEvent, useEffect, useState } from 'react'
 import { AlertTriangle, Eye, EyeOff } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
-import { API_URL } from '../../config'
-import { Button } from '../Button/Button'
-import { Card } from '../Card/Card'
-import { useAuth } from '../../contexts/AuthContext'
-import { ApiError } from '../../main'
+import { API_URL } from '../config'
+import { Button } from '../components/Button/Button'
+import { Card } from '../components/Card/Card'
+import { useAuth } from '../contexts/AuthContext'
+import { ApiError } from '../main'
 
 export const Login = () => {
 	const [username, setUsername] = useState('')

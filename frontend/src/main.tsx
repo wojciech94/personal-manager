@@ -1,21 +1,22 @@
-import { createBrowserRouter, RouterProvider, LoaderFunctionArgs } from 'react-router-dom'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import ReactDOM from 'react-dom/client'
-import { API_URL } from './config'
-import { Login } from './components/Login/Login'
+import { Login } from './screens/Login'
 import { Home } from './components/Home/Home'
-import { Dashboard } from './components/Dashboard/Dashboard'
+import { PageWrapper } from './components/PageWrapper/PageWrapper'
 import './App.css'
-import { Notes } from './components/Notes/Notes'
-import { Folders } from './components/Folders/Folders'
-import { Todos } from './components/Todos/Todos'
-import { Shopping } from './components/Shopping/Shopping'
-import { ShoppingLists } from './components/ShoppingLists/ShoppingLists'
-import { Products } from './components/Products/Products'
-import { ShoppingList } from './components/ShoppingList/ShoppingList'
+import { Notes } from './screens/Notes/Notes'
+import { Folders } from './screens/Notes/Folders'
+import { Todos } from './screens/Todos'
+import { Shopping } from './screens/Shopping/Shopping'
+import { ShoppingLists } from './screens/Shopping/ShoppingLists'
+import { Products } from './screens/Shopping/Products'
+import { ShoppingList } from './screens/Shopping/ShoppingList'
 import { GlobalError } from './components/GlobalError/GlobalError'
 import { Notifications } from './components/Notifications/Notifications'
 import { AuthProvider, useAuth } from './contexts/AuthContext'
-import { Posts } from './components/Posts/Posts'
+import { Posts } from './screens/Posts'
+import { Dashboard } from './screens/Dashboard'
+import { fetchFolders, fetchNotes, fetchShoppingList } from './loaders/loaders'
 
 export type ApiError = {
 	message: string
@@ -30,8 +31,12 @@ const Main = () => {
 			children: [
 				{
 					path: '/dashboards/:dashboardId',
-					element: <Dashboard />,
+					element: <PageWrapper />,
 					children: [
+						{
+							path: '',
+							element: <Dashboard />,
+						},
 						{
 							path: 'calendar',
 							element: <>Calendar content work in progress</>,
@@ -43,56 +48,12 @@ const Main = () => {
 						{
 							path: 'folders',
 							element: <Folders />,
-							loader: async ({ params }: LoaderFunctionArgs) => {
-								const { dashboardId } = params
-
-								if (!accessToken) {
-									throw new Error('No token found')
-								}
-
-								const response = await fetch(`${API_URL}dashboards/${dashboardId}/folders`, {
-									headers: {
-										Authorization: `Bearer ${accessToken}`,
-									},
-								})
-
-								if (!response.ok) {
-									const ErrorMessage: ApiError = await response.json()
-									throw new Error(ErrorMessage.message)
-								}
-
-								if (response.status === 204) {
-									return []
-								}
-
-								return response.json()
-							},
+							loader: args => fetchFolders(args, { accessToken }),
 							children: [
 								{
 									path: 'notes/:folderId?',
 									element: <Notes />,
-									loader: async ({ params }: LoaderFunctionArgs) => {
-										const { dashboardId, folderId } = params
-
-										if (!accessToken) {
-											throw new Error('No token found')
-										}
-
-										const folderUrl = folderId ? `/${folderId}` : ''
-
-										const response = await fetch(`${API_URL}dashboards/${dashboardId}/folders/notes${folderUrl}`, {
-											headers: {
-												Authorization: `Bearer ${accessToken}`,
-											},
-										})
-
-										if (!response.ok) {
-											const ErrorMessage: ApiError = await response.json()
-											throw new Error(ErrorMessage.message)
-										}
-
-										return response.json()
-									},
+									loader: args => fetchNotes(args, { accessToken }),
 								},
 							],
 						},
@@ -107,21 +68,7 @@ const Main = () => {
 										{
 											path: ':shoppingListId',
 											element: <ShoppingList />,
-											loader: async ({ params }: LoaderFunctionArgs) => {
-												const { shoppingListId } = params
-
-												const response = await fetch(`${API_URL}shopping-lists/${shoppingListId}`, {
-													headers: {
-														Authorization: `bearer ${accessToken}`,
-													},
-												})
-												if (!response.ok) {
-													const ErrorMessage: ApiError = await response.json()
-													throw new Error(ErrorMessage.message)
-												}
-												const data: ShoppingList = await response.json()
-												return data
-											},
+											loader: args => fetchShoppingList(args, { accessToken }),
 										},
 									],
 								},
@@ -153,13 +100,9 @@ const Main = () => {
 	return <RouterProvider router={router} />
 }
 
-const rootElement = document.getElementById('root')
-if (rootElement) {
-	ReactDOM.createRoot(rootElement).render(
-		<AuthProvider>
-			<Main />
-		</AuthProvider>
-	)
-} else {
-	console.error('Element with id "root" not found')
-}
+const rootElement = document.getElementById('root') as HTMLElement
+ReactDOM.createRoot(rootElement).render(
+	<AuthProvider>
+		<Main />
+	</AuthProvider>
+)

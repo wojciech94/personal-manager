@@ -6,7 +6,7 @@ import { useAuth } from '../../contexts/AuthContext'
 import { useModalContext } from '../../contexts/ModalContext'
 import { ApiError } from '../../main'
 import { Button } from '../Button/Button'
-import { ShoppingLists } from '../ShoppingLists/ShoppingLists'
+import { ShoppingLists } from '../../screens/Shopping/ShoppingLists'
 import { DataProps } from './types'
 
 export function ModalModifyShoppingLists({ modalData }: { modalData: DataProps }) {
