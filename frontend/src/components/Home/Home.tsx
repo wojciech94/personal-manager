@@ -105,6 +105,7 @@ export const Home = () => {
 
 			if (response.error) {
 				console.error('Failed to create dashboard:', response.status, response.error)
+				return
 			}
 
 			if (response.data) {
@@ -112,6 +113,8 @@ export const Home = () => {
 				setActiveModal(null)
 				setDashboards(prev => [...prev, newDashboard])
 			}
+		} else {
+			console.error('AccessToken is not available')
 		}
 	}
 
