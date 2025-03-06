@@ -7,16 +7,17 @@ import { Dropdown } from '../Dropdown/Dropdown'
 import { ModalContext } from '../../contexts/ModalContext'
 import { FetchDashboardsContext } from '../../contexts/FetchDashboardsContext'
 import { Plus } from 'react-feather'
-import { debounce, getScreenType, getTokenExpiration } from '../../utils/helpers'
+import { debounce, fetchData, getScreenType, getTokenExpiration } from '../../utils/helpers'
 import { WELCOME_SLIDES } from '../../constants/appConstants'
 import { ModalDataProps } from '../Modal/types'
 import { Button } from '../Button/Button'
 import { ScreenContext } from '../../contexts/ScreenContext'
 import { useAuth } from '../../contexts/AuthContext'
 import { ScreenType } from '../../types/global'
+import { DashboardType } from '../../types/dashboard'
 
 export const Home = () => {
-	const [dashboards, setDashboards] = useState([])
+	const [dashboards, setDashboards] = useState<DashboardType[]>([])
 	const [activeModal, setActiveModal] = useState<ModalDataProps | null>(null)
 	const [screenType, setScreenType] = useState<ScreenType>({ type: getScreenType() })
 	const navigate = useNavigate()
@@ -57,6 +58,12 @@ export const Home = () => {
 	}, [accessToken, navigate, refreshToken, logout])
 
 	useEffect(() => {
+		window.addEventListener('resize', debounce(handleResize, 1000))
+
+		return () => window.removeEventListener('resize', handleResize)
+	}, [])
+
+	useEffect(() => {
 		fetchUserDashboards()
 	}, [location.pathname])
 
@@ -64,52 +71,47 @@ export const Home = () => {
 		setScreenType({ type: getScreenType() })
 	}, [])
 
-	useEffect(() => {
-		window.addEventListener('resize', debounce(handleResize, 1000))
-
-		return () => window.removeEventListener('resize', handleResize)
-	}, [])
-
 	const fetchUserDashboards = async () => {
-		if (!accessToken) {
-			console.warn('Token not provided. Please log in before')
-			return
-		}
+		if (accessToken) {
+			try {
+				const result = await fetchData<DashboardType[]>(accessToken, `${API_URL}dashboards`)
 
-		const response = await fetch(`${API_URL}dashboards`, {
-			method: 'GET',
-			headers: {
-				Authorization: `Bearer ${accessToken}`,
-				'Content-Type': 'application/json',
-			},
-		})
+				if (result.error) {
+					console.error('Failed to fetch dashboards:', result.status, result.error)
+					return
+				}
 
-		if (response.ok) {
-			const dashboards = await response.json()
-			setDashboards(dashboards)
+				if (result.data) {
+					setDashboards(result.data)
+				}
+			} catch (error) {
+				console.error('Unexpected error while fetching dashboards:', error)
+			}
 		} else {
-			console.error('Failed to fetch dashboards:', response.status)
+			console.error('AccessToken is not available')
 		}
 	}
 
 	const createDashboard = async (dashboardName: string | undefined): Promise<void> => {
-		const response = await fetch(`${API_URL}dashboards`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				Authorization: `Bearer ${accessToken}`,
-			},
-			body: JSON.stringify({ name: dashboardName }),
-		})
+		if (accessToken) {
+			const options = {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({ name: dashboardName }),
+			}
+			const response = await fetchData<DashboardType>(accessToken, `${API_URL}dashboards`, options)
 
-		if (response.ok) {
-			const newDashboard = await response.json()
-			console.log('Dashboard created:', newDashboard)
-			setActiveModal(null)
-			fetchUserDashboards()
-		} else {
-			const errorData = await response.json()
-			console.error(errorData.message)
+			if (response.error) {
+				console.error('Failed to create dashboard:', response.status, response.error)
+			}
+
+			if (response.data) {
+				const newDashboard = response.data
+				setActiveModal(null)
+				setDashboards(prev => [...prev, newDashboard])
+			}
 		}
 	}
 

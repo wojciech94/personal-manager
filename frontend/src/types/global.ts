@@ -1,5 +1,6 @@
 export type ApiError = {
 	message: string
+	status?: number
 }
 
 export enum ScreenSize {
@@ -18,12 +19,10 @@ export type InputDynamicObject = {
 	[key: string]: string
 }
 
-export type FetchResponse<T> = {
+export type FetchResult<T> = {
 	data: T | null
+	error: ApiError | Error | null
 	status: number | null
-	loading: boolean
-	error: ApiError | null
-	refetch: () => void
 }
 
 export interface FetchOptions extends RequestInit {
