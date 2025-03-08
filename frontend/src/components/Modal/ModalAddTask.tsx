@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
-import { useAuth } from '../../contexts/AuthContext'
+import { useApi } from '../../contexts/ApiContext'
 import { useModalContext } from '../../contexts/ModalContext'
 import { Button } from '../Button/Button'
 
@@ -17,7 +17,7 @@ export function ModalAddTask({ modalData }: { modalData: DataProps }) {
 	const [expiredDate, setExpiredDate] = useState('')
 	const { dashboardId } = useParams()
 	const { setActiveModal } = useModalContext()
-	const { accessToken } = useAuth()
+	const { accessToken } = useApi()
 
 	useEffect(() => {
 		if (modalData.groups) {

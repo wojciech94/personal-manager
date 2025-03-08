@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import { Check, Edit, FileText, Heart, Trash2 } from 'react-feather'
 import { useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
-import { useAuth } from '../../contexts/AuthContext'
+import { useApi } from '../../contexts/ApiContext'
 import { getLocaleDateTime } from '../../utils/helpers'
 import { Button } from '../Button/Button'
 import { ApiError } from '../../types/global'
@@ -26,7 +26,7 @@ export function Post({
 	const [commentValue, setCommentValue] = useState('')
 	const [postInput, setPostInput] = useState(post.content)
 	const [editedComments, setEditedComments] = useState<{ [key: string]: string }>({})
-	const { accessToken } = useAuth()
+	const { accessToken } = useApi()
 	const { dashboardId } = useParams()
 	const userName = useMemo(() => sessionStorage.getItem('name'), [])
 

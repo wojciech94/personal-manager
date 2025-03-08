@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { API_URL } from '../config'
 import { Button } from '../components/Button/Button'
 import { Card } from '../components/Card/Card'
-import { useAuth } from '../contexts/AuthContext'
+import { useApi } from '../contexts/ApiContext'
 import { ApiError } from '../types/global'
 
 export const Login = () => {
@@ -17,7 +17,7 @@ export const Login = () => {
 	const [showLoadingMessage, setShowLoadingMessage] = useState(false)
 
 	const navigate = useNavigate()
-	const { login } = useAuth()
+	const { login } = useApi()
 
 	useEffect(() => {
 		let timeout: number

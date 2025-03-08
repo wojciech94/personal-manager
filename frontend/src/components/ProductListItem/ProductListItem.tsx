@@ -3,7 +3,7 @@ import { Check, Edit, Star, Trash2 } from 'react-feather'
 import { useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
 import { CATEGORIES } from '../../constants/appConstants'
-import { useAuth } from '../../contexts/AuthContext'
+import { useApi } from '../../contexts/ApiContext'
 import { Product } from '../../screens/Shopping/Products'
 import { UpdateProduct } from '../../screens/Shopping/ProductsList'
 import { Button } from '../Button/Button'
@@ -23,7 +23,7 @@ export const ProductListItem = ({
 	const [unitValue, setUnitValue] = useState('')
 	const [priceValue, setPriceValue] = useState(0)
 	const [tagsValue, setTagsValue] = useState('')
-	const { accessToken } = useAuth()
+	const { accessToken } = useApi()
 	const { dashboardId } = useParams()
 	const productData = { name: nameValue, category: categoryValue, unit: unitValue, price: priceValue, tags: tagsValue }
 

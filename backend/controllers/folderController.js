@@ -55,7 +55,7 @@ exports.getFolders = async (req, res) => {
 	const folderIds = dashboard.foldersIds
 
 	if (!folderIds || folderIds.length === 0) {
-		return res.status(204).send()
+		return res.status(200).json([])
 	}
 
 	const folders = await Folder.find({ _id: { $in: folderIds } })

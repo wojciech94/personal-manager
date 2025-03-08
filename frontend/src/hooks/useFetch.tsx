@@ -1,5 +1,5 @@
 // import { useState, useEffect, useCallback } from 'react'
-// import { useAuth } from '../contexts/AuthContext'
+// import { useApi } from '../contexts/AuthContext'
 // import { ApiError, FetchFunction, FetchOptions, FetchResponse } from '../types/global'
 
 // export const useFetch = <T,>(urlOrFn: string | FetchFunction<T>, options: FetchOptions = {}): FetchResponse<T> => {
@@ -7,7 +7,7 @@
 // 	const [loading, setLoading] = useState<boolean>(true)
 // 	const [error, setError] = useState<Error | ApiError | null>(null)
 // 	const [status, setStatus] = useState<number | null>(null)
-// 	const { accessToken } = useAuth()
+// 	const { accessToken } = useApi()
 
 // 	const fetchData = useCallback(async () => {
 // 		setLoading(true)

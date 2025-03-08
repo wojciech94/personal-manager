@@ -9,7 +9,7 @@ import { usePagination } from '../../hooks/usePagination'
 import { Pagination } from '../../components/Pagination/Pagination'
 import { Alert } from '../../components/Alert/Alert'
 import { Button } from '../../components/Button/Button'
-import { useAuth } from '../../contexts/AuthContext'
+import { useApi } from '../../contexts/ApiContext'
 
 export type Product = {
 	_id: string
@@ -30,7 +30,7 @@ export function Products() {
 	const [itemsPerPage, setItemsPerPage] = useState(10)
 	const [sortBy, setSortBy] = useState<'name' | 'category'>('name')
 	const [sortDir, setSortDir] = useState<'asc' | 'desc'>('asc')
-	const { accessToken } = useAuth()
+	const { accessToken } = useApi()
 
 	const { currentItems, currentPage, totalPages, nextPage, prevPage, goToPage } = usePagination(
 		filteredProducts,

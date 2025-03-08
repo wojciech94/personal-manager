@@ -6,7 +6,7 @@ import { useModalContext } from '../../contexts/ModalContext'
 import { FormRow } from '../FormRow/FormRow'
 import { DataProps } from './types'
 import { Button } from '../Button/Button'
-import { useAuth } from '../../contexts/AuthContext'
+import { useApi } from '../../contexts/ApiContext'
 import { Folder } from '../../screens/Notes/types'
 
 export function ModalFolderContent({ modalData }: { modalData: DataProps }) {
@@ -14,7 +14,7 @@ export function ModalFolderContent({ modalData }: { modalData: DataProps }) {
 	const [addInputValue, setAddInputValue] = useState('')
 	const { dashboardId } = useParams()
 	const { setActiveModal } = useModalContext()
-	const { accessToken } = useAuth()
+	const { accessToken } = useApi()
 
 	useEffect(() => {
 		fetchFolders()
@@ -89,7 +89,7 @@ type FolderRowProps = {
 function FolderRow({ folder, action, dashboardId, className }: FolderRowProps) {
 	const [isEdit, setIsEdit] = useState(false)
 	const [inputValue, setInputValue] = useState(folder.name)
-	const { accessToken } = useAuth()
+	const { accessToken } = useApi()
 
 	const handleSave = async () => {
 		const res = await fetch(`${API_URL}dashboards/${dashboardId}/folders/${folder._id}`, {

@@ -8,7 +8,7 @@ import { ApiError } from '../../main'
 import { Product } from './Products'
 import { getLocaleDateTime } from '../../utils/helpers'
 import { Button } from '../../components/Button/Button'
-import { useAuth } from '../../contexts/AuthContext'
+import { useApi } from '../../contexts/ApiContext'
 
 export type ShoppingItem = {
 	productId: Product
@@ -37,7 +37,7 @@ export function ShoppingList() {
 	const { shoppingListId, dashboardId } = useParams()
 	const productsToBuy = data.list.filter(p => p.isPurchased === false).length
 	const { revalidate } = useRevalidator()
-	const { accessToken } = useAuth()
+	const { accessToken } = useApi()
 
 	const openAddItemModal = () => {
 		const modalData = {

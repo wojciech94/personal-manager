@@ -1,7 +1,7 @@
 import { useState, useEffect, ChangeEvent } from 'react'
 import { useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
-import { useAuth } from '../../contexts/AuthContext'
+import { useApi } from '../../contexts/ApiContext'
 import { Folder } from '../../screens/Notes/types'
 import { Button } from '../Button/Button'
 import { FormRow } from '../FormRow/FormRow'
@@ -18,7 +18,7 @@ export const ModalNoteContent = ({ modalData }: { modalData: DataProps }) => {
 	const [expiredDate, setExpiredDate] = useState('')
 	const [noteTags, setNoteTags] = useState('')
 	const { dashboardId } = useParams()
-	const { accessToken } = useAuth()
+	const { accessToken } = useApi()
 
 	useEffect(() => {
 		fetchNotesCategories()

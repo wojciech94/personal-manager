@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
-import { useAuth } from '../../contexts/AuthContext'
+import { useApi } from '../../contexts/ApiContext'
 import { useModalContext } from '../../contexts/ModalContext'
 import { Button } from '../Button/Button'
 
@@ -15,7 +15,7 @@ export function ModalAddShoppingItem(): JSX.Element {
 	const [notesValue, setNotesValue] = useState<string>('')
 	const { setActiveModal } = useModalContext()
 	const navigate = useNavigate()
-	const { accessToken } = useAuth()
+	const { accessToken } = useApi()
 
 	type Product = {
 		_id: string

@@ -1,53 +1,53 @@
-import { useEffect, useState } from 'react'
-import { MoreVertical, Settings } from 'react-feather'
+import { useState } from 'react'
+import { MoreVertical } from 'react-feather'
 import { NavLink, Outlet, useLoaderData, useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
-import { useAuth } from '../../contexts/AuthContext'
+import { useApi } from '../../contexts/ApiContext'
 import { useModalContext } from '../../contexts/ModalContext'
 import { Button } from '../../components/Button/Button'
 import { Folder } from './types'
 
 export const Folders = () => {
 	const loaderData = useLoaderData() as Folder[]
-	const [data, setData] = useState<Folder[] | null>(loaderData)
+	const [folders, setFolders] = useState<Folder[] | null>(loaderData)
 	const { setActiveModal } = useModalContext()
 	const { dashboardId } = useParams()
-	const { accessToken } = useAuth()
+	const { fetchData } = useApi()
 
 	const handleAddFolder = async (val: string) => {
-		const res = await fetch(`${API_URL}dashboards/${dashboardId}/add-folder`, {
+		const url = `${API_URL}dashboards/${dashboardId}/add-folder`
+		const options = {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
-				Authorization: `Bearer ${accessToken}`,
 			},
 			body: JSON.stringify({ name: val }),
-		})
-
-		if (res.ok) {
-			const data = await res.json()
-			console.log('Folder created:' + data.folderId)
-		} else {
-			console.log(`Couldn't create folder`)
 		}
-		fetchFolders()
-		setActiveModal(null)
+
+		const response = await fetchData<Folder>(url, options)
+
+		if (response.error) {
+			console.error('Failed to add folder', response.status, response.error)
+			return
+		}
+
+		if (response.data) {
+			const newFolder: Folder = response.data
+			setFolders(prev => (prev ? [...prev, newFolder] : [newFolder]))
+			setActiveModal(null)
+		}
 	}
 
 	const fetchFolders = async () => {
-		if (!accessToken) {
+		const url = `${API_URL}dashboards/${dashboardId}/folders`
+		const response = await fetchData<Folder[]>(url)
+
+		if (response.error) {
+			console.error('Failed to fetch folders', response.status, response.error)
 			return
 		}
-		const res = await fetch(`${API_URL}dashboards/${dashboardId}/folders`, {
-			headers: {
-				Authorization: `Bearer ${accessToken}`,
-			},
-		})
 
-		if (res.ok) {
-			const data: Folder[] = await res.json()
-			setData(data || [])
-		}
+		setFolders(response.data)
 	}
 
 	return (
@@ -57,9 +57,9 @@ export const Folders = () => {
 					<NavLink className='btn link' to={`/dashboards/${dashboardId}/folders/notes`} end>
 						All notes
 					</NavLink>
-					{data &&
-						data.length > 0 &&
-						data.map(d => (
+					{folders &&
+						folders.length > 0 &&
+						folders.map(d => (
 							<NavLink key={d._id} to={`/dashboards/${dashboardId}/folders/notes/${d._id}`} className='btn link'>
 								{d.name}
 							</NavLink>

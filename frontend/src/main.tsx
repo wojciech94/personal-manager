@@ -13,13 +13,13 @@ import { Products } from './screens/Shopping/Products'
 import { ShoppingList } from './screens/Shopping/ShoppingList'
 import { GlobalError } from './components/GlobalError/GlobalError'
 import { Notifications } from './components/Notifications/Notifications'
-import { AuthProvider, useAuth } from './contexts/AuthContext'
+import { ApiProvider, useApi } from './contexts/ApiContext'
 import { Posts } from './screens/Posts'
 import { Dashboard } from './screens/Dashboard'
 import { fetchFolders, fetchNotes, fetchShoppingList } from './loaders/loaders'
 
 const Main = () => {
-	const { accessToken } = useAuth()
+	const { accessToken } = useApi()
 	const router = createBrowserRouter([
 		{
 			path: '/',
@@ -45,6 +45,7 @@ const Main = () => {
 							path: 'folders',
 							element: <Folders />,
 							loader: args => fetchFolders(args, { accessToken }),
+
 							children: [
 								{
 									path: 'notes/:folderId?',
@@ -98,7 +99,7 @@ const Main = () => {
 
 const rootElement = document.getElementById('root') as HTMLElement
 ReactDOM.createRoot(rootElement).render(
-	<AuthProvider>
+	<ApiProvider>
 		<Main />
-	</AuthProvider>
+	</ApiProvider>
 )

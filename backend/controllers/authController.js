@@ -98,9 +98,30 @@ exports.refresh = async (req, res) => {
 
 		const newAccessToken = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '1h' })
 
-		res.json({ accessToken: newAccessToken })
+		res.json({ accessToken: newAccessToken, name: user.name })
 	} catch (error) {
 		console.error(error)
 		return res.status(403).json({ message: 'Invalid Refresh Token.' })
+	}
+}
+
+exports.logout = async (req, res) => {
+	try {
+		const refreshToken = req.cookies?.refreshToken
+		if (!refreshToken) {
+			return res.status(400).json({ message: 'No refresh token provided' })
+		}
+		res.clearCookie('refreshToken', {
+			httpOnly: true,
+			secure: process.env.NODE_ENV === 'production',
+			sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Strict',
+		})
+
+		res.status(204).send()
+	} catch (error) {
+		res.status(500).json({
+			message: 'Failed to logout',
+			error: error.message || 'Internal server error',
+		})
 	}
 }

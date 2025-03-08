@@ -6,7 +6,7 @@ import { useParams } from 'react-router-dom'
 import { API_URL } from '../config'
 import { useModalContext } from '../contexts/ModalContext'
 import { Button } from '../components/Button/Button'
-import { useAuth } from '../contexts/AuthContext'
+import { useApi } from '../contexts/ApiContext'
 import { HeaderDataProps } from '../components/Card/types'
 import { TasksSettings, TaskType, TodoGroup } from '../components/Task/types'
 import { Task } from '../components/Task/Task'
@@ -21,7 +21,7 @@ export const Todos = () => {
 	const [activeGroup, setActiveGroup] = useState('')
 	const [showArchive, setShowArchive] = useState(false)
 	const { setActiveModal } = useModalContext()
-	const { accessToken } = useAuth()
+	const { fetchData } = useApi()
 
 	const visibleTasks = showArchive ? archivedTasks : tasks
 
@@ -37,33 +37,31 @@ export const Todos = () => {
 	}, [tasksSettings])
 
 	const fetchTasksSettings = async () => {
-		const res = await fetch(`${API_URL}dashboards/${dashboardId}/tasks-settings`, {
-			headers: {
-				Authorization: `Bearer ${accessToken}`,
-			},
-		})
-		if (res.ok) {
-			const data = await res.json()
-			setTasksSettings(data)
-		} else {
-			const errorData = await res.json()
-			console.error(errorData.message)
+		const url = `${API_URL}dashboards/${dashboardId}/tasks-settings`
+		const response = await fetchData<TasksSettings>(url)
+
+		if (response.error) {
+			console.error('Failed to fetch TasksSettings', response.status, response.error)
+			return
+		}
+
+		if (response.data) {
+			setTasksSettings(response.data)
 		}
 	}
 
 	const fetchTodoGroups = async () => {
-		const res = await fetch(`${API_URL}dashboards/${dashboardId}/tasks-groups`, {
-			headers: {
-				Authorization: `Bearer ${accessToken}`,
-			},
-		})
-		if (res.ok) {
-			const data: TodoGroup[] = await res.json()
-			setTodoGroups(data)
-		} else {
-			const errorData = await res.json()
-			console.error(errorData.message)
+		const url = `${API_URL}dashboards/${dashboardId}/tasks-groups`
+		const response = await fetchData<TodoGroup[]>(url)
+
+		if (response.error) {
+			console.error('Failed to fetch dashboard tasks group', response.status, response.error)
 			setTodoGroups([])
+			return
+		}
+
+		if (response.data) {
+			setTodoGroups(response.data)
 		}
 	}
 
@@ -72,50 +70,68 @@ export const Todos = () => {
 			return
 		}
 
-		const res = await fetch(
-			`${API_URL}dashboards/${dashboardId}/tasks/${id}?sortBy=${tasksSettings.sortMethod}&order=${tasksSettings.sortDirection}`,
-			{
-				headers: {
-					Authorization: `Bearer ${accessToken}`,
-				},
-			}
-		)
+		const url = `${API_URL}dashboards/${dashboardId}/tasks/${id}?sortBy=${tasksSettings.sortMethod}&order=${tasksSettings.sortDirection}`
+		const response = await fetchData<TodoGroup>(url)
+
 		setActiveGroup(id)
-		if (res.ok) {
-			const data: TodoGroup = await res.json()
-			if (data) {
-				const now = new Date()
-				const activeTasks = data.tasks.filter(t => !t.archived_at || new Date(t.archived_at) > now)
-				const archiveTasks = data.tasks.filter(t => t.archived_at && new Date(t.archived_at) < now)
-				setTasks(activeTasks)
-				setArchivedTasks(archiveTasks)
-			}
-		} else {
-			const errorData = await res.json()
-			console.error(errorData.message)
+
+		if (response.error) {
+			console.error('Failed to fetch tasks', response.status, response.error)
+			return
+		}
+
+		if (response.data) {
+			const data: TodoGroup = response.data
+			const now = new Date()
+			const activeTasks = data.tasks.filter(t => !t.archived_at || new Date(t.archived_at) > now)
+			const archiveTasks = data.tasks.filter(t => t.archived_at && new Date(t.archived_at) <= now)
+			setTasks(activeTasks)
+			setArchivedTasks(archiveTasks)
 		}
 	}
 
 	const addGroup = async (name: string) => {
-		if (accessToken && dashboardId && name) {
-			const res = await fetch(`${API_URL}dashboards/${dashboardId}/add-todo-group`, {
-				method: 'POST',
-				headers: {
-					Authorization: `Bearer ${accessToken}`,
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({
-					name: name,
-					tasks: [],
-				}),
-			})
-			if (res.ok) {
-				const data: TodoGroup = await res.json()
-				setTodoGroups(prevGroups => [...(prevGroups ?? []), data])
-			} else {
-				const errorData = await res.json()
-				console.error(errorData.message)
-			}
+		const url = `${API_URL}dashboards/${dashboardId}/add-todo-group`
+		const options = {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({ name, tasks: [] }),
+		}
+
+		const response = await fetchData<TodoGroup>(url, options)
+
+		if (response.error) {
+			console.error('Failed to add todo group', response.status, response.error)
+			return
+		}
+
+		if (response.data) {
+			const data: TodoGroup = response.data
+			setTodoGroups(prevGroups => [...(prevGroups ?? []), data])
+		}
+	}
+
+	const handleSetTasksSettings = async (settings: TasksSettings) => {
+		const url = `${API_URL}dashboards/${dashboardId}/tasks-settings`
+		const options = {
+			method: 'PATCH',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(settings),
+		}
+
+		const response = await fetchData<TasksSettings>(url, options)
+
+		if (response.error) {
+			console.error('Failed to update task settings', response.status, response.error)
+			return
+		}
+
+		if (response.data) {
+			setTasksSettings(response.data)
 		}
 	}
 
@@ -131,24 +147,6 @@ export const Todos = () => {
 			title: 'Modify todo group',
 		}
 		setActiveModal(modifyTodoGroupCategoryModal)
-	}
-
-	const handleSetTasksSettings = async (settings: TasksSettings) => {
-		const res = await fetch(`${API_URL}dashboards/${dashboardId}/tasks-settings`, {
-			method: 'PATCH',
-			headers: {
-				Authorization: `Bearer ${accessToken}`,
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(settings),
-		})
-		if (res.ok) {
-			const data = await res.json()
-			setTasksSettings(data)
-		} else {
-			const error = await res.json()
-			console.log(error.message)
-		}
 	}
 
 	const headerActions = () => {

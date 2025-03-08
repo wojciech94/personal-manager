@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Check, Edit, Trash } from 'react-feather'
 import { useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
-import { useAuth } from '../../contexts/AuthContext'
+import { useApi } from '../../contexts/ApiContext'
 import { useModalContext } from '../../contexts/ModalContext'
 import { Button } from '../Button/Button'
 import { DataProps } from './types'
@@ -14,7 +14,7 @@ export function ModalModifyTodoGroup({ modalData }: { modalData: DataProps }) {
 	const [inputVal, setInputVal] = useState('')
 	const [groups, setGroups] = useState<TodoGroup[]>([])
 	const [inputValues, setInputValues] = useState<InputDynamicObject>({})
-	const { accessToken } = useAuth()
+	const { accessToken } = useApi()
 	const { dashboardId } = useParams()
 
 	useEffect(() => {

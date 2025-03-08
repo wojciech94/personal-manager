@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Check, Eye, X } from 'react-feather'
 import { API_URL } from '../../config'
-import { useAuth } from '../../contexts/AuthContext'
+import { useApi } from '../../contexts/ApiContext'
 import { useFetchDashboardsContext } from '../../contexts/FetchDashboardsContext'
 import { ApiError } from '../../types/global'
 import { Alert } from '../Alert/Alert'
@@ -12,7 +12,7 @@ import { Notification } from './types'
 export const Notifications = () => {
 	const [notifications, setNotifications] = useState<Notification[]>([])
 	const { fetchUserDashboards } = useFetchDashboardsContext()
-	const { accessToken } = useAuth()
+	const { accessToken } = useApi()
 
 	useEffect(() => {
 		fetchNotifications()

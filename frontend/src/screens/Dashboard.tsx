@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Check, Plus, Repeat, Trash2, User, X } from 'react-feather'
 import { useNavigate, useParams } from 'react-router-dom'
 import { API_URL } from '../config'
-import { useAuth } from '../contexts/AuthContext'
+import { useApi } from '../contexts/ApiContext'
 import { useFetchDashboardsContext } from '../contexts/FetchDashboardsContext'
 import { useModalContext } from '../contexts/ModalContext'
 import { Button } from '../components/Button/Button'
@@ -11,7 +11,6 @@ import { FormRow } from '../components/FormRow/FormRow'
 import { Logs } from '../components/Logs/Logs'
 import { DashboardType } from '../types/dashboard'
 import { HeaderDataProps } from '../components/Card/types'
-import { fetchData } from '../utils/helpers'
 
 export const Dashboard: React.FC = () => {
 	const [editMode, setEditMode] = useState(false)
@@ -21,7 +20,7 @@ export const Dashboard: React.FC = () => {
 	const [nameValue, setNameValue] = useState('')
 	const [selectedOwner, setSelectedOwner] = useState('')
 	const { dashboardId } = useParams()
-	const { accessToken } = useAuth()
+	const { fetchData } = useApi()
 	const [dashboard, setDashboard] = useState<DashboardType | null>(null)
 
 	useEffect(() => {
@@ -42,125 +41,104 @@ export const Dashboard: React.FC = () => {
 	}, [dashboard])
 
 	const getDetails = async () => {
-		if (accessToken) {
-			const url = `${API_URL}dashboards/${dashboardId}`
-			const response = await fetchData<DashboardType>(accessToken, url)
+		const url = `${API_URL}dashboards/${dashboardId}`
+		const response = await fetchData<DashboardType>(url)
 
-			if (response.error) {
-				console.error('Failed to fetch dashboard:', response.status, response.error)
-				return
-			}
-
-			const dashboardDetails = response.data
-			setDashboard(dashboardDetails)
-			setEditMode(false)
-		} else {
-			console.error('AccessToken is not available')
+		if (response.error) {
+			console.error('Failed to fetch dashboard:', response.status, response.error)
+			return
 		}
+
+		const dashboardDetails = response.data
+		setDashboard(dashboardDetails)
+		setEditMode(false)
 	}
 
 	const updateDashboard = async () => {
-		if (accessToken) {
-			const url = `${API_URL}dashboards/${dashboard?._id}`
-			const options = {
-				method: 'PATCH',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({ name: nameValue, creatorId: selectedOwner }),
-			}
-			const response = await fetchData<DashboardType>(accessToken, url, options)
+		const url = `${API_URL}dashboards/${dashboard?._id}`
+		const options = {
+			method: 'PATCH',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({ name: nameValue, creatorId: selectedOwner }),
+		}
+		const response = await fetchData<DashboardType>(url, options)
 
-			if (response.error) {
-				console.error('Failed to update dashboard:', response.status, response.error)
-				return
-			}
+		if (response.error) {
+			console.error('Failed to update dashboard:', response.status, response.error)
+			return
+		}
 
-			if (response.data) {
-				const updatedDashboard = response.data
-				if (updatedDashboard?.creatorId) {
-					setSelectedOwner(updatedDashboard.creatorId._id)
-					getDetails()
-					fetchUserDashboards()
-				}
+		if (response.data) {
+			const updatedDashboard = response.data
+			if (updatedDashboard?.creatorId) {
+				setSelectedOwner(updatedDashboard.creatorId._id)
+				getDetails()
+				fetchUserDashboards()
 			}
-		} else {
-			console.error('AccessToken is not available')
 		}
 	}
 
 	const handleInviteUser = async (userName: string) => {
-		if (accessToken) {
-			const url = `${API_URL}notifications`
-			const options = {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({
-					content: `You have been invited to the dashboard (${dashboard?.name}) by ${dashboard?.creatorId.name}`,
-					type: 'invitation',
-					target: userName,
-					dashboardId: dashboardId,
-				}),
-			}
-			const response = await fetchData<Notification>(accessToken, url, options)
+		const url = `${API_URL}notifications`
+		const options = {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				content: `You have been invited to the dashboard (${dashboard?.name}) by ${dashboard?.creatorId.name}`,
+				type: 'invitation',
+				target: userName,
+				dashboardId: dashboardId,
+			}),
+		}
+		const response = await fetchData<Notification>(url, options)
 
-			if (response.error) {
-				console.error('Failed to invite User:', response.status, response.error)
-				return
-			}
+		if (response.error) {
+			console.error('Failed to invite User:', response.status, response.error)
+			return
+		}
 
-			if (response.data) {
-				getDetails()
-			}
-		} else {
-			console.error('AccessToken is not available')
+		if (response.data) {
+			getDetails()
 		}
 	}
 
 	const removeUser = async (id: string | null) => {
-		if (accessToken) {
-			const url = `${API_URL}dashboards/${dashboardId}/remove`
-			const options = {
-				method: 'PATCH',
-				headers: {
-					Authorization: `Bearer ${accessToken}`,
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({ id: id }),
-			}
-			const response = await fetchData<void>(accessToken, url, options)
+		const url = `${API_URL}dashboards/${dashboardId}/remove`
+		const options = {
+			method: 'PATCH',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({ id: id }),
+		}
+		const response = await fetchData<void>(url, options)
 
-			if (response.error) {
-				console.error('Failed to remove user.', response.status, response.error)
-				return
-			}
+		if (response.error) {
+			console.error('Failed to remove user.', response.status, response.error)
+			return
+		}
 
-			if (response.status === 204) {
-				setEditMode(false)
-				if (!id || id === dashboard?.creatorId?._id) {
-					navigate('/')
-				}
-				if (dashboard && Array.isArray(dashboard.userIds) && dashboard.userIds.length > 1) {
-					getDetails()
-				}
+		if (response.status === 204) {
+			setEditMode(false)
+			if (!id || id === dashboard?.creatorId?._id) {
+				navigate('/')
 			}
-		} else {
-			console.error('AccessToken is not available')
+			if (dashboard && Array.isArray(dashboard.userIds) && dashboard.userIds.length > 1) {
+				getDetails()
+			}
 		}
 	}
 
 	const deleteDashboard = async () => {
-		if (!accessToken) {
-			console.error('AccessToken is not available')
-			return
-		}
 		const url = `${API_URL}dashboards/${dashboardId}`
 		const options = {
 			method: 'DELETE',
 		}
-		const response = await fetchData<void>(accessToken, url, options)
+		const response = await fetchData<void>(url, options)
 
 		if (response.error) {
 			console.error('Failed to delete dashboard', response.status, response.error)

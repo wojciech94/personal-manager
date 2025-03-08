@@ -3,7 +3,7 @@ import { API_URL } from './../config'
 import { LoaderFunctionArgs } from 'react-router-dom'
 import { ApiError } from '../types/global'
 
-export const fetchFolders = async ({ params }: LoaderFunctionArgs, { accessToken }: { accessToken: String | null }) => {
+export const fetchFolders = async ({ params }: LoaderFunctionArgs, { accessToken }: { accessToken: string | null }) => {
 	const { dashboardId } = params
 
 	if (!accessToken) {
@@ -21,16 +21,12 @@ export const fetchFolders = async ({ params }: LoaderFunctionArgs, { accessToken
 		throw new Error(ErrorMessage.message)
 	}
 
-	if (response.status === 204) {
-		return []
-	}
-
 	return response.json()
 }
 
 export const fetchShoppingList = async (
 	{ params }: LoaderFunctionArgs,
-	{ accessToken }: { accessToken: String | null }
+	{ accessToken }: { accessToken: string | null }
 ) => {
 	const { shoppingListId } = params
 
@@ -47,7 +43,7 @@ export const fetchShoppingList = async (
 	return data
 }
 
-export const fetchNotes = async ({ params }: LoaderFunctionArgs, { accessToken }: { accessToken: String | null }) => {
+export const fetchNotes = async ({ params }: LoaderFunctionArgs, { accessToken }: { accessToken: string | null }) => {
 	const { dashboardId, folderId } = params
 
 	if (!accessToken) {

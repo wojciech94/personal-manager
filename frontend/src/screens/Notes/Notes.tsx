@@ -9,7 +9,7 @@ import { Note } from '../../components/Note/Note'
 import { ExpandableMenu } from '../../components/ExpandableMenu/ExpandableMenu'
 import { Alert } from '../../components/Alert/Alert'
 import { Button } from '../../components/Button/Button'
-import { useAuth } from '../../contexts/AuthContext'
+import { useApi } from '../../contexts/ApiContext'
 import { NoteType } from '../../components/Note/types'
 import { ApiError } from '../../types/global'
 
@@ -26,7 +26,7 @@ export const Notes = () => {
 	const [filterOrRule, setFilterOrRule] = useState(true)
 	const [searchValue, setSearchValue] = useState('')
 	const { dashboardId, folderId } = useParams()
-	const { accessToken } = useAuth()
+	const { accessToken } = useApi()
 
 	const debouncedSearchFilter = useCallback(
 		debounce((val: string) => searchFilter(val), 500),
@@ -152,8 +152,7 @@ export const Notes = () => {
 					condition = filterCategory === '' || n.category === filterCategory || n.is_favourite === isFavourite
 					break
 				case false:
-					condition =
-						(filterCategory === '' || n.category === filterCategory) && n.is_favourite === isFavourite
+					condition = (filterCategory === '' || n.category === filterCategory) && n.is_favourite === isFavourite
 					break
 			}
 			return condition

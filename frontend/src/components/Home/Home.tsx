@@ -7,12 +7,12 @@ import { Dropdown } from '../Dropdown/Dropdown'
 import { ModalContext } from '../../contexts/ModalContext'
 import { FetchDashboardsContext } from '../../contexts/FetchDashboardsContext'
 import { Plus } from 'react-feather'
-import { debounce, fetchData, getScreenType, getTokenExpiration } from '../../utils/helpers'
+import { debounce, getScreenType, getTokenExpiration } from '../../utils/helpers'
 import { WELCOME_SLIDES } from '../../constants/appConstants'
 import { ModalDataProps } from '../Modal/types'
 import { Button } from '../Button/Button'
 import { ScreenContext } from '../../contexts/ScreenContext'
-import { useAuth } from '../../contexts/AuthContext'
+import { useApi } from '../../contexts/ApiContext'
 import { ScreenType } from '../../types/global'
 import { DashboardType } from '../../types/dashboard'
 
@@ -23,39 +23,7 @@ export const Home = () => {
 	const navigate = useNavigate()
 	const location = useLocation()
 	const isExactMatch = useMatch('/')
-	const { accessToken, logout, refreshToken } = useAuth()
-
-	useEffect(() => {
-		let tokenTimeout: number | undefined
-
-		const checkToken = async () => {
-			if (accessToken) {
-				const remainingTime = getTokenExpiration(accessToken) - new Date().getTime()
-
-				if (remainingTime < 60 * 1000) {
-					try {
-						await refreshToken()
-					} catch (error) {
-						console.error('Error refreshing token:', error)
-						logout()
-						navigate('/login')
-					}
-				} else {
-					tokenTimeout = setTimeout(() => {
-						checkToken()
-					}, remainingTime)
-
-					console.log(`Remaining time: ${Math.floor(remainingTime / 60000)} min`)
-				}
-			} else {
-				navigate('/login')
-			}
-		}
-
-		checkToken()
-
-		return () => clearTimeout(tokenTimeout)
-	}, [accessToken, navigate, refreshToken, logout])
+	const { accessToken, logout, fetchData, isRefreshing } = useApi()
 
 	useEffect(() => {
 		window.addEventListener('resize', debounce(handleResize, 1000))
@@ -64,57 +32,58 @@ export const Home = () => {
 	}, [])
 
 	useEffect(() => {
-		fetchUserDashboards()
-	}, [location.pathname])
+		if (!accessToken && !isRefreshing) {
+			navigate('/login')
+		}
+	}, [accessToken, navigate, isRefreshing])
+
+	useEffect(() => {
+		if (accessToken && !isRefreshing) {
+			fetchUserDashboards()
+		}
+	}, [accessToken, isRefreshing, location.pathname])
 
 	const handleResize = useCallback(() => {
 		setScreenType({ type: getScreenType() })
 	}, [])
 
 	const fetchUserDashboards = async () => {
-		if (accessToken) {
-			try {
-				const result = await fetchData<DashboardType[]>(accessToken, `${API_URL}dashboards`)
+		try {
+			const url = `${API_URL}dashboards`
+			const result = await fetchData<DashboardType[]>(url)
 
-				if (result.error) {
-					console.error('Failed to fetch dashboards:', result.status, result.error)
-					return
-				}
-
-				if (result.data) {
-					setDashboards(result.data)
-				}
-			} catch (error) {
-				console.error('Unexpected error while fetching dashboards:', error)
+			if (result.error) {
+				console.error('Failed to fetch dashboards:', result.status, result.error)
+				return
 			}
-		} else {
-			console.error('AccessToken is not available')
+
+			if (result.data) {
+				setDashboards(result.data)
+			}
+		} catch (error) {
+			console.error('Unexpected error while fetching dashboards:', error)
 		}
 	}
 
 	const createDashboard = async (dashboardName: string | undefined): Promise<void> => {
-		if (accessToken) {
-			const options = {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({ name: dashboardName }),
-			}
-			const response = await fetchData<DashboardType>(accessToken, `${API_URL}dashboards`, options)
+		const options = {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({ name: dashboardName }),
+		}
+		const response = await fetchData<DashboardType>(`${API_URL}dashboards`, options)
 
-			if (response.error) {
-				console.error('Failed to create dashboard:', response.status, response.error)
-				return
-			}
+		if (response.error) {
+			console.error('Failed to create dashboard:', response.status, response.error)
+			return
+		}
 
-			if (response.data) {
-				const newDashboard = response.data
-				setActiveModal(null)
-				setDashboards(prev => [...prev, newDashboard])
-			}
-		} else {
-			console.error('AccessToken is not available')
+		if (response.data) {
+			const newDashboard = response.data
+			setActiveModal(null)
+			setDashboards(prev => [...prev, newDashboard])
 		}
 	}
 

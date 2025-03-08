@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
-import { useAuth } from '../../contexts/AuthContext'
+import { useApi } from '../../contexts/ApiContext'
 import { useModalContext } from '../../contexts/ModalContext'
 import { Button } from '../Button/Button'
 import { FormRow } from '../FormRow/FormRow'
@@ -11,7 +11,7 @@ export function ModalCreateShoppingList({ modalData }: { modalData: DataProps })
 	const [nameValue, setNameValue] = useState('')
 	const { dashboardId } = useParams()
 	const { setActiveModal } = useModalContext()
-	const { accessToken } = useAuth()
+	const { accessToken } = useApi()
 
 	const createShoppingList = async () => {
 		const res = await fetch(`${API_URL}dashboards/${dashboardId}/shopping-lists`, {

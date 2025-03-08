@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { API_URL } from '../config'
-import { useAuth } from '../contexts/AuthContext'
+import { useApi } from '../contexts/ApiContext'
 import { Button } from '../components/Button/Button'
 import { Card, CardHeader } from '../components/Card/Card'
 import { Post } from '../components/Post/Post'
@@ -13,7 +13,7 @@ export function Posts() {
 	const [postInput, setPostInput] = useState('')
 	const userName = useMemo(() => sessionStorage.getItem('name'), [])
 	const { dashboardId } = useParams()
-	const { accessToken } = useAuth()
+	const { accessToken } = useApi()
 
 	useEffect(() => {
 		getPosts()

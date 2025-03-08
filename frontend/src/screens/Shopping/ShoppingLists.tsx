@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Plus } from 'react-feather'
 import { NavLink, Outlet, useMatch, useNavigate, useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
-import { useAuth } from '../../contexts/AuthContext'
+import { useApi } from '../../contexts/ApiContext'
 import { useModalContext } from '../../contexts/ModalContext'
 import { Alert } from '../../components/Alert/Alert'
 import { Button } from '../../components/Button/Button'
@@ -18,7 +18,7 @@ export function ShoppingLists() {
 	const { dashboardId } = useParams()
 	const isExactMatch = useMatch('/dashboards/:dashboardId/shopping/list')
 	const navigate = useNavigate()
-	const { accessToken } = useAuth()
+	const { accessToken } = useApi()
 
 	useEffect(() => {
 		fetchShoppingLists()

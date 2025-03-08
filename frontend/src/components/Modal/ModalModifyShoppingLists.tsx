@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Check, Edit, X } from 'react-feather'
 import { useNavigate, useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
-import { useAuth } from '../../contexts/AuthContext'
+import { useApi } from '../../contexts/ApiContext'
 import { useModalContext } from '../../contexts/ModalContext'
 import { Button } from '../Button/Button'
 import { ShoppingLists } from '../../screens/Shopping/ShoppingLists'
@@ -16,7 +16,7 @@ export function ModalModifyShoppingLists({ modalData }: { modalData: DataProps }
 	const { setActiveModal } = useModalContext()
 	const { dashboardId } = useParams()
 	const navigate = useNavigate()
-	const { accessToken } = useAuth()
+	const { accessToken } = useApi()
 
 	useEffect(() => {
 		fetchShoppingLists()
