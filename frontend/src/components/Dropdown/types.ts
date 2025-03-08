@@ -6,4 +6,5 @@ export type ItemsProps = {
 export type DropdownProps = {
 	title?: string
 	items: ItemsProps[]
+	hasNotifications?: boolean
 }

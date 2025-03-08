@@ -521,6 +521,7 @@ a.active,
 }
 
 .dropdown-avatar {
+	position: relative;
 	background-color: #fff;
 	padding: 0.5rem;
 	border-radius: 50%;
@@ -529,6 +530,16 @@ a.active,
 
 .dropdown-avatar:hover {
 	background-color: rgb(224, 240, 248);
+}
+
+.dropdown-status {
+	position: absolute;
+	width: 16px;
+	height: 16px;
+	bottom: -8px;
+	left: -8px;
+	background-color: rgb(48, 224, 48);
+	border-radius: 50%;
 }
 
 .dropdown-menu {

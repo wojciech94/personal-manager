@@ -100,7 +100,7 @@ exports.removeUser = async (req, res) => {
 			return res.status(200).json({ message: 'Last user removed. Dashboard deleted.' })
 		} else {
 			await dashboard.save()
-			return res.status(200).json({ message: 'Access removed successfully' })
+			return res.status(204).send()
 		}
 	} catch (error) {
 		res.status(500).json({ message: error.message })

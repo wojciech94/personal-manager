@@ -3,7 +3,7 @@ import { User } from 'react-feather'
 import { Button } from '../Button/Button'
 import { DropdownProps, ItemsProps } from './types'
 
-export const Dropdown: React.FC<DropdownProps> = ({ items }): JSX.Element => {
+export const Dropdown: React.FC<DropdownProps> = ({ items, hasNotifications }): JSX.Element => {
 	const [expanded, setExpanded] = useState(false)
 
 	const handleSetAction = (action: () => void): void => {
@@ -16,6 +16,7 @@ export const Dropdown: React.FC<DropdownProps> = ({ items }): JSX.Element => {
 			<Button variant='text' className='dropdown-btn' onClick={() => setExpanded(prevState => !prevState)}>
 				<div className='dropdown-avatar'>
 					<User size={20} />
+					{hasNotifications && <div title='You have any notifications' className='dropdown-status'></div>}
 				</div>
 			</Button>
 			{expanded && (
@@ -31,8 +32,8 @@ export const Dropdown: React.FC<DropdownProps> = ({ items }): JSX.Element => {
 	)
 }
 
-export const DropdownItem: React.FC<ItemsProps> = ({ name, action }): JSX.Element => {
-	const handleAction = (): void => {
+export const DropdownItem: React.FC<ItemsProps> = ({ name, action }) => {
+	const handleAction = () => {
 		action()
 	}
 

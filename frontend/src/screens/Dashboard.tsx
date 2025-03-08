@@ -74,9 +74,9 @@ export const Dashboard: React.FC = () => {
 			const updatedDashboard = response.data
 			if (updatedDashboard?.creatorId) {
 				setSelectedOwner(updatedDashboard.creatorId._id)
-				getDetails()
-				fetchUserDashboards()
 			}
+			getDetails()
+			fetchUserDashboards()
 		}
 	}
 
@@ -125,10 +125,13 @@ export const Dashboard: React.FC = () => {
 		if (response.status === 204) {
 			setEditMode(false)
 			if (!id || id === dashboard?.creatorId?._id) {
+				console.log('No id')
 				navigate('/')
+				fetchUserDashboards()
 			}
 			if (dashboard && Array.isArray(dashboard.userIds) && dashboard.userIds.length > 1) {
 				getDetails()
+				console.log('get details')
 			}
 		}
 	}
