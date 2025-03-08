@@ -11,136 +11,79 @@ import { PostType } from '../components/Post/types'
 export function Posts() {
 	const [posts, setPosts] = useState<PostType[]>([])
 	const [postInput, setPostInput] = useState('')
-	const userName = useMemo(() => sessionStorage.getItem('name'), [])
 	const { dashboardId } = useParams()
-	const { accessToken } = useApi()
+	const { fetchData } = useApi()
+	const userName = useMemo(() => sessionStorage.getItem('name'), [])
 
 	useEffect(() => {
 		getPosts()
 	}, [])
 
 	const getPosts = async () => {
-		if (!accessToken) {
-			console.error('Access token not found')
-		}
-		const res = await fetch(`${API_URL}dashboards/${dashboardId}/posts`, {
-			method: 'GET',
-			headers: {
-				Authorization: `Bearer ${accessToken}`,
-			},
-		})
-		if (!res.ok) {
-			const errorData: ApiError = await res.json()
-			console.error(errorData.message)
+		const url = `${API_URL}dashboards/${dashboardId}/posts`
+
+		const response = await fetchData<PostType[]>(url)
+
+		if (response.error) {
+			console.error('Failed to fetch posts:', response.status, response.error)
 			return
 		}
-		const data: PostType[] = await res.json()
-		if (data) {
-			console.log(data)
+
+		if (response.data) {
+			const data: PostType[] = response.data
 			setPosts(data)
 		}
 	}
 
 	const setLikes = async (postId: string, like: boolean) => {
-		if (!accessToken) {
-			console.error('Access token not available')
-			return
-		}
-
-		const res = await fetch(`${API_URL}dashboards/${dashboardId}/posts`, {
+		const url = `${API_URL}dashboards/${dashboardId}/posts`
+		const options = {
 			method: 'PATCH',
 			headers: {
-				Authorization: `Bearer ${accessToken}`,
 				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify({ postId: postId, like: like }),
-		})
+		}
 
-		if (!res.ok) {
-			const errorData: ApiError = await res.json()
-			console.error(errorData.message)
+		const response = await fetchData<PostType>(url, options)
+
+		if (response.error) {
+			console.error('Failed to set likes:', response.status, response.error)
 			return
 		}
 
-		const data = await res.json()
-		if (data) {
-			setPosts(prevPosts =>
-				prevPosts.map(p => {
-					return p._id === postId ? data : p
-				})
-			)
+		if (response.data) {
+			const data: PostType = response.data
+			setPosts(prevPosts => prevPosts.map(p => (p._id === postId ? data : p)))
 		}
 	}
 
-	// const setComments = ({
-	// 	postId,
-	// 	type,
-	// 	comment,
-	// 	data,
-	// }: {
-	// 	postId: string
-	// 	type: string
-	// 	comment?: Comment
-	// 	data?: CommentDataType
-	// }) => {
-	// 	switch (type) {
-	// 		case 'add':
-	// 			if (comment) {
-	// 				setPosts(prevPosts =>
-	// 					prevPosts.map(p => {
-	// 						if (p._id === postId) {
-	// 							const newP: PostType = { ...p, comments: [comment, ...p.comments] }
-	// 							return newP
-	// 						}
-	// 						return p
-	// 					})
-	// 				)
-	// 			} else {
-	// 				console.error('Comment is required for add type action')
-	// 			}
-	// 			break
-	// 		case 'delete':
-	// 			if (data && data.commentId) {
-	// 				setPosts(prevPosts =>
-	// 					prevPosts.map(p => {
-	// 						if (p._id === postId) {
-	// 							const newComments = p.comments.filter(c => c._id !== data.commentId)
-	// 							const newP: PostType = { ...p, comments: newComments }
-	// 							console.log(newP)
-	// 							return newP
-	// 						}
-	// 						return p
-	// 					})
-	// 				)
-	// 			} else {
-	// 				console.error('Data is required for delete type action')
-	// 			}
-	// 			break
-	// 	}
-	// }
-
-	const addPost = async (e: React.MouseEvent<HTMLButtonElement>) => {
-		const res = await fetch(`${API_URL}dashboards/${dashboardId}/posts`, {
+	const addPost = async () => {
+		const url = `${API_URL}dashboards/${dashboardId}/posts`
+		const options = {
 			method: 'POST',
 			headers: {
-				Authorization: `Bearer ${accessToken}`,
 				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify({ content: postInput }),
-		})
-		if (!res.ok) {
-			const errorData: ApiError = await res.json()
-			console.error(errorData.message)
+		}
+
+		const response = await fetchData<PostType>(url, options)
+
+		if (response.error) {
+			console.error('Failed to add post:', response.status, response.error)
 			return
 		}
 
-		const data: PostType = await res.json()
-		if (data) {
-			const post: PostType = {
-				...data,
-				isEdit: false,
-			}
-			setPosts(prev => [post, ...prev])
+		if (response.data) {
+			const data = response.data
+			setPosts(prev => [
+				{
+					...data,
+					isEdit: false,
+				},
+				...prev,
+			])
 			setPostInput('')
 		}
 	}
@@ -157,18 +100,18 @@ export function Posts() {
 	}
 
 	const onDeletePost = async (id: string) => {
-		const res = await fetch(`${API_URL}dashboards/${dashboardId}/posts`, {
+		const url = `${API_URL}dashboards/${dashboardId}/posts`
+		const options = {
 			method: 'DELETE',
 			headers: {
-				Authorization: `Bearer ${accessToken}`,
 				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify({ postId: id }),
-		})
+		}
+		const response = await fetchData<PostType[]>(url, options)
 
-		if (!res.ok) {
-			const errorData: ApiError = await res.json()
-			console.error(errorData.message)
+		if (response.error) {
+			console.error('Failed to delete post:', response.status, response.error)
 			return
 		}
 
@@ -176,26 +119,24 @@ export function Posts() {
 	}
 
 	const onSavePost = async (id: string, content: string) => {
-		if (!accessToken) {
-			console.error('Access token not available')
-			return
-		}
-
-		const res = await fetch(`${API_URL}dashboards/${dashboardId}/posts`, {
+		const url = `${API_URL}dashboards/${dashboardId}/posts`
+		const options = {
 			method: 'PATCH',
 			headers: {
-				Authorization: `Bearer ${accessToken}`,
 				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify({ postId: id, content: content }),
-		})
-		if (!res.ok) {
-			const errorData: ApiError = await res.json()
-			console.error(errorData.message)
+		}
+
+		const response = await fetchData<PostType>(url, options)
+
+		if (response.error) {
+			console.error('Failed to save post:', response.status, response.error)
 			return
 		}
-		const data: PostType = await res.json()
-		if (data) {
+
+		if (response.data) {
+			const data = response.data
 			setPosts(prev => prev.map(p => (p._id === id ? { ...data, isEdit: false } : p)))
 		}
 	}
@@ -209,7 +150,7 @@ export function Posts() {
 					style={{ minHeight: '55px' }}
 					placeholder={`How are you doing ${userName}?`}
 					onChange={e => setPostInput(e.target.value)}></textarea>
-				<Button className='align-self-end' variant='light' onClick={e => addPost(e)}>
+				<Button className='align-self-end' variant='light' onClick={addPost}>
 					Post
 				</Button>
 			</div>

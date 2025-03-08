@@ -27,7 +27,6 @@ exports.addPost = async (req, res) => {
 
 		dashboard.postsIds = [post._id, ...dashboard.postsIds]
 		await dashboard.save()
-		console.log(dashboard.postsIds)
 
 		await post.populate('author', 'name')
 

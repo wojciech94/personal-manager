@@ -12,36 +12,31 @@ import { ShoppingList } from './ShoppingList'
 export type ShoppingLists = ShoppingList[]
 
 export function ShoppingLists() {
-	const { setActiveModal } = useModalContext()
 	const [shoppingLists, setShoppingLists] = useState<ShoppingLists>([])
-
-	const { dashboardId } = useParams()
 	const isExactMatch = useMatch('/dashboards/:dashboardId/shopping/list')
+	const { dashboardId } = useParams()
+	const { setActiveModal } = useModalContext()
+	const { fetchData } = useApi()
 	const navigate = useNavigate()
-	const { accessToken } = useApi()
 
 	useEffect(() => {
 		fetchShoppingLists()
 	}, [])
 
 	const fetchShoppingLists = async () => {
-		if (accessToken) {
-			const res = await fetch(`${API_URL}dashboards/${dashboardId}/shopping-lists`, {
-				headers: {
-					Authorization: `Bearer ${accessToken}`,
-				},
-			})
-			if (res.ok) {
-				const data: ShoppingLists = await res.json()
-				if (data) {
-					setShoppingLists(data)
-					if (isExactMatch && data.length > 0) {
-						navigate(`/dashboards/${dashboardId}/shopping/list/${data[0]._id}`)
-					}
-				}
-			} else {
-				const errorData = await res.json()
-				console.error(errorData.message)
+		const url = `${API_URL}dashboards/${dashboardId}/shopping-lists`
+		const response = await fetchData<ShoppingLists>(url)
+
+		if (response.error) {
+			console.error('Failed to fetch shopping lists:', response.status, response.error)
+			return
+		}
+
+		if (response.data) {
+			const data: ShoppingLists = response.data
+			setShoppingLists(data)
+			if (isExactMatch && data.length > 0) {
+				navigate(`/dashboards/${dashboardId}/shopping/list/${data[0]._id}`)
 			}
 		}
 	}

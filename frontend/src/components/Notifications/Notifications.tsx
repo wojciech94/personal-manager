@@ -12,79 +12,69 @@ import { Notification } from './types'
 export const Notifications = () => {
 	const [notifications, setNotifications] = useState<Notification[]>([])
 	const { fetchUserDashboards } = useFetchDashboardsContext()
-	const { accessToken } = useApi()
+	const { fetchData } = useApi()
 
 	useEffect(() => {
 		fetchNotifications()
 	}, [])
 
 	const fetchNotifications = async () => {
-		if (accessToken) {
-			const res = await fetch(`${API_URL}notifications`, {
-				headers: {
-					Authorization: `Bearer ${accessToken}`,
-				},
-			})
+		const url = `${API_URL}notifications`
 
-			if (!res.ok) {
-				const error: ApiError = await res.json()
-				console.error(error.message)
-			} else {
-				const data: Notification[] = await res.json()
-				setNotifications(data)
-			}
+		const response = await fetchData<Notification[]>(url)
+
+		if (response.error) {
+			console.error('Failed to fetch notifications:', response.status, response.error)
+			return
+		}
+
+		if (response.data) {
+			const data = response.data
+			setNotifications(data)
 		}
 	}
 
 	const acceptInvitation = async (id: string) => {
-		if (accessToken) {
-			try {
-				const res = await fetch(`${API_URL}notifications/accept`, {
-					headers: {
-						Authorization: `Bearer ${accessToken}`,
-						'Content-Type': 'application/json',
-					},
-					method: 'POST',
-					body: JSON.stringify({ id }),
-				})
+		const url = `${API_URL}notifications/accept`
+		const options = {
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			method: 'POST',
+			body: JSON.stringify({ id }),
+		}
 
-				if (!res.ok) {
-					const errorData: ApiError = await res.json()
-					console.error(errorData.message)
-					return
-				}
-				const data: Notification[] = await res.json()
-				if (data) {
-					await fetchUserDashboards()
-					setNotifications(data)
-				}
-			} catch (error) {
-				console.error(error)
-			}
+		const response = await fetchData<Notification[]>(url, options)
+
+		if (response.error) {
+			console.error('Failed to accept invitation:', response.status, response.error)
+			return
+		}
+
+		if (response.data) {
+			const data = response.data
+			setNotifications(data)
+			await fetchUserDashboards()
 		}
 	}
 
 	const deleteInvitation = async (id: string) => {
-		if (accessToken) {
-			try {
-				const res = await fetch(`${API_URL}notifications`, {
-					headers: {
-						Authorization: `Bearer ${accessToken}`,
-						'Content-Type': 'application/json',
-					},
-					method: 'DELETE',
-					body: JSON.stringify({ id: id }),
-				})
-				if (!res.ok) {
-					const errorData: ApiError = await res.json()
-					console.error(errorData.message)
-					return
-				}
-				fetchNotifications()
-			} catch (error) {
-				console.error(error)
-			}
+		const url = `${API_URL}notifications`
+		const options = {
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			method: 'DELETE',
+			body: JSON.stringify({ id: id }),
 		}
+
+		const response = await fetchData<Notification>(url, options)
+		if (response.error) {
+			console.error('Failed to delete notification:', response.status, response.error)
+			return
+		}
+
+		fetchNotifications()
 	}
 
 	return (

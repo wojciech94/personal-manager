@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, ChangeEvent } from 'react'
-import { useLoaderData, useParams } from 'react-router-dom'
+import { useLoaderData, useParams, useRevalidator } from 'react-router-dom'
 import { API_URL } from '../../config'
 import { useModalContext } from '../../contexts/ModalContext'
 import { Plus } from 'react-feather'
@@ -11,12 +11,10 @@ import { Alert } from '../../components/Alert/Alert'
 import { Button } from '../../components/Button/Button'
 import { useApi } from '../../contexts/ApiContext'
 import { NoteType } from '../../components/Note/types'
-import { ApiError } from '../../types/global'
 
 export const Notes = () => {
-	const data = useLoaderData() as NoteType[] | ApiError
+	const data = useLoaderData() as NoteType[]
 	const [notes, setNotes] = useState<NoteType[]>([])
-	const { setActiveModal } = useModalContext()
 	const [filteredNotes, setFilteredNotes] = useState<NoteType[]>([])
 	const [categoryNames, setCategoryNames] = useState<string[]>([])
 	const [filterCategory, setFilterCategory] = useState('')
@@ -25,8 +23,10 @@ export const Notes = () => {
 	const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
 	const [filterOrRule, setFilterOrRule] = useState(true)
 	const [searchValue, setSearchValue] = useState('')
+	const { setActiveModal } = useModalContext()
 	const { dashboardId, folderId } = useParams()
-	const { accessToken } = useApi()
+	const { revalidate } = useRevalidator()
+	const { fetchData } = useApi()
 
 	const debouncedSearchFilter = useCallback(
 		debounce((val: string) => searchFilter(val), 500),
@@ -45,41 +45,17 @@ export const Notes = () => {
 	}, [data])
 
 	async function fetchNotesCategories() {
-		const response = await fetch(`${API_URL}dashboards/${dashboardId}/note-categories`, {
-			method: 'GET',
-			headers: {
-				Authorization: `Bearer ${accessToken}`,
-				'Content-Type': 'application/json',
-			},
-		})
+		const url = `${API_URL}dashboards/${dashboardId}/note-categories`
+		const response = await fetchData<string[]>(url)
 
-		if (response.ok) {
-			const categoryNames = await response.json()
+		if (response.error) {
+			console.error('Failed to fetch Notes Categories:', response.status, response.error)
+			return
+		}
+
+		if (response.data) {
+			const categoryNames: string[] = response.data
 			setCategoryNames(categoryNames)
-		} else {
-			console.error('Failed to fetch category names', response.status)
-		}
-	}
-
-	async function fetchNotes() {
-		let url = `${API_URL}dashboards/${dashboardId}/folders/notes`
-		if (folderId) {
-			url = url + `/${folderId}`
-		}
-		const response = await fetch(url, {
-			method: 'GET',
-			headers: {
-				Authorization: `Bearer ${accessToken}`,
-				'Content-Type': 'application/json',
-			},
-		})
-
-		if (response.ok) {
-			let notes = await response.json()
-			setNotes(notes)
-			setFilteredNotes(notes)
-		} else {
-			console.error('Failed to fetch notes:', response.status)
 		}
 	}
 
@@ -103,23 +79,24 @@ export const Notes = () => {
 		const url = !noteId
 			? `${API_URL}dashboards/${dashboardId}/add-note`
 			: `${API_URL}dashboards/${dashboardId}/notes/${noteId}`
-		const response = await fetch(url, {
+		const options = {
 			method: `${noteId ? 'PATCH' : 'POST'}`,
 			headers: {
 				'Content-Type': 'application/json',
-				Authorization: `Bearer ${accessToken}`,
 			},
 			body: JSON.stringify({ title, content, category, noteTags, folder_id, is_favourite, expired_at }),
-		})
-		if (response.ok) {
-			const updatedNote = await response.json()
-			console.log(`Note ${noteId ? 'updated' : 'created'}`, updatedNote)
-			fetchNotes()
 		}
+		const response = await fetchData<NoteType[]>(url, options)
+		if (response.error) {
+			console.error('Failed to update note: ', response.status, response.error)
+			return
+		}
+
+		revalidate()
 		setActiveModal(null)
 	}
 
-	const newModal = {
+	const newNoteModal = {
 		name: 'createNote',
 		data: {
 			action: updateNote,
@@ -286,7 +263,7 @@ export const Notes = () => {
 					</ToggleBox>
 				</div>
 				<div className='d-flex gap-2 align-center'>
-					<Button onClick={() => setActiveModal(newModal)}>
+					<Button onClick={() => setActiveModal(newNoteModal)}>
 						<Plus size={16} />
 						<span>Add note</span>
 					</Button>
@@ -302,7 +279,7 @@ export const Notes = () => {
 			{filteredNotes && filteredNotes.length > 0 ? (
 				<div className='d-flex flex-column gap-4'>
 					{filteredNotes.map(n => (
-						<Note key={n._id} note={n} updateNote={updateNote} fetchNotes={fetchNotes} />
+						<Note key={n._id} note={n} updateNote={updateNote} fetchNotes={revalidate} />
 					))}
 				</div>
 			) : (

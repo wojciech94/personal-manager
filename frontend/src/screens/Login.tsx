@@ -15,9 +15,8 @@ export const Login = () => {
 	const [message, setMessage] = useState('')
 	const [isLoading, setIsloading] = useState(false)
 	const [showLoadingMessage, setShowLoadingMessage] = useState(false)
-
-	const navigate = useNavigate()
 	const { login } = useApi()
+	const navigate = useNavigate()
 
 	useEffect(() => {
 		let timeout: number
@@ -44,19 +43,31 @@ export const Login = () => {
 				credentials: 'include',
 			})
 
+			console.log('Response status:', response.status)
+			const text = await response.text()
+			console.log('Response text:', text)
+
 			if (!response.ok && mode === 'signIn') {
 				throw new Error('Invalid credentials')
 			} else if (!response.ok && mode === 'signUp') {
 				throw new Error('Server error')
 			}
 
-			const { accessToken, name }: { accessToken: string; name: string } = await response.json()
+			if (!text) {
+				throw new Error('Empty response from server')
+			}
+
+			const { accessToken, name }: { accessToken: string; name: string } = JSON.parse(text)
+
+			if (!accessToken || !name) {
+				throw new Error('Invalid response from server')
+			}
+
 			if (mode === 'signIn') {
 				login(accessToken)
-				setMessage('Login successful')
+				setMessage('Login successfull')
 				navigate('/')
 				sessionStorage.setItem('name', name)
-				console.log('navigate')
 			} else {
 				setMessage('Register successful')
 				setMode('signIn')

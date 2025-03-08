@@ -2,8 +2,9 @@ import { ShoppingList } from './../screens/Shopping/ShoppingList'
 import { API_URL } from './../config'
 import { LoaderFunctionArgs } from 'react-router-dom'
 import { ApiError } from '../types/global'
+import { NoteType } from '../components/Note/types'
 
-export const fetchFolders = async ({ params }: LoaderFunctionArgs, { accessToken }: { accessToken: string | null }) => {
+export const fetchFolders = async ({ params }: LoaderFunctionArgs, accessToken: string | null) => {
 	const { dashboardId } = params
 
 	if (!accessToken) {
@@ -24,10 +25,7 @@ export const fetchFolders = async ({ params }: LoaderFunctionArgs, { accessToken
 	return response.json()
 }
 
-export const fetchShoppingList = async (
-	{ params }: LoaderFunctionArgs,
-	{ accessToken }: { accessToken: string | null }
-) => {
+export const fetchShoppingList = async ({ params }: LoaderFunctionArgs, accessToken: string | null) => {
 	const { shoppingListId } = params
 
 	const response = await fetch(`${API_URL}shopping-lists/${shoppingListId}`, {
@@ -43,7 +41,7 @@ export const fetchShoppingList = async (
 	return data
 }
 
-export const fetchNotes = async ({ params }: LoaderFunctionArgs, { accessToken }: { accessToken: string | null }) => {
+export const fetchNotes = async ({ params }: LoaderFunctionArgs, accessToken: string | null): Promise<NoteType[]> => {
 	const { dashboardId, folderId } = params
 
 	if (!accessToken) {
@@ -59,9 +57,9 @@ export const fetchNotes = async ({ params }: LoaderFunctionArgs, { accessToken }
 	})
 
 	if (!response.ok) {
-		const ErrorMessage: ApiError = await response.json()
-		throw new Error(ErrorMessage.message)
+		const errorMessage: ApiError = await response.json()
+		throw new Error(errorMessage.message)
 	}
 
-	return response.json()
+	return response.json() as Promise<NoteType[]>
 }

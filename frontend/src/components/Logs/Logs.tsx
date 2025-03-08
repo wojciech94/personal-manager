@@ -17,7 +17,7 @@ export const Logs = ({ logs }: { logs: Log[] }) => {
 
 	return (
 		<div className='d-flex flex-column gap-2'>
-			<div className='card-subtitle'>Logs</div>
+			<div className='card-subtitle'>Activities</div>
 			<table cellSpacing={0} className='w-100 mb-n2'>
 				<thead>
 					<tr className='border-bottom'>

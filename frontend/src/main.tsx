@@ -44,13 +44,12 @@ const Main = () => {
 						{
 							path: 'folders',
 							element: <Folders />,
-							loader: args => fetchFolders(args, { accessToken }),
-
+							loader: args => fetchFolders(args, accessToken),
 							children: [
 								{
 									path: 'notes/:folderId?',
 									element: <Notes />,
-									loader: args => fetchNotes(args, { accessToken }),
+									loader: args => fetchNotes(args, accessToken),
 								},
 							],
 						},
@@ -65,7 +64,7 @@ const Main = () => {
 										{
 											path: ':shoppingListId',
 											element: <ShoppingList />,
-											loader: args => fetchShoppingList(args, { accessToken }),
+											loader: args => fetchShoppingList(args, accessToken),
 										},
 									],
 								},

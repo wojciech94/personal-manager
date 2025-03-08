@@ -22,45 +22,41 @@ export type Product = {
 }
 
 export function Products() {
-	const { setActiveModal } = useModalContext()
 	const [products, setProducts] = useState<Product[]>([])
 	const [filteredProducts, setFilteredProducts] = useState<Product[]>([])
 	const [selectedCategory, setSelectedCategory] = useState('')
-	const { dashboardId } = useParams()
 	const [itemsPerPage, setItemsPerPage] = useState(10)
 	const [sortBy, setSortBy] = useState<'name' | 'category'>('name')
 	const [sortDir, setSortDir] = useState<'asc' | 'desc'>('asc')
-	const { accessToken } = useApi()
+	const { setActiveModal } = useModalContext()
+	const { dashboardId } = useParams()
+	const { fetchData } = useApi()
 
 	const { currentItems, currentPage, totalPages, nextPage, prevPage, goToPage } = usePagination(
 		filteredProducts,
 		itemsPerPage
 	)
 
-	const fetchProducts = async () => {
-		if (!accessToken) {
-			console.error('No token found in localStorage')
-		}
-		const res = await fetch(`${API_URL}dashboards/${dashboardId}/products?sort_by=${sortBy}&direction=${sortDir}`, {
-			headers: {
-				Authorization: `Bearer ${accessToken}`,
-			},
-		})
-		if (res.ok) {
-			const data = await res.json()
-			if (data) {
-				setProducts(data)
-				setFilteredProducts(data)
-			}
-		} else {
-			const errorData = await res.json()
-			console.error(errorData.message)
-		}
-	}
-
 	useEffect(() => {
 		fetchProducts()
 	}, [sortBy, sortDir])
+
+	const fetchProducts = async () => {
+		const url = `${API_URL}dashboards/${dashboardId}/products?sort_by=${sortBy}&direction=${sortDir}`
+
+		const response = await fetchData<Product[]>(url)
+
+		if (response.error) {
+			console.error('Failed to fetch products:', response.status, response.error)
+			return
+		}
+
+		if (response.data) {
+			const data: Product[] = response.data
+			setProducts(data)
+			setFilteredProducts(data)
+		}
+	}
 
 	const modalData = {
 		title: 'Add product',

@@ -13,15 +13,15 @@ import { DashboardType } from '../types/dashboard'
 import { HeaderDataProps } from '../components/Card/types'
 
 export const Dashboard: React.FC = () => {
+	const [dashboard, setDashboard] = useState<DashboardType | null>(null)
 	const [editMode, setEditMode] = useState(false)
-	const navigate = useNavigate()
-	const { setActiveModal } = useModalContext()
-	const { fetchUserDashboards } = useFetchDashboardsContext()
 	const [nameValue, setNameValue] = useState('')
 	const [selectedOwner, setSelectedOwner] = useState('')
+	const { setActiveModal } = useModalContext()
+	const { fetchUserDashboards } = useFetchDashboardsContext()
 	const { dashboardId } = useParams()
+	const navigate = useNavigate()
 	const { fetchData } = useApi()
-	const [dashboard, setDashboard] = useState<DashboardType | null>(null)
 
 	useEffect(() => {
 		getDetails()
