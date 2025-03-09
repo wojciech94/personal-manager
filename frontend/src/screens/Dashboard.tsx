@@ -11,6 +11,7 @@ import { FormRow } from '../components/FormRow/FormRow'
 import { Logs } from '../components/Logs/Logs'
 import { DashboardType } from '../types/dashboard'
 import { HeaderDataProps } from '../components/Card/types'
+import { useTranslation } from '../contexts/TranslationContext'
 
 export const Dashboard: React.FC = () => {
 	const [dashboard, setDashboard] = useState<DashboardType | null>(null)
@@ -22,6 +23,7 @@ export const Dashboard: React.FC = () => {
 	const { dashboardId } = useParams()
 	const navigate = useNavigate()
 	const { fetchData } = useApi()
+	const { t } = useTranslation()
 
 	useEffect(() => {
 		getDetails()
@@ -131,7 +133,6 @@ export const Dashboard: React.FC = () => {
 			}
 			if (dashboard && Array.isArray(dashboard.userIds) && dashboard.userIds.length > 1) {
 				getDetails()
-				console.log('get details')
 			}
 		}
 	}
@@ -159,7 +160,7 @@ export const Dashboard: React.FC = () => {
 		data: {
 			action: handleInviteUser,
 		},
-		title: 'Invite user',
+		title: t('invite_user'),
 	}
 
 	const nameInput = <input type='text' value={nameValue} onChange={e => setNameValue(e.target.value)} />
@@ -186,7 +187,7 @@ export const Dashboard: React.FC = () => {
 			{
 				action: () => setEditMode(prevVal => !prevVal),
 				icon: <Repeat size={16} />,
-				label: editMode ? 'Details mode' : 'Edit mode',
+				label: editMode ? t('details_mode') : t('edit_mode'),
 				btnVariant: 'light',
 			},
 		]
@@ -194,7 +195,7 @@ export const Dashboard: React.FC = () => {
 			const deleteAction: HeaderDataProps = {
 				action: deleteDashboard,
 				icon: <Trash2 size={16} />,
-				label: 'Delete dashboard',
+				label: t('delete_dashboard'),
 				btnVariant: 'danger',
 			}
 			actionsArray.push(deleteAction)
@@ -202,7 +203,7 @@ export const Dashboard: React.FC = () => {
 			const removeAction: HeaderDataProps = {
 				action: () => removeUser(null),
 				icon: <Trash2 size={16} />,
-				label: 'Drop dashboard',
+				label: t('drop_dashboard'),
 				btnVariant: 'danger',
 			}
 			actionsArray.push(removeAction)
@@ -214,19 +215,21 @@ export const Dashboard: React.FC = () => {
 	return (
 		<>
 			{dashboard && (
-				<Card className='card-p0' headerComponent={<CardHeader title='Dashboard details' data={headerActions()} />}>
+				<Card
+					className='card-p0'
+					headerComponent={<CardHeader title={t('dashboard_details')} data={headerActions()} />}>
 					<div className='d-flex flex-column gap-2 pt-4'>
-						<FormRow label={'Name'} content={nameContent} />
-						<FormRow label={'Owner'} content={ownerContent} />
-						<FormRow className='mb-2' label={'Creation date'} content={dashboard?.created_at?.split('T')[0]} />
+						<FormRow label={t('name')} content={nameContent} />
+						<FormRow label={t('owner')} content={ownerContent} />
+						<FormRow className='mb-2' label={t('creation_date')} content={dashboard?.created_at?.split('T')[0]} />
 						{dashboard.userIds && dashboard.userIds.length > 0 && (
 							<div className='d-flex flex-column gap-2'>
 								<div className='card-subtitle'>
-									Users
+									{t('users')}
 									<div className='d-flex gap-2'>
 										{dashboard.isOwner && (
 											<Button onClick={() => setActiveModal(addUserModalData)}>
-												<Plus size={16} /> Invite user
+												<Plus size={16} /> {t('invite_user')}
 											</Button>
 										)}
 									</div>
@@ -250,7 +253,7 @@ export const Dashboard: React.FC = () => {
 						{editMode && (
 							<div className='d-flex justify-center border-top border-light pt-4 pb-2'>
 								<Button variant='success' onClick={updateDashboard}>
-									<Check size={16} /> Save dashboard
+									<Check size={16} /> {t('save_dashboard')}
 								</Button>
 							</div>
 						)}

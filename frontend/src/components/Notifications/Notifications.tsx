@@ -3,6 +3,7 @@ import { Check, Eye, X } from 'react-feather'
 import { API_URL } from '../../config'
 import { useApi } from '../../contexts/ApiContext'
 import { useFetchDashboardsContext } from '../../contexts/FetchDashboardsContext'
+import { useTranslation } from '../../contexts/TranslationContext'
 import { ApiError } from '../../types/global'
 import { Alert } from '../Alert/Alert'
 import { Button } from '../Button/Button'
@@ -13,6 +14,7 @@ export const Notifications = () => {
 	const [notifications, setNotifications] = useState<Notification[]>([])
 	const { fetchUserDashboards } = useFetchDashboardsContext()
 	const { fetchData } = useApi()
+	const { t } = useTranslation()
 
 	useEffect(() => {
 		fetchNotifications()
@@ -79,7 +81,7 @@ export const Notifications = () => {
 
 	return (
 		<div className='content-container'>
-			<Card headerComponent={<CardHeader title='Notifications' />} className='card-p0'>
+			<Card headerComponent={<CardHeader title={t('notifications')} />} className='card-p0'>
 				{notifications && notifications.length > 0 ? (
 					<ul className='zebra rounded-3 overflow-hidden'>
 						{notifications.map(n => (
@@ -107,7 +109,7 @@ export const Notifications = () => {
 						))}
 					</ul>
 				) : (
-					<Alert variant='primary'>You don't have any notifications.</Alert>
+					<Alert variant='primary'>{t('you_dont_have_notifications')}</Alert>
 				)}
 			</Card>
 		</div>

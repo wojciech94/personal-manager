@@ -1217,6 +1217,10 @@ tbody tr.border-bottom:last-child {
 	border: 1px solid gray;
 }
 
+.border-2 {
+	border: 2px solid gray;
+}
+
 .border-bottom {
 	border-bottom: 1px solid gray;
 }

@@ -11,6 +11,7 @@ import { Alert } from '../../components/Alert/Alert'
 import { Button } from '../../components/Button/Button'
 import { useApi } from '../../contexts/ApiContext'
 import { NoteType } from '../../components/Note/types'
+import { useTranslation } from '../../contexts/TranslationContext'
 
 export const Notes = () => {
 	const data = useLoaderData() as NoteType[]
@@ -27,6 +28,7 @@ export const Notes = () => {
 	const { dashboardId, folderId } = useParams()
 	const { revalidate } = useRevalidator()
 	const { fetchData } = useApi()
+	const { t } = useTranslation()
 
 	const debouncedSearchFilter = useCallback(
 		debounce((val: string) => searchFilter(val), 500),
@@ -100,14 +102,14 @@ export const Notes = () => {
 		name: 'createNote',
 		data: {
 			action: updateNote,
-			actionName: 'Create note',
+			actionName: t('create_note'),
 		},
-		title: 'Add note',
+		title: t('add_note'),
 	}
 
 	const categoryModal = {
 		name: 'addNoteCategory',
-		title: 'Add note category',
+		title: t('add_note_category'),
 	}
 
 	const searchFilter = (val: string) => {
@@ -181,19 +183,19 @@ export const Notes = () => {
 					<input
 						className='w-50 min-w-125px'
 						type='text'
-						placeholder='Search note'
+						placeholder={t('search_note')}
 						value={searchValue}
 						onChange={onSearchInputChange}
 					/>
 					<ToggleBox>
 						<div className='d-flex justify-between align-center gap-2'>
-							<div className='toggle-subtitle'>Settings</div>
+							<div className='toggle-subtitle'>{t('settings')}</div>
 							<Button variant='success' size='xs' onClick={handleChangeOptions}>
-								Save
+								{t('save')}
 							</Button>
 						</div>
-						<div className='toggle-title'>Filter</div>
-						<div className='toggle-subtitle'>Filter rule</div>
+						<div className='toggle-title'>{t('filter')}</div>
+						<div className='toggle-subtitle'>{t('filter_rule')}</div>
 						<div className='d-flex gap-4 align-center'>
 							<div className='d-flex gap-2 align-center'>
 								<input
@@ -203,7 +205,7 @@ export const Notes = () => {
 									id='filterRuleOr'
 									onChange={() => setFilterOrRule(true)}
 								/>
-								<label htmlFor='filterRuleOr'>OR</label>
+								<label htmlFor='filterRuleOr'>{t('or')}</label>
 							</div>
 							<div className='d-flex gap-2 align-center'>
 								<input
@@ -213,17 +215,17 @@ export const Notes = () => {
 									id='filterRuleAnd'
 									onChange={() => setFilterOrRule(false)}
 								/>
-								<label htmlFor='filterRuleAnd'>AND</label>
+								<label htmlFor='filterRuleAnd'>{t('and')}</label>
 							</div>
 						</div>
 						<div className='toggle-separator'></div>
-						<div className='toggle-subtitle'>Category</div>
+						<div className='toggle-subtitle'>{t('category')}</div>
 						<select
 							name='filterCategory'
 							id='filterCategory'
 							value={filterCategory}
 							onChange={e => setFilterCategory(e.target.value)}>
-							<option value=''>Choose category...</option>
+							<option value=''>{t('choose_category')}</option>
 							{categoryNames &&
 								categoryNames.length > 0 &&
 								categoryNames.map(cat => (
@@ -241,36 +243,36 @@ export const Notes = () => {
 								checked={isFavourite}
 								onChange={() => setIsFavourite(prevState => !prevState)}
 							/>
-							<label htmlFor='isFav'>Is favourite</label>
+							<label htmlFor='isFav'>{t('is_favourite')}</label>
 						</div>
-						<div className='toggle-title'>Sorting</div>
-						<div className='toggle-subtitle'>Sort by</div>
+						<div className='toggle-title'>{t('sorting')}</div>
+						<div className='toggle-subtitle'>{t('sort_by')}</div>
 						<select name='sortBy' id='sortBy' value={sortBy} onChange={e => setSortBy(e.target.value)}>
-							<option value=''>Sort by...</option>
-							<option value='creationate'>Creation date</option>
-							<option value='updateDate'>Update date</option>
-							<option value='deadlineDate'>Deadline date</option>
+							<option value=''>{t('sort_by')}</option>
+							<option value='creationate'>{t('creation_date')}</option>
+							<option value='updateDate'>{t('update_date')}</option>
+							<option value='deadlineDate'>{t('deadline_date')}</option>
 						</select>
-						<div className='toggle-subtitle'>Sort by</div>
+						<div className='toggle-subtitle'>{t('sorting_order')}</div>
 						<select
 							name='sortOrder'
 							id='sortOrder'
 							value={sortOrder}
 							onChange={e => setSortOrder(e.target.value as 'asc' | 'desc')}>
-							<option value='asc'>Ascending</option>
-							<option value='desc'>Descending</option>
+							<option value='asc'>{t('ascending')}</option>
+							<option value='desc'>{t('descending')}</option>
 						</select>
 					</ToggleBox>
 				</div>
 				<div className='d-flex gap-2 align-center'>
 					<Button onClick={() => setActiveModal(newNoteModal)}>
 						<Plus size={16} />
-						<span>Add note</span>
+						<span>{t('add_note')}</span>
 					</Button>
 					<ExpandableMenu
 						items={[
 							{
-								label: 'Add note category',
+								label: t('add_note_category'),
 								action: () => setActiveModal(categoryModal),
 							},
 						]}></ExpandableMenu>

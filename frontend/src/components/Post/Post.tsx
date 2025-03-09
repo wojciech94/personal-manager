@@ -7,6 +7,7 @@ import { getLocaleDateTime } from '../../utils/helpers'
 import { Button } from '../Button/Button'
 import { ApiError } from '../../types/global'
 import { Comment, PostType } from './types'
+import { useTranslation } from '../../contexts/TranslationContext'
 
 export function Post({
 	post,
@@ -29,6 +30,7 @@ export function Post({
 	const { accessToken } = useApi()
 	const { dashboardId } = useParams()
 	const userName = useMemo(() => sessionStorage.getItem('name'), [])
+	const { t } = useTranslation()
 
 	const handleAddComment = async () => {
 		if (!accessToken) {
@@ -202,10 +204,10 @@ export function Post({
 						<textarea
 							value={commentValue}
 							className='resize-vertical flex-1'
-							placeholder='Type your comment...'
+							placeholder={t('type_your_comment')}
 							onChange={e => setCommentValue(e.target.value)}></textarea>
 						<Button className='align-self-end' variant='light' onClick={handleAddComment}>
-							Post
+							{t('send')}
 						</Button>
 					</div>
 					{comments &&

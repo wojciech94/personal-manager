@@ -4,6 +4,7 @@ import { Check, Edit, Trash2 } from 'react-feather'
 import { Button } from '../Button/Button'
 import { Product } from '../../screens/Shopping/Products'
 import { ShoppingProductProps } from './types'
+import { useTranslation } from '../../contexts/TranslationContext'
 
 export function ShoppingProduct({ data, onListItemUpdate, onListItemDelete }: ShoppingProductProps) {
 	const [product, setProduct] = useState<Product>(data.productId)

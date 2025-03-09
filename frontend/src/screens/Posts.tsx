@@ -5,8 +5,8 @@ import { useApi } from '../contexts/ApiContext'
 import { Button } from '../components/Button/Button'
 import { Card, CardHeader } from '../components/Card/Card'
 import { Post } from '../components/Post/Post'
-import { ApiError } from '../types/global'
 import { PostType } from '../components/Post/types'
+import { useTranslation } from '../contexts/TranslationContext'
 
 export function Posts() {
 	const [posts, setPosts] = useState<PostType[]>([])
@@ -14,6 +14,7 @@ export function Posts() {
 	const { dashboardId } = useParams()
 	const { fetchData } = useApi()
 	const userName = useMemo(() => sessionStorage.getItem('name'), [])
+	const { t } = useTranslation()
 
 	useEffect(() => {
 		getPosts()
@@ -142,16 +143,16 @@ export function Posts() {
 	}
 
 	return (
-		<Card className='overflow-hidden' contentClass='p-0' headerComponent={<CardHeader title='Posts'></CardHeader>}>
+		<Card className='overflow-hidden' contentClass='p-0' headerComponent={<CardHeader title={t('posts')}></CardHeader>}>
 			<div className='d-flex p-4 border-bottom border-light gap-2'>
 				<textarea
 					value={postInput}
 					className='flex-1 p-4 border-none text-lg bg-lighter rounded-4 resize-vertical'
 					style={{ minHeight: '55px' }}
-					placeholder={`How are you doing ${userName}?`}
+					placeholder={`${t('how_are_you_doing')} ${userName}?`}
 					onChange={e => setPostInput(e.target.value)}></textarea>
 				<Button className='align-self-end' variant='light' onClick={addPost}>
-					Post
+					{t('send')}
 				</Button>
 			</div>
 			<div className='d-flex flex-column'>

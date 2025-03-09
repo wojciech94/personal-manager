@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from '../../contexts/TranslationContext'
 import { usePagination } from '../../hooks/usePagination'
 import { getLocaleDateTime } from '../../utils/helpers'
 import { Pagination } from '../Pagination/Pagination'
@@ -10,6 +11,7 @@ export const Logs = ({ logs }: { logs: Log[] }) => {
 		logs,
 		logsCount
 	)
+	const { t } = useTranslation()
 
 	const handleSetItems = (value: number) => {
 		setLogsCount(value)
@@ -17,13 +19,13 @@ export const Logs = ({ logs }: { logs: Log[] }) => {
 
 	return (
 		<div className='d-flex flex-column gap-2'>
-			<div className='card-subtitle'>Activities</div>
+			<div className='card-subtitle'>{t('activities')}</div>
 			<table cellSpacing={0} className='w-100 mb-n2'>
 				<thead>
 					<tr className='border-bottom'>
-						<th className='ps-4'>Details</th>
-						<th className='text-center'>Time</th>
-						<th className='text-end'>Author</th>
+						<th className='ps-4'>{t('details')}</th>
+						<th className='text-center'>{t('time')}</th>
+						<th className='text-end'>{t('author')}</th>
 					</tr>
 				</thead>
 				<tbody className='zebra'>

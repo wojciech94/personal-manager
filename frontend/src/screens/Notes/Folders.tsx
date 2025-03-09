@@ -6,6 +6,7 @@ import { useApi } from '../../contexts/ApiContext'
 import { useModalContext } from '../../contexts/ModalContext'
 import { Button } from '../../components/Button/Button'
 import { Folder } from './types'
+import { useTranslation } from '../../contexts/TranslationContext'
 
 export const Folders = () => {
 	const loaderData = useLoaderData() as Folder[]
@@ -13,6 +14,7 @@ export const Folders = () => {
 	const { setActiveModal } = useModalContext()
 	const { dashboardId } = useParams()
 	const { fetchData } = useApi()
+	const { t } = useTranslation()
 
 	const handleAddFolder = async (val: string) => {
 		const url = `${API_URL}dashboards/${dashboardId}/add-folder`
@@ -55,7 +57,7 @@ export const Folders = () => {
 			<div className='d-flex justify-between align-center gap-3'>
 				<div className='d-flex gap-2 align-center scroll-x-auto'>
 					<NavLink className='btn link' to={`/dashboards/${dashboardId}/folders/notes`} end>
-						All notes
+						{t('all_notes')}
 					</NavLink>
 					{folders &&
 						folders.length > 0 &&
@@ -71,7 +73,7 @@ export const Folders = () => {
 					onClick={() =>
 						setActiveModal({
 							name: 'editFolder',
-							title: 'Update folders',
+							title: t('update_folders'),
 							data: {
 								action: fetchFolders,
 								addAction: handleAddFolder,
@@ -79,7 +81,7 @@ export const Folders = () => {
 						})
 					}>
 					<MoreVertical className='d-none-sm' size={16} />
-					<span className='d-mobile-none text-nowrap'>Modify folders</span>
+					<span className='d-mobile-none text-nowrap'>{t('modify_folders')}</span>
 				</Button>
 			</div>
 			<Outlet />

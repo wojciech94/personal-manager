@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
 import { useApi } from '../../contexts/ApiContext'
 import { useModalContext } from '../../contexts/ModalContext'
+import { useTranslation } from '../../contexts/TranslationContext'
 import { Button } from '../Button/Button'
 import { FormRow } from '../FormRow/FormRow'
 import { DataProps } from './types'
@@ -12,6 +13,7 @@ export function ModalCreateShoppingList({ modalData }: { modalData: DataProps })
 	const { dashboardId } = useParams()
 	const { setActiveModal } = useModalContext()
 	const { accessToken } = useApi()
+	const { t } = useTranslation()
 
 	const createShoppingList = async () => {
 		const res = await fetch(`${API_URL}dashboards/${dashboardId}/shopping-lists`, {
@@ -43,7 +45,7 @@ export function ModalCreateShoppingList({ modalData }: { modalData: DataProps })
 			</div>
 			<div className='card-footer'>
 				<Button variant='success' className='w-100' onClick={createShoppingList}>
-					Create shopping list
+					{t('createShoppingList_title')}
 				</Button>
 			</div>
 		</>

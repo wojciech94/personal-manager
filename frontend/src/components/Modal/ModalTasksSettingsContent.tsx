@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import { useApi } from '../../contexts/ApiContext'
 import { useModalContext } from '../../contexts/ModalContext'
+import { useTranslation } from '../../contexts/TranslationContext'
 import { Button } from '../Button/Button'
 import { FormRow } from '../FormRow/FormRow'
 import { SortMethods, TasksSettings } from '../Task/types'
@@ -13,6 +13,7 @@ export function ModalTasksSettingsContent({ modalData }: { modalData: DataProps 
 	const [archivizationTime, setArchivizationTime] = useState(0)
 	const [removeTime, setRemoveTime] = useState(0)
 	const { setActiveModal } = useModalContext()
+	const { t } = useTranslation()
 
 	useEffect(() => {
 		if (modalData && modalData.initValue && typeof modalData.initValue !== 'string') {
@@ -34,12 +35,12 @@ export function ModalTasksSettingsContent({ modalData }: { modalData: DataProps 
 
 	return (
 		<>
-			<div className='card-subtitle'>Settings</div>
+			<div className='card-subtitle'>{t('settings')}</div>
 			<div className='p-4 d-flex flex-column gap-2'>
-				<FormRow label='Show expiration date'>
+				<FormRow label={t('show_expiration_date')}>
 					<input type='checkbox' checked={showDeadline} onChange={e => setShowDeadline(e.target.checked)} />
 				</FormRow>
-				<FormRow label='Archivization time'>
+				<FormRow label={t('archivization_time')}>
 					<div className='text-normal'>
 						<input
 							className='w-75px'
@@ -47,10 +48,10 @@ export function ModalTasksSettingsContent({ modalData }: { modalData: DataProps 
 							value={archivizationTime}
 							onChange={e => setArchivizationTime(Number(e.target.value))}
 						/>{' '}
-						hours
+						{t('hours')}
 					</div>
 				</FormRow>
-				<FormRow label='Remove time'>
+				<FormRow label={t('remove_time')}>
 					<div className='text-normal'>
 						<input
 							className='w-75px'
@@ -58,21 +59,21 @@ export function ModalTasksSettingsContent({ modalData }: { modalData: DataProps 
 							value={removeTime}
 							onChange={e => setRemoveTime(Number(e.target.value))}
 						/>{' '}
-						hours
+						{t('hours')}
 					</div>
 				</FormRow>
 			</div>
-			<div className='card-subtitle'>Sorting</div>
+			<div className='card-subtitle'>{t('sorting')}</div>
 			<div className='pt-4 d-flex flex-column gap-2'>
-				<FormRow label='Sorting method'>
+				<FormRow label={t('sorting_method')}>
 					<select
 						name='sortMethod'
 						value={sortMethod}
 						id='sortMethod'
 						onChange={e => setSortMethod(e.target.value as SortMethods)}>
-						<option value='created_at'>Creation date</option>
-						<option value='expired_at'>Expiration date</option>
-						<option value='priority'>Priority</option>
+						<option value='created_at'>{t('creation_date')}</option>
+						<option value='expired_at'>{t('expiration_date')}</option>
+						<option value='priority'>{t('priority')}</option>
 					</select>
 				</FormRow>
 				<FormRow label='Sorting order'>
@@ -81,8 +82,8 @@ export function ModalTasksSettingsContent({ modalData }: { modalData: DataProps 
 						value={sortDirection}
 						id='sortDirection'
 						onChange={e => setSortDirection(e.target.value as 'asc' | 'desc')}>
-						<option value='asc'>Ascending</option>
-						<option value='desc'>Descending</option>
+						<option value='asc'>{t('ascending')}</option>
+						<option value='desc'>{t('descending')}</option>
 					</select>
 				</FormRow>
 			</div>

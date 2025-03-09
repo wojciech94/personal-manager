@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
 import { useApi } from '../../contexts/ApiContext'
 import { useModalContext } from '../../contexts/ModalContext'
+import { useTranslation } from '../../contexts/TranslationContext'
 import { getLocaleDateTime } from '../../utils/helpers'
 import { Button } from '../Button/Button'
 import { NoteProps } from './types'
@@ -11,6 +12,7 @@ export const Note: React.FC<NoteProps> = ({ note, updateNote, fetchNotes }): JSX
 	const { setActiveModal } = useModalContext()
 	const { dashboardId } = useParams()
 	const { accessToken } = useApi()
+	const { t } = useTranslation()
 
 	const removeNote = async (id: string): Promise<void> => {
 		if (id) {
@@ -41,10 +43,10 @@ export const Note: React.FC<NoteProps> = ({ note, updateNote, fetchNotes }): JSX
 			name: 'editNote',
 			data: {
 				action: updateNote,
-				actionName: 'Update note',
+				actionName: t('update_note'),
 				id: id,
 			},
-			title: 'Update note',
+			title: t('update_note'),
 		}
 	}
 

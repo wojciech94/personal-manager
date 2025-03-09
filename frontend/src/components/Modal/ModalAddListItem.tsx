@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from '../../contexts/TranslationContext'
 import { FormRow } from '../FormRow/FormRow'
 
 export function ModalAddListItem() {
@@ -6,24 +7,25 @@ export function ModalAddListItem() {
 	const [weightValue, setWeightValue] = useState('')
 	const [quantityValue, setQuantityValue] = useState('')
 	const [unitValue, setUnitValue] = useState('kg')
+	const { t } = useTranslation()
 
 	return (
 		<>
 			<div className='d-flex flex-column gap-2 pb-4'>
-				<FormRow label='Product name'>
+				<FormRow label={t('product_name')}>
 					<input type='text' value={nameValue} onChange={e => setNameValue(e.target.value)} />
 				</FormRow>
-				<FormRow label='Weight'>
+				<FormRow label={t('weight')}>
 					<input type='text' value={weightValue} onChange={e => setWeightValue(e.target.value)} />
 				</FormRow>
-				<FormRow label='Unit'>
+				<FormRow label={t('unit')}>
 					<select name='unitSelect' id='unitSelect' value={unitValue} onChange={e => setUnitValue(e.target.value)}>
-						<option value='kg'>Kilograms</option>
-						<option value='dg'>Dekagrams</option>
-						<option value='g'>Grams</option>
+						<option value='kg'>{t('kilograms')}</option>
+						<option value='dg'>{t('decagrams')}</option>
+						<option value='g'>{t('grams')}</option>
 					</select>
 				</FormRow>
-				<FormRow label='Quantity'>
+				<FormRow label={t('quantity')}>
 					<input type='text' value={quantityValue} onChange={e => setQuantityValue(e.target.value)} />
 				</FormRow>
 			</div>

@@ -6,6 +6,8 @@ import { Button } from '../components/Button/Button'
 import { Card } from '../components/Card/Card'
 import { useApi } from '../contexts/ApiContext'
 import { ApiError } from '../types/global'
+import { useTranslation } from '../contexts/TranslationContext'
+import { GB, PL } from 'country-flag-icons/react/1x1'
 
 export const Login = () => {
 	const [username, setUsername] = useState('')
@@ -16,6 +18,7 @@ export const Login = () => {
 	const [isLoading, setIsloading] = useState(false)
 	const [showLoadingMessage, setShowLoadingMessage] = useState(false)
 	const { login } = useApi()
+	const { language, setLanguage, t } = useTranslation()
 	const navigate = useNavigate()
 
 	useEffect(() => {
@@ -115,19 +118,30 @@ export const Login = () => {
 		}
 	}
 
+	const handleChangeLanguage = () => {
+		setLanguage(language === 'en' ? 'pl' : 'en')
+	}
+
 	return (
 		<div className='d-flex flex-column flex-1 flex-center'>
 			<Card className={'w-300px'}>
 				<div className='d-flex flex-column gap-2'>
-					<div className='d-flex gap-2 align-center justify-center'>
-						<h3 className='mb-2'>{mode === 'signIn' ? 'Login' : 'Sign Up'}</h3>
+					<div className='position-relative d-flex gap-2 align-center justify-center mb-2'>
+						<h3>{mode === 'signIn' ? t('login') : t('sign_up')}</h3>
+						<Button
+							className='position-absolute absolute-right-centered rounded-full overflow-hidden border-2 border-light'
+							variant='text'
+							onlyIcon={true}
+							onClick={handleChangeLanguage}>
+							{language === 'en' ? <PL /> : <GB />}
+						</Button>
 					</div>
 					<form className='d-flex flex-column gap-4' onSubmit={handleSubmit}>
 						<input
 							type='text'
 							value={username}
 							onChange={e => setUsername(e.target.value)}
-							placeholder='Username'
+							placeholder={t('username')}
 							required
 						/>
 						<div className='d-flex position-relative'>
@@ -136,7 +150,7 @@ export const Login = () => {
 								type={`${showPassword ? 'text' : 'password'}`}
 								value={password}
 								onChange={e => setPassword(e.target.value)}
-								placeholder='Password'
+								placeholder={t('password')}
 								required
 							/>
 							<Button
@@ -149,29 +163,28 @@ export const Login = () => {
 							</Button>
 						</div>
 						<Button isLoading={isLoading} type='submit'>
-							{mode === 'signIn' ? 'Login' : 'Sign up'}
+							{mode === 'signIn' ? t('sign_in') : t('sign_up')}
 						</Button>
 						<Button isLoading={isLoading} type='button' onClick={handleTestLogin}>
-							Test account
+							{t('test_account')}
 						</Button>
 						{message && <div className='text-danger'>{message}</div>}
 						{showLoadingMessage && (
 							<div className='d-flex gap-1 text-danger'>
 								<AlertTriangle size={16} className='flex-shrink-0' />
-								<div>
-									Backend is in cold start mode due to server inactivity. This might take a little longer than usual...
-								</div>
+								<div>{t('backend_in_coldstart')}</div>
 							</div>
 						)}
 						<div className='d-flex gap-2 align-center'>
 							<span className='text-sm text-gray'>
-								{mode === 'signIn' ? `Don't have an account?` : `Already have an account?`}
+								{mode === 'signIn' ? t('dont_have_account') : t('already_have_account')}
 							</span>
 							<Button
+								type='button'
 								variant='text'
 								className='link text-hover-primary'
 								onClick={() => setMode(prevMode => (prevMode === 'signIn' ? 'signUp' : 'signIn'))}>
-								{mode === 'signIn' ? 'Sign Up' : 'Login'}
+								{mode === 'signIn' ? t('sign_up') : t('login')}
 							</Button>
 						</div>
 					</form>

@@ -2,6 +2,7 @@ import { useState, useEffect, ChangeEvent } from 'react'
 import { useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
 import { useApi } from '../../contexts/ApiContext'
+import { useTranslation } from '../../contexts/TranslationContext'
 import { Folder } from '../../screens/Notes/types'
 import { Button } from '../Button/Button'
 import { FormRow } from '../FormRow/FormRow'
@@ -19,6 +20,7 @@ export const ModalNoteContent = ({ modalData }: { modalData: DataProps }) => {
 	const [noteTags, setNoteTags] = useState('')
 	const { dashboardId } = useParams()
 	const { accessToken } = useApi()
+	const { t } = useTranslation()
 
 	useEffect(() => {
 		fetchNotesCategories()
@@ -144,7 +146,7 @@ export const ModalNoteContent = ({ modalData }: { modalData: DataProps }) => {
 	return (
 		<>
 			<div className='card-content d-flex flex-column gap-3'>
-				<FormRow label='Title'>
+				<FormRow label={t('title')}>
 					<input
 						className='w-100'
 						type='text'
@@ -154,7 +156,7 @@ export const ModalNoteContent = ({ modalData }: { modalData: DataProps }) => {
 						onChange={e => setNoteName(e.target.value)}
 					/>
 				</FormRow>
-				<FormRow label='Content'>
+				<FormRow label={t('content')}>
 					<textarea
 						className='w-100'
 						name='noteContent'
@@ -163,7 +165,7 @@ export const ModalNoteContent = ({ modalData }: { modalData: DataProps }) => {
 						onChange={e => setNoteContent(e.target.value)}
 					/>
 				</FormRow>
-				<FormRow label='Category'>
+				<FormRow label={t('category')}>
 					<select
 						name='noteCategory'
 						id='noteCategory'
@@ -176,7 +178,7 @@ export const ModalNoteContent = ({ modalData }: { modalData: DataProps }) => {
 						))}
 					</select>
 				</FormRow>
-				<FormRow label='Tags'>
+				<FormRow label={t('tags')}>
 					<input
 						className='w-100'
 						type='text'
@@ -186,7 +188,7 @@ export const ModalNoteContent = ({ modalData }: { modalData: DataProps }) => {
 						onChange={handleNoteTagsChanged}
 					/>
 				</FormRow>
-				<FormRow label='folder'>
+				<FormRow label={t('folder')}>
 					<select
 						name='noteFolder'
 						id='noteFolder'
@@ -200,7 +202,7 @@ export const ModalNoteContent = ({ modalData }: { modalData: DataProps }) => {
 						))}
 					</select>
 				</FormRow>
-				<FormRow label='Is favourite'>
+				<FormRow label={t('is_favourite')}>
 					<input
 						checked={isFavourite}
 						type='checkbox'
@@ -209,7 +211,7 @@ export const ModalNoteContent = ({ modalData }: { modalData: DataProps }) => {
 						onChange={() => setIsFavourite(prevFav => !prevFav)}
 					/>
 				</FormRow>
-				<FormRow label='Expired at'>
+				<FormRow label={t('expire_at')}>
 					<input
 						type='date'
 						name='expiredDate'

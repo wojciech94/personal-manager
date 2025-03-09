@@ -38,7 +38,7 @@ export const DropdownItem: React.FC<ItemsProps> = ({ name, action }) => {
 	}
 
 	return (
-		<Button variant='text' className='dropdown-item rounded-0' onClick={handleAction}>
+		<Button variant='text' className='dropdown-item rounded-0 text-nowrap' onClick={handleAction}>
 			{name}
 		</Button>
 	)

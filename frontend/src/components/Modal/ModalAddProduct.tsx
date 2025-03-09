@@ -4,6 +4,7 @@ import { API_URL } from '../../config'
 import { CATEGORIES } from '../../constants/appConstants'
 import { useApi } from '../../contexts/ApiContext'
 import { useModalContext } from '../../contexts/ModalContext'
+import { useTranslation } from '../../contexts/TranslationContext'
 import { Button } from '../Button/Button'
 import { FormRow } from '../FormRow/FormRow'
 import { DataProps } from './types'
@@ -18,6 +19,7 @@ export function ModalAddProduct({ modalData }: { modalData: DataProps }) {
 	const { dashboardId } = useParams()
 	const { setActiveModal } = useModalContext()
 	const { accessToken } = useApi()
+	const { t } = useTranslation()
 
 	const addProduct = async () => {
 		if (!accessToken) {
@@ -76,7 +78,7 @@ export function ModalAddProduct({ modalData }: { modalData: DataProps }) {
 						onChange={e => setCategoryValue(e.target.value)}>
 						{CATEGORIES.map((c, index) => (
 							<option key={index} value={c.value}>
-								{c.name}
+								{t(c.value)}
 							</option>
 						))}
 					</select>

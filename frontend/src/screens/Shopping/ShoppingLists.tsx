@@ -8,6 +8,7 @@ import { Alert } from '../../components/Alert/Alert'
 import { Button } from '../../components/Button/Button'
 import { ExpandableMenu } from '../../components/ExpandableMenu/ExpandableMenu'
 import { ShoppingList } from './ShoppingList'
+import { useTranslation } from '../../contexts/TranslationContext'
 
 export type ShoppingLists = ShoppingList[]
 
@@ -18,6 +19,7 @@ export function ShoppingLists() {
 	const { setActiveModal } = useModalContext()
 	const { fetchData } = useApi()
 	const navigate = useNavigate()
+	const { t } = useTranslation()
 
 	useEffect(() => {
 		fetchShoppingLists()
@@ -47,7 +49,7 @@ export function ShoppingLists() {
 			data: {
 				action: fetchShoppingLists,
 			},
-			title: 'Modify shopping lists',
+			title: t('modify_shopping_lists'),
 		}
 		setActiveModal(modifyShoppingListModal)
 	}
@@ -58,14 +60,14 @@ export function ShoppingLists() {
 			data: {
 				action: fetchShoppingLists,
 			},
-			title: 'Create shopping list',
+			title: t('create_shopping_list'),
 		}
 		setActiveModal(modalData)
 	}
 
 	const menuItems = [
 		{
-			label: 'Modify shopping lists',
+			label: t('modify_shopping_lists'),
 			action: modifyShoppingListsModal,
 			disabled: !shoppingLists || shoppingLists.length === 0,
 		},
@@ -74,11 +76,11 @@ export function ShoppingLists() {
 	return (
 		<>
 			<div className='d-flex gap-3 justify-between align-center'>
-				<div className='card-title'>Shopping list</div>
+				<div className='card-title'>{t('shopping_list')}</div>
 				<div className='d-flex gap-2 align-center'>
 					<Button className={`text-nowrap btn-mobile-icon`} onClick={openCreateShoppingListModal}>
 						<Plus size={16} />
-						<span className='d-mobile-none'>Create shopping list</span>
+						<span className='d-mobile-none'>{t('create_shopping_list')}</span>
 					</Button>
 					<ExpandableMenu items={menuItems} />
 				</div>
@@ -95,7 +97,7 @@ export function ShoppingLists() {
 				</>
 			) : (
 				<div className='mt-4 mb-n4 mx-n4 border-top border-light'>
-					<Alert variant='primary'>Create your first shopping list to add products.</Alert>
+					<Alert variant='primary'>{t('create_your_first_shopping_list')}</Alert>
 				</div>
 			)}
 			<Outlet />

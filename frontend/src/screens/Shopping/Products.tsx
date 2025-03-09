@@ -10,6 +10,7 @@ import { Pagination } from '../../components/Pagination/Pagination'
 import { Alert } from '../../components/Alert/Alert'
 import { Button } from '../../components/Button/Button'
 import { useApi } from '../../contexts/ApiContext'
+import { useTranslation } from '../../contexts/TranslationContext'
 
 export type Product = {
 	_id: string
@@ -31,6 +32,7 @@ export function Products() {
 	const { setActiveModal } = useModalContext()
 	const { dashboardId } = useParams()
 	const { fetchData } = useApi()
+	const { t } = useTranslation()
 
 	const { currentItems, currentPage, totalPages, nextPage, prevPage, goToPage } = usePagination(
 		filteredProducts,
@@ -59,7 +61,7 @@ export function Products() {
 	}
 
 	const modalData = {
-		title: 'Add product',
+		title: t('add_product'),
 		data: { action: fetchProducts },
 		name: 'addProduct',
 	}
@@ -82,25 +84,25 @@ export function Products() {
 		<>
 			<div className='d-flex flex-wrap justify-between align-center gap-3'>
 				<div className='d-flex gap-4 align-center'>
-					<div className='card-title'>Products</div>
+					<div className='card-title'>{t('products')}</div>
 				</div>
 				<div className='d-flex gap-2 align-center'>
 					<Button className='text-nowrap' onClick={() => setActiveModal(modalData)}>
 						<Plus size={16} />
-						Add product
+						{t('add_product')}
 					</Button>
 				</div>
 				<div
 					className='d-flex flex-wrap justify-between justify-start-sm gap-4 pt-2 border-top border-light mx-n4 px-4'
 					style={{ width: 'calc(100% + 32px)' }}>
 					<div className='d-flex flex-column gap-1'>
-						<div className='text-gray'>Filter:</div>
+						<div className='text-gray'>{t('filter')}</div>
 						<select
 							name='catSelect'
 							id='catSelect'
 							value={selectedCategory}
 							onChange={e => handleSelectCategory(e.target.value)}>
-							<option value=''>All categories</option>
+							<option value=''>{t('all_categories')}</option>
 							{CATEGORIES &&
 								CATEGORIES.length > 0 &&
 								CATEGORIES.map(c => (
@@ -111,25 +113,25 @@ export function Products() {
 						</select>
 					</div>
 					<div className='d-flex flex-column gap-1'>
-						<div className='text-gray'>Sort by:</div>
+						<div className='text-gray'>{t('sort_by')}</div>
 						<select
 							name='sortby'
 							id='sortby'
 							value={sortBy}
 							onChange={e => setSortBy(e.target.value as 'name' | 'category')}>
-							<option value='name'>Name</option>
-							<option value='category'>Category</option>
+							<option value='name'>{t('name')}</option>
+							<option value='category'>{t('category')}</option>
 						</select>
 					</div>
 					<div className='d-flex flex-column gap-1'>
-						<div className='text-gray'>Sort direction:</div>
+						<div className='text-gray'>{t('sort_direction')}</div>
 						<select
 							name='sortdir'
 							id='sortdir'
 							value={sortDir}
 							onChange={e => setSortDir(e.target.value as 'asc' | 'desc')}>
-							<option value='asc'>Ascending</option>
-							<option value='desc'>Descending</option>
+							<option value='asc'>{t('ascending')}</option>
+							<option value='desc'>{t('descending')}</option>
 						</select>
 					</div>
 				</div>
@@ -151,7 +153,7 @@ export function Products() {
 				<div className='mx-n4 mt-4 mb-n4 border-top border-light'>
 					<Alert variant='primary'>
 						<div>
-							Add products to your database or <Button variant='link'>import</Button> default data.
+							{t('add_product_to_your_database_or')} <Button variant='link'>{t('import')}</Button> {t('default_data')}
 						</div>
 					</Alert>
 				</div>

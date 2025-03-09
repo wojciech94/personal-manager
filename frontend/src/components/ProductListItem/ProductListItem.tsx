@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
 import { CATEGORIES } from '../../constants/appConstants'
 import { useApi } from '../../contexts/ApiContext'
+import { useTranslation } from '../../contexts/TranslationContext'
 import { Product } from '../../screens/Shopping/Products'
 import { UpdateProduct } from '../../screens/Shopping/ProductsList'
 import { Button } from '../Button/Button'
@@ -26,6 +27,7 @@ export const ProductListItem = ({
 	const { accessToken } = useApi()
 	const { dashboardId } = useParams()
 	const productData = { name: nameValue, category: categoryValue, unit: unitValue, price: priceValue, tags: tagsValue }
+	const { t } = useTranslation()
 
 	const handleEditProduct = (id: string) => {
 		if (productsData && productsData.length > 0) {
@@ -107,7 +109,7 @@ export const ProductListItem = ({
 						<input
 							type='text'
 							value={nameValue}
-							placeholder='Type name...'
+							placeholder={t('type_name')}
 							onChange={e => setNameValue(e.target.value)}
 						/>
 					</td>
@@ -128,7 +130,7 @@ export const ProductListItem = ({
 						<input
 							type='text'
 							value={unitValue}
-							placeholder='Type unit...'
+							placeholder={t('type_name')}
 							onChange={e => setUnitValue(e.target.value)}
 						/>
 					</td>
@@ -136,7 +138,7 @@ export const ProductListItem = ({
 						<input
 							type='number'
 							value={priceValue}
-							placeholder='Type price...'
+							placeholder={t('type_price')}
 							onChange={e => setPriceValue(Number(e.target.value))}
 						/>
 					</td>
@@ -144,7 +146,7 @@ export const ProductListItem = ({
 						<input
 							type='text'
 							value={tagsValue}
-							placeholder='Type tags...'
+							placeholder={t('type_tags')}
 							onChange={e => setTagsValue(e.target.value)}
 						/>
 					</td>

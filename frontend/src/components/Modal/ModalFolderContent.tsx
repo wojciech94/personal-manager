@@ -8,6 +8,7 @@ import { DataProps } from './types'
 import { Button } from '../Button/Button'
 import { useApi } from '../../contexts/ApiContext'
 import { Folder } from '../../screens/Notes/types'
+import { useTranslation } from '../../contexts/TranslationContext'
 
 export function ModalFolderContent({ modalData }: { modalData: DataProps }) {
 	const [folders, setFolders] = useState<Folder[]>([])
@@ -15,6 +16,7 @@ export function ModalFolderContent({ modalData }: { modalData: DataProps }) {
 	const { dashboardId } = useParams()
 	const { setActiveModal } = useModalContext()
 	const { accessToken } = useApi()
+	const { t } = useTranslation()
 
 	useEffect(() => {
 		fetchFolders()
@@ -53,7 +55,7 @@ export function ModalFolderContent({ modalData }: { modalData: DataProps }) {
 			<div className='card-content d-flex flex-column gap-3 pt-0'>
 				{dashboardId && folders && folders.length > 0 && (
 					<>
-						<div className='card-subtitle'>Modify folders</div>
+						<div className='card-subtitle'>{t('modify_folders')}</div>
 						{folders.map(f => (
 							<FolderRow key={f.name} folder={f} action={modalAction} dashboardId={dashboardId} />
 						))}
@@ -61,8 +63,8 @@ export function ModalFolderContent({ modalData }: { modalData: DataProps }) {
 				)}
 				{modalData?.addAction && (
 					<>
-						<div className='card-subtitle'>Add folder</div>
-						<FormRow label='Folder name'>
+						<div className='card-subtitle'>{t('add_folder')}</div>
+						<FormRow label={t('folder_name')}>
 							<input type='text' value={addInputValue} onChange={e => setAddInputValue(e.target.value)} />
 						</FormRow>
 					</>
@@ -71,7 +73,7 @@ export function ModalFolderContent({ modalData }: { modalData: DataProps }) {
 			{modalData?.addAction && (
 				<div className='card-footer border-light'>
 					<Button variant='success' className='w-100' onClick={handleAddFolderAction}>
-						Add folder
+						{t('add_folder')}
 					</Button>
 				</div>
 			)}
@@ -86,10 +88,11 @@ type FolderRowProps = {
 	className?: string
 }
 
-function FolderRow({ folder, action, dashboardId, className }: FolderRowProps) {
+function FolderRow({ folder, action, dashboardId }: FolderRowProps) {
 	const [isEdit, setIsEdit] = useState(false)
 	const [inputValue, setInputValue] = useState(folder.name)
 	const { accessToken } = useApi()
+	const { t } = useTranslation()
 
 	const handleSave = async () => {
 		const res = await fetch(`${API_URL}dashboards/${dashboardId}/folders/${folder._id}`, {
@@ -140,10 +143,10 @@ function FolderRow({ folder, action, dashboardId, className }: FolderRowProps) {
 			)}
 			<div className='d-flex gap-2'>
 				<Button size='sm' onClick={() => setIsEdit(prevEdit => !prevEdit)}>
-					<Edit size={16} /> Edit
+					<Edit size={16} /> {t('edit')}
 				</Button>
 				<Button size='sm' variant='danger' onClick={handleRemove}>
-					<X size={16} /> Remove
+					<X size={16} /> {t('remove')}
 				</Button>
 			</div>
 		</div>

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useModalContext } from '../../contexts/ModalContext'
+import { useTranslation } from '../../contexts/TranslationContext'
 import { Button } from '../Button/Button'
 import { FormRow } from '../FormRow/FormRow'
 import { DataProps } from './types'
@@ -7,6 +8,7 @@ import { DataProps } from './types'
 export const ModalAddUserContent = ({ modalData }: { modalData: DataProps }) => {
 	const [userInput, setUserInput] = useState('')
 	const { setActiveModal } = useModalContext()
+	const { t } = useTranslation()
 
 	const handleInviteUser = () => {
 		if (modalData.action && typeof modalData.action === 'function' && modalData.action.length === 1) {
@@ -19,13 +21,13 @@ export const ModalAddUserContent = ({ modalData }: { modalData: DataProps }) => 
 	return (
 		<>
 			<div className='card-content'>
-				<FormRow label='Name'>
+				<FormRow label={t('name')}>
 					<input type='text' value={userInput} onChange={e => setUserInput(e.target.value)} />
 				</FormRow>
 			</div>
 			<div className='card-footer'>
 				<Button variant='success' className='w-100' onClick={handleInviteUser}>
-					Invite user to dashboard
+					{t('invite_user_to_dashboard')}
 				</Button>
 			</div>
 		</>

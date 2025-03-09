@@ -1,7 +1,9 @@
 import { NavLink, useParams } from 'react-router-dom'
+import { useTranslation } from '../../contexts/TranslationContext'
 
 export const Menu = () => {
 	const { dashboardId } = useParams()
+	const { t } = useTranslation()
 
 	return (
 		<div className='menu'>
@@ -9,27 +11,27 @@ export const Menu = () => {
 				className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}
 				to={`/dashboards/${dashboardId}`}
 				end>
-				Details
+				{t('details')}
 			</NavLink>
 			<NavLink
 				className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}
 				to={`/dashboards/${dashboardId}/todo`}>
-				To do list
+				{t('todo_list')}
 			</NavLink>
 			<NavLink
 				className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}
 				to={`/dashboards/${dashboardId}/folders/notes`}>
-				Notes
+				{t('notes')}
 			</NavLink>
 			<NavLink
 				className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}
 				to={`/dashboards/${dashboardId}/shopping`}>
-				Shopping
+				{t('shopping')}
 			</NavLink>
 			<NavLink
 				className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}
 				to={`/dashboards/${dashboardId}/posts`}>
-				Community
+				{t('community')}
 			</NavLink>
 		</div>
 	)

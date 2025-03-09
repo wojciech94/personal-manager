@@ -1,10 +1,12 @@
 import { useState } from 'react'
+import { useTranslation } from '../../contexts/TranslationContext'
 import { Button } from '../Button/Button'
 import { FormRow } from '../FormRow/FormRow'
 import { DataProps } from './types'
 
 export const ModalDashboardContent = ({ modalData }: { modalData: DataProps }) => {
 	const [dashboardName, setDashboardName] = useState('')
+	const {t} = useTranslation()
 
 	const handleCreateDashboard = () => {
 		if (modalData.action && typeof modalData.action === 'function' && modalData.action.length === 1) {
@@ -16,7 +18,7 @@ export const ModalDashboardContent = ({ modalData }: { modalData: DataProps }) =
 	return (
 		<>
 			<div className='card-content'>
-				<FormRow label='Dashboard name'>
+				<FormRow label={t('dashboard_name')}>
 					<input
 						type='text'
 						name='dshb'

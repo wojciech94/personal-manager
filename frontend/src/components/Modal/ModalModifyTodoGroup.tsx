@@ -8,6 +8,7 @@ import { Button } from '../Button/Button'
 import { DataProps } from './types'
 import { InputDynamicObject } from '../../types/global'
 import { TodoGroup } from '../Task/types'
+import { useTranslation } from '../../contexts/TranslationContext'
 
 export function ModalModifyTodoGroup({ modalData }: { modalData: DataProps }) {
 	const { setActiveModal } = useModalContext()
@@ -16,6 +17,7 @@ export function ModalModifyTodoGroup({ modalData }: { modalData: DataProps }) {
 	const [inputValues, setInputValues] = useState<InputDynamicObject>({})
 	const { accessToken } = useApi()
 	const { dashboardId } = useParams()
+	const { t } = useTranslation()
 
 	useEffect(() => {
 		if (modalData.groups) {
@@ -119,7 +121,7 @@ export function ModalModifyTodoGroup({ modalData }: { modalData: DataProps }) {
 			<div className='card-content d-flex flex-column gap-3 pt-0'>
 				{groups && groups.length > 0 && (
 					<>
-						<div className='card-subtitle border-top-none'>Update groups</div>
+						<div className='card-subtitle border-top-none'>{t('update_groups')}</div>
 						{groups.map(g => (
 							<div key={g._id} className='px-2 d-flex justify-between align-center gap-2'>
 								{g.isEdit ? (
@@ -153,12 +155,12 @@ export function ModalModifyTodoGroup({ modalData }: { modalData: DataProps }) {
 						))}
 					</>
 				)}
-				<div className='card-subtitle'>Add new group</div>
+				<div className='card-subtitle'>{t('add_new_group')}</div>
 				<div className='px-2'>
 					<input
 						type='text'
 						value={inputVal}
-						placeholder='Type group name...'
+						placeholder={t('type_group_name')}
 						onChange={e => setInputVal(e.target.value)}
 					/>
 				</div>

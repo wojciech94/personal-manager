@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react'
 import { Product } from './Products'
 import { ProductListItem } from '../../components/ProductListItem/ProductListItem'
+import { useTranslation } from '../../contexts/TranslationContext'
 
 export type UpdateProduct = Omit<Product, '_id'>
 
 export function ProductsList({ products }: { products: Product[] }) {
 	const [productsData, setProductsData] = useState<Product[]>([])
+	const { t } = useTranslation()
 
 	useEffect(() => {
 		setProductsData(products)
@@ -24,11 +26,11 @@ export function ProductsList({ products }: { products: Product[] }) {
 							<thead>
 								<tr className='border-top border-bottom border-light bg-lighter text-bold'>
 									<td style={{ width: '40px' }}></td>
-									<td>NAME</td>
-									<td>CATEGORY</td>
-									<td>UNIT</td>
-									<td>PRICE</td>
-									<td className='d-none d-table-cell-sm'>TAGS</td>
+									<td>{t('name').toUpperCase()}</td>
+									<td>{t('category').toUpperCase()}</td>
+									<td>{t('unit').toUpperCase()}</td>
+									<td>{t('price').toUpperCase()}</td>
+									<td className='d-none d-table-cell-sm'>{t('tags').toUpperCase()}</td>
 									<td style={{ width: '85px' }}></td>
 								</tr>
 							</thead>

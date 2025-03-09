@@ -10,6 +10,7 @@ import { useApi } from '../contexts/ApiContext'
 import { HeaderDataProps } from '../components/Card/types'
 import { TasksSettings, TaskType, TodoGroup } from '../components/Task/types'
 import { Task } from '../components/Task/Task'
+import { useTranslation } from '../contexts/TranslationContext'
 
 export const Todos = () => {
 	const { dashboardId } = useParams()
@@ -22,6 +23,7 @@ export const Todos = () => {
 	const [showArchive, setShowArchive] = useState(false)
 	const { setActiveModal } = useModalContext()
 	const { fetchData } = useApi()
+	const { t } = useTranslation()
 
 	const visibleTasks = showArchive ? archivedTasks : tasks
 
@@ -140,11 +142,11 @@ export const Todos = () => {
 			name: 'modifyTodoGroup',
 			data: {
 				action: addGroup,
-				actionName: 'Add group',
+				actionName: t('add_group'),
 				fetchAction: fetchTodoGroups,
 				groups: todoGroups,
 			},
-			title: 'Modify todo group',
+			title: t('modify_todo_groups'),
 		}
 		setActiveModal(modifyTodoGroupCategoryModal)
 	}
@@ -154,7 +156,7 @@ export const Todos = () => {
 			{
 				action: () => setShowArchive(prevState => !prevState),
 				icon: <Repeat size={16} />,
-				label: showArchive ? 'Show active tasks' : 'Show archive tasks',
+				label: showArchive ? t('show_active_tasks') : t('show_archive_tasks'),
 				btnVariant: 'light',
 			},
 		]
@@ -163,16 +165,16 @@ export const Todos = () => {
 				name: 'tasksSettings',
 				data: {
 					action: handleSetTasksSettings,
-					actionName: 'Save settings',
+					actionName: t('save_settings'),
 					initValue: tasksSettings as TasksSettings,
 				},
-				title: 'Tasks settings',
+				title: t('tasks_settings'),
 			}
 
 			actionsArray.push({
 				action: () => setActiveModal(tasksSettingsModal),
 				icon: <Settings size={16} />,
-				label: 'Settings',
+				label: t('settings'),
 				btnVariant: 'light',
 			})
 		}
@@ -181,17 +183,17 @@ export const Todos = () => {
 				name: 'addTask',
 				data: {
 					action: () => fetchTasks(activeGroup),
-					actionName: 'Save task',
+					actionName: t('save_task'),
 					initValue: activeGroup,
 					groups: todoGroups,
 				},
-				title: 'Add task',
+				title: t('add_task'),
 			}
 
 			actionsArray.unshift({
 				action: () => setActiveModal(addTaskModal),
 				icon: <Plus size={16} />,
-				label: 'Add task',
+				label: t('add_task'),
 				btnVariant: 'primary',
 			})
 		}
@@ -199,14 +201,16 @@ export const Todos = () => {
 	}
 
 	return (
-		<Card className='card-p0' headerComponent={<CardHeader title='Tasks to do' data={headerActions()}></CardHeader>}>
+		<Card
+			className='card-p0'
+			headerComponent={<CardHeader title={t('tasks_todo')} data={headerActions()}></CardHeader>}>
 			<div className='card-subtitle border-top-0 flex-wrap'>
 				<div className='d-flex gap-3 scroll-x-auto'>
 					<Button
 						variant='link'
 						onClick={() => fetchTasks('')}
 						className={`text-decoration-none scroll-item ${activeGroup === '' ? 'active' : ''}`}>
-						All tasks
+						{t('all_tasks')}
 					</Button>
 					{todoGroups &&
 						todoGroups.length > 0 &&
@@ -222,10 +226,10 @@ export const Todos = () => {
 				</div>
 				<Button variant='secondary' onClick={handleModifyTodoGroupCategory}>
 					<Edit size={16} />
-					Manage groups
+					{t('manage_groups')}
 				</Button>
 			</div>
-			{showArchive && <div className='p-4 text-bold border-bottom border-light'>Archived tasks</div>}
+			{showArchive && <div className='p-4 text-bold border-bottom border-light'>{t('archived_tasks')}</div>}
 			{visibleTasks && visibleTasks.length > 0 ? (
 				<>
 					<div className='task-container rounded-bottom-4 overflow-hidden'>
@@ -236,7 +240,7 @@ export const Todos = () => {
 					</div>
 				</>
 			) : (
-				<Alert variant='primary'>{`The list of ${showArchive ? 'archived' : ''} tasks is empty.`}</Alert>
+				<Alert variant='primary'>{`${t('list_of')} ${showArchive ? t('archived') : ''} ${t('tasks_is_empty')}.`}</Alert>
 			)}
 		</Card>
 	)

@@ -1,18 +1,20 @@
 import { useEffect, useState } from 'react'
 import { Link, Outlet, useLocation, useMatch, useNavigate } from 'react-router-dom'
-import { API_URL } from '../../config'
-import { Dashboards } from '../Navigation/Navigation'
-import { Modal } from '../Modal/Modal'
-import { Dropdown } from '../Dropdown/Dropdown'
-import { ModalContext } from '../../contexts/ModalContext'
-import { FetchDashboardsContext } from '../../contexts/FetchDashboardsContext'
+import { API_URL } from '../config'
+import { Dashboards } from '../components/Navigation/Navigation'
+import { Modal } from '../components/Modal/Modal'
+import { Dropdown } from '../components/Dropdown/Dropdown'
+import { ModalContext } from '../contexts/ModalContext'
+import { FetchDashboardsContext } from '../contexts/FetchDashboardsContext'
 import { Plus } from 'react-feather'
-import { WELCOME_SLIDES } from '../../constants/appConstants'
-import { ModalDataProps } from '../Modal/types'
-import { Button } from '../Button/Button'
-import { useApi } from '../../contexts/ApiContext'
-import { DashboardType } from '../../types/dashboard'
-import { Notification } from '../Notifications/types'
+import { WELCOME_SLIDES } from '../constants/appConstants'
+import { ModalDataProps } from '../components/Modal/types'
+import { Button } from '../components/Button/Button'
+import { useApi } from '../contexts/ApiContext'
+import { DashboardType } from '../types/dashboard'
+import { Notification } from '../components/Notifications/types'
+import { useTranslation } from '../contexts/TranslationContext'
+import { WelcomeScreen } from './WelcomeScreen'
 
 export const Home = () => {
 	const [dashboards, setDashboards] = useState<DashboardType[]>([])
@@ -22,6 +24,7 @@ export const Home = () => {
 	const location = useLocation()
 	const isExactMatch = useMatch('/')
 	const { accessToken, logout, fetchData, isRefreshing } = useApi()
+	const { t, setLanguage, language } = useTranslation()
 
 	useEffect(() => {
 		if (isExactMatch) {
@@ -101,9 +104,13 @@ export const Home = () => {
 		name: 'createDashboard',
 		data: {
 			action: createDashboard,
-			actionName: 'Create dashboard',
+			actionName: t('create_dashboard'),
 		},
-		title: 'Create dashboard',
+		title: t('create_dashboard'),
+	}
+
+	const changeLanguage = () => {
+		setLanguage(language === 'en' ? 'pl' : 'en')
 	}
 
 	const openModal = () => {
@@ -115,8 +122,9 @@ export const Home = () => {
 	}
 
 	const dropdownItems = [
-		{ name: 'Notifications', action: openNotifications },
-		{ name: 'Logout', action: logout },
+		{ name: t('notifications'), action: openNotifications },
+		{ name: `${t('language')} (${language.toUpperCase()})`, action: changeLanguage },
+		{ name: t('logout'), action: logout },
 	]
 
 	return (
@@ -132,7 +140,7 @@ export const Home = () => {
 						</div>
 						<Button className='btn-mobile-icon' onClick={openModal}>
 							<Plus size={16} />
-							<span className='d-none d-inline-sm'>Add dashboard</span>
+							<span className='d-none d-inline-sm'>{t('add_dashboard')}</span>
 						</Button>
 						<Dropdown items={dropdownItems} hasNotifications={hasNotifications}></Dropdown>
 					</header>
@@ -147,60 +155,5 @@ export const Home = () => {
 				</div>
 			</FetchDashboardsContext.Provider>
 		</ModalContext.Provider>
-	)
-}
-
-type WelcomeScreenProps = {
-	isNew: boolean
-	createDashboardModal: () => void
-}
-
-const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ isNew, createDashboardModal }) => {
-	const [mode, setMode] = useState(1)
-	const slides = WELCOME_SLIDES
-
-	useEffect(() => {
-		const interval = setInterval(
-			() =>
-				setMode(prevMode => {
-					if (prevMode === slides.length - 2) {
-						setTimeout(() => setMode(0), 2500)
-						return prevMode + 1
-					}
-					return (prevMode + 1) % slides.length
-				}),
-			8000
-		)
-		return () => {
-			clearInterval(interval)
-		}
-	}, [])
-
-	return (
-		<div className='d-flex flex-column gap-4 m-5'>
-			<div className='bg-welcome wrapper rounded-4 overflow-hidden d-flex flex-column flex-center shadow p-8'>
-				<div className='max-w-95 bg-dark-transparent text-white p-8 rounded-4 m-10 fs-xl d-flex flex-column gap-3 align-center'>
-					<h1>Organize your life like never before</h1>
-					{isNew && <Button onClick={createDashboardModal}>Create your first dashboard</Button>}
-				</div>
-				<div className='carousel w-100 m-8'>
-					<div
-						className={`carousel-track w-100 ${mode === 0 ? 'transition-none' : ''}`}
-						style={{ transform: `translateX(-${mode * 100}%)` }}>
-						{slides &&
-							slides.length > 0 &&
-							slides.map((s, index) => (
-								<div key={index} className='carousel-item'>
-									<div
-										className={`d-flex flex-column justify-evenly bg-white shadow w-50 rounded-3 p-8 fs-xl ${s.class}`}>
-										<h2 className='text-center mb-8'>{s.title}</h2>
-										<h3>{s.subtitle}</h3>
-									</div>
-								</div>
-							))}
-					</div>
-				</div>
-			</div>
-		</div>
 	)
 }

@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
 import { useApi } from '../../contexts/ApiContext'
 import { useModalContext } from '../../contexts/ModalContext'
+import { useTranslation } from '../../contexts/TranslationContext'
 import { Button } from '../Button/Button'
 
 export function ModalAddShoppingItem(): JSX.Element {
@@ -16,6 +17,7 @@ export function ModalAddShoppingItem(): JSX.Element {
 	const { setActiveModal } = useModalContext()
 	const navigate = useNavigate()
 	const { accessToken } = useApi()
+	const { t } = useTranslation()
 
 	type Product = {
 		_id: string
@@ -90,7 +92,7 @@ export function ModalAddShoppingItem(): JSX.Element {
 				<div className='d-flex justify-between gap-4 flex-wrap'>
 					{products && products.length > 0 && (
 						<div className='d-flex flex-column gap-1'>
-							<div>Product</div>
+							<div>{t('product')}</div>
 							<select
 								name='productsSelect'
 								id='productsSelect'
@@ -105,9 +107,8 @@ export function ModalAddShoppingItem(): JSX.Element {
 						</div>
 					)}
 					<div className='d-flex flex-column gap-1'>
-						<div>Quantity</div>
+						<div>{t('quantity')}</div>
 						<input
-							type='number'
 							value={quantityValue === null ? '' : quantityValue}
 							onChange={e => {
 								const value = e.target.value === '' ? null : Number(e.target.value)
@@ -116,22 +117,22 @@ export function ModalAddShoppingItem(): JSX.Element {
 						/>
 					</div>
 					<div className='d-flex flex-column gap-1'>
-						<div>Unit</div>
+						<div>{t('unit')}</div>
 						<input type='text' value={unitValue} onChange={e => setUnitValue(e.target.value)} />
 					</div>
 					<div className='d-flex flex-column gap-1'>
-						<div>Price</div>
+						<div>{t('price')}</div>
 						<input type='number' value={priceValue} onChange={e => setPriceValue(Number(e.target.value))} />
 					</div>
 					<div className='d-flex flex-column flex-1 gap-1 w-100'>
-						<div>Notes</div>
+						<div>{t('notes')}</div>
 						<textarea className='max-w-100' value={notesValue} onChange={e => setNotesValue(e.target.value)} />
 					</div>
 				</div>
 			</div>
 			<div className='card-footer'>
 				<Button variant='success' className='w-100' onClick={addShoppingItem}>
-					Add item
+					{t('add_item')}
 				</Button>
 			</div>
 		</>

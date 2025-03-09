@@ -1,7 +1,7 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import ReactDOM from 'react-dom/client'
 import { Login } from './screens/Login'
-import { Home } from './components/Home/Home'
+import { Home } from './screens/Home'
 import { PageWrapper } from './components/PageWrapper/PageWrapper'
 import './App.css'
 import { Notes } from './screens/Notes/Notes'
@@ -17,6 +17,7 @@ import { ApiProvider, useApi } from './contexts/ApiContext'
 import { Posts } from './screens/Posts'
 import { Dashboard } from './screens/Dashboard'
 import { fetchFolders, fetchNotes, fetchShoppingList } from './loaders/loaders'
+import { TranslationProvider } from './contexts/TranslationContext'
 
 const Main = () => {
 	const { accessToken } = useApi()
@@ -98,7 +99,9 @@ const Main = () => {
 
 const rootElement = document.getElementById('root') as HTMLElement
 ReactDOM.createRoot(rootElement).render(
-	<ApiProvider>
-		<Main />
-	</ApiProvider>
+	<TranslationProvider>
+		<ApiProvider>
+			<Main />
+		</ApiProvider>
+	</TranslationProvider>
 )

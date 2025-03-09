@@ -1,4 +1,5 @@
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'react-feather'
+import { useTranslation } from '../../contexts/TranslationContext'
 import { Button } from '../Button/Button'
 import { PaginationProps } from './types'
 
@@ -11,6 +12,7 @@ export function Pagination({
 	goToPage,
 	onSetItemsPerPage,
 }: PaginationProps) {
+	const { t } = useTranslation()
 	const prev2Button = currentPage > 2
 	const prevCondition = currentPage > 1
 	const nextCondition = currentPage < totalPages
@@ -20,7 +22,7 @@ export function Pagination({
 		<>
 			<div className='d-flex gap-2 justify-between align-center border-top border-light px-4 pt-4 bg-lighter pb-4 rounded-bottom-3'>
 				<div>
-					Page <span className='text-nowrap'>{`${currentPage} of ${totalPages}`}</span>
+					{t('page')} <span className='text-nowrap'>{`${currentPage} ${t('of')} ${totalPages}`}</span>
 				</div>
 				<div className='d-flex gap-2 align-center'>
 					{prevCondition && (
@@ -72,7 +74,7 @@ export function Pagination({
 					)}
 				</div>
 				<div className='d-flex flex-column gap-1 text-end'>
-					<div>Items per page</div>
+					<div>{t('items_per_page')}</div>
 					<select
 						className='w-50px'
 						name='itemsSelect'

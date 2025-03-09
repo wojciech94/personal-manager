@@ -8,6 +8,7 @@ import { Product } from './Products'
 import { getLocaleDateTime } from '../../utils/helpers'
 import { Button } from '../../components/Button/Button'
 import { useApi } from '../../contexts/ApiContext'
+import { useTranslation } from '../../contexts/TranslationContext'
 
 export type ShoppingItem = {
 	productId: Product
@@ -37,11 +38,12 @@ export function ShoppingList() {
 	const productsToBuy = data.list.filter(p => p.isPurchased === false).length
 	const { revalidate } = useRevalidator()
 	const { fetchData } = useApi()
+	const { t } = useTranslation()
 
 	const openAddItemModal = () => {
 		const modalData = {
 			name: 'addShoppingItem',
-			title: 'Add shopping item',
+			title: t('add_shopping_item'),
 		}
 		setActiveModal(modalData)
 	}
@@ -96,7 +98,7 @@ export function ShoppingList() {
 	if (!data) {
 		return (
 			<Alert>
-				<div>Your shopping list is empty.</div>
+				<div>{t('your_shopping_list_is_empty')}</div>
 			</Alert>
 		)
 	}
@@ -106,13 +108,15 @@ export function ShoppingList() {
 			<div className='mt-4 mb-4 d-flex gap-2 justify-between align-center'>
 				<div className='d-flex flex-column gap-1'>
 					<div>
-						Left to buy: {productsToBuy} {`${productsToBuy === 1 ? 'product' : 'products'}`}
+						{t('left_to_buy')} {productsToBuy} {`${productsToBuy === 1 ? t('product') : t('products')}`}
 					</div>
-					<div className='text-gray fs-sm'>Last update: {getLocaleDateTime(data.updatedAt)}</div>
+					<div className='text-gray fs-sm'>
+						{t('last_update')} {getLocaleDateTime(data.updatedAt)}
+					</div>
 				</div>
 				<Button className='btn-mobile-icon text-nowrap' onClick={openAddItemModal}>
 					<Plus size={16} />
-					Add item
+					{t('add_item')}
 				</Button>
 			</div>
 			{data.list && data.list.length > 0 ? (
@@ -121,10 +125,10 @@ export function ShoppingList() {
 						<thead className='bg-lighter'>
 							<tr className='border-top border-bottom border-light'>
 								<th style={{ width: '30px' }}></th>
-								<th>Name</th>
-								<th>{'Quantity [unit]'}</th>
-								<th>Price per unit</th>
-								<th>Notes</th>
+								<th>{t('name')}</th>
+								<th>{`${t('quantity')} [${t('unit')}]`}</th>
+								<th>{t('price_per_unit')}</th>
+								<th>{t('notes')}</th>
 								<th style={{ width: '85px' }}></th>
 							</tr>
 						</thead>
@@ -141,9 +145,9 @@ export function ShoppingList() {
 						<tfoot>
 							<tr className='bg-lighter border-top border-light text-bold'>
 								<td colSpan={2} className='px-2'>
-									Summary:
+									{t('summary')}
 								</td>
-								<td className='text-end'>Products Value:</td>
+								<td className='text-end'>{t('products_value')}</td>
 								<td colSpan={3}>{calculateSum()}</td>
 							</tr>
 						</tfoot>
@@ -152,7 +156,7 @@ export function ShoppingList() {
 			) : (
 				<div className='mx-n4 mb-n4 border-top border-light'>
 					<Alert>
-						<div>Your shopping list is empty. Add an item to see it on the table.</div>
+						<div>{t('your_shopping_list_is_empty_add_item')}</div>
 					</Alert>
 				</div>
 			)}

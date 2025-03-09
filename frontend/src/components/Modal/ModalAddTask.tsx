@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
 import { useApi } from '../../contexts/ApiContext'
 import { useModalContext } from '../../contexts/ModalContext'
+import { useTranslation } from '../../contexts/TranslationContext'
 import { Button } from '../Button/Button'
 
 import { FormRow } from '../FormRow/FormRow'
@@ -18,6 +19,7 @@ export function ModalAddTask({ modalData }: { modalData: DataProps }) {
 	const { dashboardId } = useParams()
 	const { setActiveModal } = useModalContext()
 	const { accessToken } = useApi()
+	const { t } = useTranslation()
 
 	useEffect(() => {
 		if (modalData.groups) {
@@ -62,7 +64,7 @@ export function ModalAddTask({ modalData }: { modalData: DataProps }) {
 	return (
 		<>
 			<div className='card-content d-flex flex-column gap-3'>
-				<FormRow label='Content'>
+				<FormRow label={t('content')}>
 					<input
 						required
 						className=''
@@ -71,19 +73,19 @@ export function ModalAddTask({ modalData }: { modalData: DataProps }) {
 						onChange={e => setContentValue(e.target.value)}
 					/>
 				</FormRow>
-				<FormRow label='Priority'>
+				<FormRow label={t('priority')}>
 					<select
 						className='align-self-start'
 						name='prioritySelect'
 						value={priorityValue}
 						id='prioritySelect'
 						onChange={e => setPriorityValue(e.target.value)}>
-						<option value='low'>Low</option>
-						<option value='medium'>Medium</option>
-						<option value='high'>Heigh</option>
+						<option value='low'>{t('low')}</option>
+						<option value='medium'>{t('medium')}</option>
+						<option value='high'>{t('high')}</option>
 					</select>
 				</FormRow>
-				<FormRow label='Group'>
+				<FormRow label={t('group')}>
 					<select
 						className='align-self-start'
 						name='taskSelect'
@@ -99,7 +101,7 @@ export function ModalAddTask({ modalData }: { modalData: DataProps }) {
 							))}
 					</select>
 				</FormRow>
-				<FormRow label='Deadline' className='mb-2'>
+				<FormRow label={t('deadline')} className='mb-2'>
 					<input
 						className='align-self-start'
 						type='date'

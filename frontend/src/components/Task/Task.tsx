@@ -3,6 +3,7 @@ import { Check, Clock, Edit, Trash2 } from 'react-feather'
 import { useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
 import { useApi } from '../../contexts/ApiContext'
+import { useTranslation } from '../../contexts/TranslationContext'
 import { Button } from '../Button/Button'
 import { TaskPriorities, TaskProps } from './types'
 
@@ -14,6 +15,7 @@ export function Task({ task, fetchTasks, tasksSettings }: TaskProps) {
 	const [isEdit, setIsEdit] = useState(false)
 	const { accessToken } = useApi()
 	const { dashboardId } = useParams()
+	const { t } = useTranslation()
 
 	useEffect(() => {
 		setTaskData(task)
@@ -83,7 +85,7 @@ export function Task({ task, fetchTasks, tasksSettings }: TaskProps) {
 				{isEdit ? (
 					<div className='d-flex gap-3 flex-1 align-center'>
 						<div className='d-flex flex-column gap-1 text-gray flex-1'>
-							<label htmlFor={`contentInput-${task._id}`}>Content</label>
+							<label htmlFor={`contentInput-${task._id}`}>{t('content')}</label>
 							<input
 								id={`contentInput-${task._id}`}
 								type='text'
@@ -92,19 +94,19 @@ export function Task({ task, fetchTasks, tasksSettings }: TaskProps) {
 							/>
 						</div>
 						<div className='d-flex flex-column gap-1 text-gray'>
-							<label htmlFor='prioritySelect'>Priority</label>
+							<label htmlFor='prioritySelect'>{t('priority')}</label>
 							<select
 								name='prioritySelect'
 								id='prioritySelect'
 								value={taskData.priority}
 								onChange={e => setPriorityValue(e.target.value as TaskPriorities)}>
-								<option value='low'>Low</option>
-								<option value='medium'>Medium</option>
-								<option value='high'>High</option>
+								<option value='low'>{t('low')}</option>
+								<option value='medium'>{t('medium')}</option>
+								<option value='high'>{t('high')}</option>
 							</select>
 						</div>
 						<div className='d-flex flex-column gap-1 text-gray'>
-							<label htmlFor='expirationDate'>Expire at</label>
+							<label htmlFor='expirationDate'>{t('expire_at')}</label>
 							<input type='date' value={expirationValue} onChange={e => setExpirationValue(e.target.value)} />
 						</div>
 					</div>
