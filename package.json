@@ -16,7 +16,6 @@
 		"concurrently": "^9.0.1"
 	},
 	"dependencies": {
-		"country-flag-icons": "^1.5.18",
 		"dotenv": "^16.4.5"
 	}
 }
