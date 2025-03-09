@@ -61,7 +61,7 @@ export function ModalAddProduct({ modalData }: { modalData: DataProps }) {
 	return (
 		<>
 			<div className='card-content d-flex flex-column gap-2'>
-				<FormRow label='Product name' required>
+				<FormRow label={t('product_name')} required>
 					<input
 						className='flex-1 max-w-200px'
 						type='text'
@@ -69,7 +69,7 @@ export function ModalAddProduct({ modalData }: { modalData: DataProps }) {
 						onChange={e => setNameValue(e.target.value)}
 					/>
 				</FormRow>
-				<FormRow label='Category'>
+				<FormRow label={t('category')}>
 					<select
 						className='flex-1 max-w-200px'
 						name='categorySelect'
@@ -83,7 +83,7 @@ export function ModalAddProduct({ modalData }: { modalData: DataProps }) {
 						))}
 					</select>
 				</FormRow>
-				<FormRow label='Unit'>
+				<FormRow label={t('unit')}>
 					<input
 						className='flex-1 max-w-200px'
 						type='text'
@@ -91,7 +91,7 @@ export function ModalAddProduct({ modalData }: { modalData: DataProps }) {
 						onChange={e => setUnitValue(e.target.value)}
 					/>
 				</FormRow>
-				<FormRow label='Price'>
+				<FormRow label={t('price')}>
 					<input
 						className='flex-1 max-w-200px'
 						type='number'
@@ -99,7 +99,7 @@ export function ModalAddProduct({ modalData }: { modalData: DataProps }) {
 						onChange={e => setPriceValue(e.target.value)}
 					/>
 				</FormRow>
-				<FormRow label='Tags'>
+				<FormRow label={t('tags')}>
 					<input
 						className='flex-1 max-w-200px'
 						type='text'
@@ -107,13 +107,13 @@ export function ModalAddProduct({ modalData }: { modalData: DataProps }) {
 						onChange={e => setTagsValue(e.target.value)}
 					/>
 				</FormRow>
-				<FormRow label='Is favourite'>
+				<FormRow label={t('is_favourite')}>
 					<input type='checkbox' checked={isFavouriteValue} onChange={e => setIsFavouriteValue(e.target.checked)} />
 				</FormRow>
 			</div>
 			<div className='card-footer'>
 				<Button variant='success' className='w-100' onClick={addProduct}>
-					Add product
+					{t('add_product')}
 				</Button>
 			</div>
 		</>
