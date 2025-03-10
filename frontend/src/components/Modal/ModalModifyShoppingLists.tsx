@@ -93,6 +93,7 @@ export function ModalModifyShoppingLists({ modalData }: { modalData: DataProps }
 					action()
 				}
 			}
+			setActiveModal(null)
 		}
 	}
 

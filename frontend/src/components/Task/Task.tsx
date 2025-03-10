@@ -66,7 +66,6 @@ export function Task({ task, fetchTasks, tasksSettings }: TaskProps) {
 		const res = await fetch(`${API_URL}dashboards/${dashboardId}/task/${taskData._id}`, config)
 		if (res.ok) {
 			if (action === 'delete') {
-				console.log('fetch')
 				fetchTasks()
 			} else {
 				const data = await res.json()

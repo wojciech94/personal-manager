@@ -24,7 +24,6 @@ export const ModalAddCategoryContent = () => {
 			})
 			if (res.ok) {
 				const data = await res.json()
-				console.log('Note category added succesfully')
 				setActiveModal(null)
 			} else {
 				const data = await res.json()

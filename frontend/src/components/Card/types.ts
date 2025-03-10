@@ -14,6 +14,7 @@ export type HeaderDataProps = {
 	btnVariant?: ButtonVariant
 	icon?: React.ReactNode
 	action: () => void
+	disabled?: boolean
 }
 
 export type HeaderProps = {

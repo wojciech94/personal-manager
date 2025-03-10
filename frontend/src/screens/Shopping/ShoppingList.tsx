@@ -9,6 +9,7 @@ import { getLocaleDateTime } from '../../utils/helpers'
 import { Button } from '../../components/Button/Button'
 import { useApi } from '../../contexts/ApiContext'
 import { useTranslation } from '../../contexts/TranslationContext'
+import { useEffect, useState } from 'react'
 
 export type ShoppingItem = {
 	productId: Product
@@ -33,12 +34,35 @@ export type ShoppingList = {
 
 export function ShoppingList() {
 	const data: ShoppingList = useLoaderData() as ShoppingList
+	const [hasProducts, setHasProducts] = useState(false)
 	const { setActiveModal } = useModalContext()
 	const { shoppingListId, dashboardId } = useParams()
-	const productsToBuy = data.list.filter(p => p.isPurchased === false).length
 	const { revalidate } = useRevalidator()
 	const { fetchData } = useApi()
 	const { t } = useTranslation()
+	const productsToBuy = data.list.filter(p => p.isPurchased === false).length
+
+	useEffect(() => {
+		const getProductsCount = async () => {
+			const url = `${API_URL}dashboards/${dashboardId}/products`
+
+			const response = await fetchData<Product[]>(url)
+
+			if (response.error) {
+				console.error('Failed to fetch products:', response.status, response.error)
+				return
+			}
+
+			if (response.data) {
+				const data: Product[] = response.data
+				if (data && data.length > 0) {
+					setHasProducts(true)
+				}
+			}
+		}
+
+		getProductsCount()
+	}, [])
 
 	const openAddItemModal = () => {
 		const modalData = {
@@ -95,9 +119,17 @@ export function ShoppingList() {
 			.toFixed(2)
 	}
 
+	if (!hasProducts) {
+		return (
+			<Alert className='mb-0 mx-0'>
+				<div>{t('you_dont_have_products_in_database')}</div>
+			</Alert>
+		)
+	}
+
 	if (!data) {
 		return (
-			<Alert>
+			<Alert className='mb-0 mx-0'>
 				<div>{t('your_shopping_list_is_empty')}</div>
 			</Alert>
 		)

@@ -27,7 +27,6 @@ export const Note: React.FC<NoteProps> = ({ note, updateNote, fetchNotes }): JSX
 
 			if (response.ok) {
 				const data = await response.json()
-				console.log(data.message)
 				fetchNotes()
 			} else {
 				const errorData = await response.json()
@@ -78,7 +77,7 @@ export const Note: React.FC<NoteProps> = ({ note, updateNote, fetchNotes }): JSX
 			)}
 			<div className='mx-n3 px-3 py-3 border-top border-bottom border-light'>{note.content}</div>
 			<div className='d-flex gap-3 justify-between mx-n3 px-3 pt-2'>
-				<div className='d-flex gap-2 align-center'>
+				<div className='d-flex gap-2 align-center text-gray'>
 					<Edit size={20} /> {getLocaleDateTime(note.updated_at)}
 				</div>
 				{note.expired_at ? (

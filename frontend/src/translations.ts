@@ -75,6 +75,7 @@ export const translations = {
 		create_dashboard: 'Create dashboard',
 		create_first_dashboard: 'Create your first dashboard',
 		organize_your_life: 'Organize your life like never before!',
+		you_need_to_have_tasks_group: 'You need to have a group in order to add tasks.',
 		//Categories
 		other: 'Other',
 		vegetables: 'Vegetables',
@@ -136,7 +137,7 @@ export const translations = {
 		//Notes
 		notes: 'Notes',
 		all_notes: 'All notes',
-		modify_folders: 'Modify folders',
+		edit_folders: 'Edit folders',
 		update_folders: 'Update folders',
 		create_note: 'Create note',
 		add_note: 'Add note',
@@ -151,6 +152,7 @@ export const translations = {
 		update_note: 'Update note',
 		add_folder: 'Add folder',
 		folder_name: 'Folder name',
+		add_folders_info: 'Add folders to group your notes.',
 		//Shopping
 		shopping: 'Shopping',
 		lists: 'Lists',
@@ -180,6 +182,7 @@ export const translations = {
 		product_name: 'Product name',
 		weight: 'Weight',
 		create_shopping_list: 'Create shopping list',
+		you_dont_have_products_in_database: "You have no products in the database. Please add some products in the 'Products' section.",
 		//Community
 		community: 'Community',
 		send: 'Send',
@@ -265,6 +268,7 @@ export const translations = {
 		create_dashboard: 'Stwórz dashboard',
 		create_first_dashboard: 'Stwórz swój pierwszy dashboard',
 		organize_your_life: 'Zorganizuj swoje życie jak nigdy dotąd!',
+		you_need_to_have_tasks_group: 'Musisz posiadać jakąś grupę aby dodawać zadania.',
 		//Categories
 		other: 'Inne',
 		vegetables: 'Warzywa',
@@ -326,7 +330,7 @@ export const translations = {
 		//Notes
 		notes: 'Notatki',
 		all_notes: 'Wszystkie notatki',
-		modify_folders: 'Modyfikuj foldery',
+		edit_folders: 'Edytuj foldery',
 		update_folders: 'Aktualizuj foldery',
 		create_note: 'Stwórz notatkę',
 		add_note: 'Dodaj notatkę',
@@ -341,6 +345,7 @@ export const translations = {
 		update_note: 'Aktualizuj notatkę',
 		add_folder: 'Dodaj folder',
 		folder_name: 'Nazwa folderu',
+		add_folders_info: 'Dodaj foldery aby pogrupować swoje notatki.',
 		// Shopping
 		shopping: 'Zakupy',
 		lists: 'Listy',
@@ -359,7 +364,7 @@ export const translations = {
 		shopping_list: 'Lista zakupów',
 		create_your_first_shopping_list: 'Stwórz swoją pierwszą listę zakupów, aby dodać produkty.',
 		add_product: 'Dodaj produkt',
-		add_product_to_your_database_or: 'Dodaj produkty do swojej bazy danych lub',
+		add_product_to_your_database_or: 'Dodaj produkty do swojej bazy lub',
 		type_name: 'Wpisz nazwę...',
 		type_unit: 'Wpisz jednostkę...',
 		type_price: 'Wpisz cenę...',
@@ -370,6 +375,7 @@ export const translations = {
 		product_name: 'Nazwa produktu',
 		weight: 'Waga',
 		create_shopping_list: 'Stwórz listę zakupów',
+		you_dont_have_products_in_database: "Nie masz żadnych produktów w bazie danych. Dodaj produkty w zakładce 'Produkty'.",
 		// Community
 		community: 'Społeczność',
 		send: 'Wyślij',

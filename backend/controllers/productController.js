@@ -1,3 +1,5 @@
+const fs = require('fs')
+const path = require('path')
 const Dashboard = require('../models/Dashboard')
 const Product = require('../models/Product')
 const mongoose = require('mongoose')
@@ -149,6 +151,56 @@ exports.deleteProduct = async (req, res) => {
 		await addLog(dashboard.logsId, userId, message)
 
 		res.status(204).send()
+	} catch (error) {
+		res.status(500).json({ message: error.message })
+	}
+}
+
+exports.importDefaultProducts = async (req, res) => {
+	try {
+		const { dashboardId } = req.params
+		const userId = req.user.userId
+		const { language } = req.body
+
+		if (!dashboardId || !mongoose.Types.ObjectId.isValid(dashboardId)) {
+			return res.status(400).json({ message: 'Missing or invalid dashboardId' })
+		}
+
+		const dashboard = await Dashboard.findById(dashboardId).populate('productsIds')
+
+		if (!dashboard) {
+			return res.status(404).json({ message: 'Dashboard not found for provided id' })
+		}
+
+		const langFile = language === 'pl' ? 'products_pl.json' : 'products_en.json'
+		const filePath = path.join(__dirname, `../data/${langFile}`)
+
+		if (!fs.existsSync(filePath)) {
+			return res.status(400).json({ message: 'Invalid language selection' })
+		}
+
+		const rawData = fs.readFileSync(filePath)
+		const defaultProducts = JSON.parse(rawData)
+
+		const dashboardProducts = await Product.find({ _id: { $in: dashboard.productsIds } })
+
+		const newProducts = []
+
+		for (const productData of defaultProducts) {
+			const productExists = dashboardProducts.some(product => product.name === productData.name)
+			if (!productExists) {
+				const product = await Product.create(productData)
+				dashboard.productsIds.push(product._id)
+				newProducts.push(product)
+			}
+		}
+
+		await dashboard.save()
+
+		const message = `Imported ${newProducts.length} default products`
+		await addLog(dashboard.logsId, userId, message)
+
+		res.status(201).json(newProducts)
 	} catch (error) {
 		res.status(500).json({ message: error.message })
 	}

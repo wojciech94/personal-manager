@@ -13,8 +13,6 @@ import { Task } from '../components/Task/Task'
 import { useTranslation } from '../contexts/TranslationContext'
 
 export const Todos = () => {
-	const { dashboardId } = useParams()
-
 	const [todoGroups, setTodoGroups] = useState<TodoGroup[]>([])
 	const [tasks, setTasks] = useState<TaskType[] | null>(null)
 	const [archivedTasks, setArchivedTasks] = useState<TaskType[] | null>(null)
@@ -22,6 +20,7 @@ export const Todos = () => {
 	const [activeGroup, setActiveGroup] = useState('')
 	const [showArchive, setShowArchive] = useState(false)
 	const { setActiveModal } = useModalContext()
+	const { dashboardId } = useParams()
 	const { fetchData } = useApi()
 	const { t } = useTranslation()
 
@@ -152,7 +151,24 @@ export const Todos = () => {
 	}
 
 	const headerActions = () => {
+		const addTaskModal = {
+			name: 'addTask',
+			data: {
+				action: () => fetchTasks(activeGroup),
+				actionName: t('save_task'),
+				initValue: activeGroup,
+				groups: todoGroups,
+			},
+			title: t('add_task'),
+		}
 		const actionsArray: HeaderDataProps[] = [
+			{
+				action: () => setActiveModal(addTaskModal),
+				icon: <Plus size={16} />,
+				label: t('add_task'),
+				btnVariant: 'primary',
+				disabled: !todoGroups || todoGroups.length === 0,
+			},
 			{
 				action: () => setShowArchive(prevState => !prevState),
 				icon: <Repeat size={16} />,
@@ -176,25 +192,6 @@ export const Todos = () => {
 				icon: <Settings size={16} />,
 				label: t('settings'),
 				btnVariant: 'light',
-			})
-		}
-		if (todoGroups && todoGroups.length > 0) {
-			const addTaskModal = {
-				name: 'addTask',
-				data: {
-					action: () => fetchTasks(activeGroup),
-					actionName: t('save_task'),
-					initValue: activeGroup,
-					groups: todoGroups,
-				},
-				title: t('add_task'),
-			}
-
-			actionsArray.unshift({
-				action: () => setActiveModal(addTaskModal),
-				icon: <Plus size={16} />,
-				label: t('add_task'),
-				btnVariant: 'primary',
 			})
 		}
 		return actionsArray
@@ -240,7 +237,16 @@ export const Todos = () => {
 					</div>
 				</>
 			) : (
-				<Alert variant='primary'>{`${t('list_of')} ${showArchive ? t('archived') : ''} ${t('tasks_is_empty')}.`}</Alert>
+				<>
+					{!todoGroups ||
+						(todoGroups.length === 0 ? (
+							<Alert variant='primary'>{`${t('you_need_to_have_tasks_group')}`}</Alert>
+						) : (
+							<Alert variant='primary'>{`${t('list_of')} ${showArchive ? t('archived') : ''} ${t(
+								'tasks_is_empty'
+							)}.`}</Alert>
+						))}
+				</>
 			)}
 		</Card>
 	)

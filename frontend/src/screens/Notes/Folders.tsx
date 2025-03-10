@@ -81,7 +81,7 @@ export const Folders = () => {
 						})
 					}>
 					<MoreVertical className='d-none-sm' size={16} />
-					<span className='d-mobile-none text-nowrap'>{t('modify_folders')}</span>
+					<span className='d-mobile-none text-nowrap'>{t('edit_folders')}</span>
 				</Button>
 			</div>
 			<Outlet />

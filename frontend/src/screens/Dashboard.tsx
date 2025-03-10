@@ -127,7 +127,6 @@ export const Dashboard: React.FC = () => {
 		if (response.status === 204) {
 			setEditMode(false)
 			if (!id || id === dashboard?.creatorId?._id) {
-				console.log('No id')
 				navigate('/')
 				fetchUserDashboards()
 			}

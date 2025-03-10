@@ -15,7 +15,7 @@ export function ModalModifyTodoGroup({ modalData }: { modalData: DataProps }) {
 	const [inputVal, setInputVal] = useState('')
 	const [groups, setGroups] = useState<TodoGroup[]>([])
 	const [inputValues, setInputValues] = useState<InputDynamicObject>({})
-	const { accessToken } = useApi()
+	const { fetchData } = useApi()
 	const { dashboardId } = useParams()
 	const { t } = useTranslation()
 
@@ -42,30 +42,34 @@ export function ModalModifyTodoGroup({ modalData }: { modalData: DataProps }) {
 	}
 
 	const removeTodoGroup = async (id: string) => {
-		if (!id || !accessToken) {
+		if (!id) {
 			return
 		}
 
-		const res = await fetch(`${API_URL}dashboards/${dashboardId}/tasks-groups`, {
+		const url = `${API_URL}dashboards/${dashboardId}/tasks-groups`
+		const options = {
 			method: 'DELETE',
 			headers: {
-				Authorization: `Bearer ${accessToken}`,
 				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify({ id }),
-		})
-		if (res.ok) {
-			const data = await res.json()
-			if (data) {
-				initGroups(data)
-				if (modalData.fetchAction && typeof modalData.action === 'function' && modalData.action.length === 0) {
-					const action = modalData.action as () => Promise<void>
-					action()
-				}
+		}
+
+		const response = await fetchData<TodoGroup[]>(url, options)
+
+		if (response.error) {
+			console.error('Remove todo group failed:', response.status, response.error)
+			return
+		}
+
+		if (response.data) {
+			const data = response.data
+			initGroups(data)
+			if (modalData.fetchAction && typeof modalData.fetchAction === 'function' && modalData.fetchAction.length === 0) {
+				const action = modalData.fetchAction as () => Promise<void>
+				action()
+				setActiveModal(null)
 			}
-		} else {
-			const errorData = await res.json()
-			console.error(errorData.message)
 		}
 	}
 
@@ -82,20 +86,27 @@ export function ModalModifyTodoGroup({ modalData }: { modalData: DataProps }) {
 	}
 
 	const saveInput = async (id: string, val: string) => {
-		if (id && val && accessToken && dashboardId) {
-			const res = await fetch(`${API_URL}dashboards/${dashboardId}/tasks-groups`, {
+		if (id && val && dashboardId) {
+			const url = `${API_URL}dashboards/${dashboardId}/tasks-groups`
+			const options = {
 				method: 'PATCH',
 				headers: {
-					Authorization: `Bearer ${accessToken}`,
 					'Content-Type': 'application/json',
 				},
 				body: JSON.stringify({
 					id,
 					name: val,
 				}),
-			})
-			if (res.ok) {
-				const data = await res.json()
+			}
+
+			const response = await fetchData<TodoGroup[]>(url, options)
+
+			if (response.error) {
+				console.error('Failed to update todo group:', response.status, response.error)
+				return
+			}
+			if (response.data) {
+				const data = response.data
 				initGroups(data)
 				if (
 					modalData.fetchAction &&
@@ -105,9 +116,6 @@ export function ModalModifyTodoGroup({ modalData }: { modalData: DataProps }) {
 					const action = modalData.fetchAction as () => Promise<void>
 					action()
 				}
-			} else {
-				const errorData = await res.json()
-				console.error(errorData.message)
 			}
 		}
 	}
@@ -121,7 +129,7 @@ export function ModalModifyTodoGroup({ modalData }: { modalData: DataProps }) {
 			<div className='card-content d-flex flex-column gap-3 pt-0'>
 				{groups && groups.length > 0 && (
 					<>
-						<div className='card-subtitle border-top-none'>{t('update_groups')}</div>
+						<div className='card-subtitle'>{t('update_groups')}</div>
 						{groups.map(g => (
 							<div key={g._id} className='px-2 d-flex justify-between align-center gap-2'>
 								{g.isEdit ? (

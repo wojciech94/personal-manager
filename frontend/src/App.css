@@ -64,6 +64,12 @@ nav .link:not(.active):hover::after {
 	transform: translateY(-50%);
 }
 
+.absolute-top-right {
+	top: 0;
+	right: 0;
+	transform: translateY(-50%);
+}
+
 .h-30px {
 	height: 30px;
 }
@@ -304,6 +310,7 @@ a.active,
 	height: 100vh;
 	background-color: rgba(0, 0, 0, 0.5);
 	backdrop-filter: blur(2px);
+	z-index: 100;
 }
 
 .modal {
@@ -424,6 +431,7 @@ a.active,
 	border-radius: 0.25rem;
 	background-color: white;
 	box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.5);
+	z-index: 100;
 }
 
 .toggle-title {
@@ -567,6 +575,7 @@ a.active,
 	display: flex;
 	gap: 0.75rem;
 	align-items: center;
+	justify-content: space-between;
 	margin: 1rem;
 	padding: 1rem;
 	border-left: 4px solid lightgray;
@@ -899,6 +908,9 @@ a.active,
 	margin-top: -1rem;
 }
 
+.mb-0 {
+	margin-bottom: 0;
+}
 .mb-1 {
 	margin-bottom: 0.25rem;
 }

@@ -24,6 +24,7 @@ export const Notes = () => {
 	const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
 	const [filterOrRule, setFilterOrRule] = useState(true)
 	const [searchValue, setSearchValue] = useState('')
+	const [showFoldersInfo, setShowFoldersInfo] = useState(true)
 	const { setActiveModal } = useModalContext()
 	const { dashboardId, folderId } = useParams()
 	const { revalidate } = useRevalidator()
@@ -36,6 +37,21 @@ export const Notes = () => {
 	)
 
 	useEffect(() => {
+		const showInfo = localStorage.getItem('folders-info')
+
+		if (showInfo) {
+			try {
+				const state = JSON.parse(showInfo)
+				setShowFoldersInfo(state)
+			} catch (error) {
+				console.error('Błąd parsowania JSON:', error)
+				setShowFoldersInfo(false)
+			}
+		} else {
+			localStorage.setItem('folders-info', JSON.stringify(true))
+			setShowFoldersInfo(true)
+		}
+
 		fetchNotesCategories()
 	}, [])
 
@@ -176,6 +192,11 @@ export const Notes = () => {
 		setFilteredNotes(newNotes)
 	}
 
+	const handleHideFoldersInfo = () => {
+		localStorage.setItem('folders-info', JSON.stringify(false))
+		setShowFoldersInfo(false)
+	}
+
 	return (
 		<>
 			<div className='w-100 d-flex justify-between align-center'>
@@ -278,6 +299,11 @@ export const Notes = () => {
 						]}></ExpandableMenu>
 				</div>
 			</div>
+			{showFoldersInfo && (
+				<Alert variant='primary' className='m-0' onHideAction={handleHideFoldersInfo}>
+					{t('add_folders_info')}
+				</Alert>
+			)}
 			{filteredNotes && filteredNotes.length > 0 ? (
 				<div className='d-flex flex-column gap-4'>
 					{filteredNotes.map(n => (
@@ -285,8 +311,8 @@ export const Notes = () => {
 					))}
 				</div>
 			) : (
-				<Alert className='m-0' variant='primary'>{`You don't have any notes${
-					folderId ? ' in this folder' : ''
+				<Alert className='m-0' variant='primary'>{`${t('you_dont_have_any_notes')} ${
+					folderId ? t('in_this_folder') : ''
 				}.`}</Alert>
 			)}
 		</>

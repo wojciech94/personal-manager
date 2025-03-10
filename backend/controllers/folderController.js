@@ -33,7 +33,7 @@ exports.addFolder = async (req, res) => {
 		const message = `Added new folder (${name}) to notes panel.`
 		await addLog(dashboard.logsId, userId, message)
 
-		res.status(200).json({ message: 'Folder added successfully', folderId: folderId })
+		res.status(200).json(newFolder)
 	} catch (error) {
 		res.status(500).json({ message: error.message })
 	}

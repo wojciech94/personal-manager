@@ -19,7 +19,7 @@ export const CardHeader: React.FC<HeaderProps> = ({ title, data, className }) =>
 			{data && data.length > 0 && (
 				<div className='d-flex gap-2 align-center flex-wrap'>
 					{data.map(d => (
-						<Button key={d.label} variant={d.btnVariant} onClick={d.action}>
+						<Button disabled={d.disabled} key={d.label} variant={d.btnVariant} onClick={d.action}>
 							{d.icon}
 							{d.label}
 						</Button>

@@ -32,7 +32,7 @@ export function Products() {
 	const { setActiveModal } = useModalContext()
 	const { dashboardId } = useParams()
 	const { fetchData } = useApi()
-	const { t } = useTranslation()
+	const { t, language } = useTranslation()
 
 	const { currentItems, currentPage, totalPages, nextPage, prevPage, goToPage } = usePagination(
 		filteredProducts,
@@ -47,6 +47,32 @@ export function Products() {
 		const url = `${API_URL}dashboards/${dashboardId}/products?sort_by=${sortBy}&direction=${sortDir}`
 
 		const response = await fetchData<Product[]>(url)
+
+		if (response.error) {
+			console.error('Failed to fetch products:', response.status, response.error)
+			return
+		}
+
+		if (response.data) {
+			const data: Product[] = response.data
+			setProducts(data)
+			setFilteredProducts(data)
+		}
+	}
+
+	const importDefaultData = async () => {
+		const url = `${API_URL}dashboards/${dashboardId}/import-products`
+		const options = {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				language: language,
+			}),
+		}
+
+		const response = await fetchData<Product[]>(url, options)
 
 		if (response.error) {
 			console.error('Failed to fetch products:', response.status, response.error)
@@ -153,7 +179,11 @@ export function Products() {
 				<div className='mx-n4 mt-4 mb-n4 border-top border-light'>
 					<Alert variant='primary'>
 						<div>
-							{t('add_product_to_your_database_or')} <Button variant='link'>{t('import')}</Button> {t('default_data')}
+							{t('add_product_to_your_database_or')}{' '}
+							<Button variant='link' onClick={importDefaultData}>
+								{t('import')}
+							</Button>{' '}
+							{t('default_data')}
 						</div>
 					</Alert>
 				</div>

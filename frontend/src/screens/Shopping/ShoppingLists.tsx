@@ -39,6 +39,8 @@ export function ShoppingLists() {
 			setShoppingLists(data)
 			if (isExactMatch && data.length > 0) {
 				navigate(`/dashboards/${dashboardId}/shopping/list/${data[0]._id}`)
+			} else if (!isExactMatch && data.length === 0) {
+				navigate(`/dashboards/${dashboardId}/shopping/list`)
 			}
 		}
 	}
