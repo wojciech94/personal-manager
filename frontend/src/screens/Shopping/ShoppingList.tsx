@@ -4,36 +4,15 @@ import { API_URL } from '../../config'
 import { Alert } from '../../components/Alert/Alert'
 import { useModalContext } from '../../contexts/ModalContext'
 import { ShoppingProduct } from '../../components/ShoppingProduct/ShoppingProduct'
-import { Product } from './Products'
 import { getLocaleDateTime } from '../../utils/helpers'
 import { Button } from '../../components/Button/Button'
 import { useApi } from '../../contexts/ApiContext'
 import { useTranslation } from '../../contexts/TranslationContext'
 import { useEffect, useState } from 'react'
-
-export type ShoppingItem = {
-	productId: Product
-	quantity: number
-	notes: string
-	customUnit: string
-	customPrice: number
-	isPurchased: boolean
-	_id: string
-}
-
-export type IsShoppingPurchased = {
-	isPurchased: boolean
-}
-
-export type ShoppingList = {
-	_id: string
-	name: string
-	list: ShoppingItem[]
-	updatedAt: string
-}
+import { IsShoppingPurchased, Product, ShoppingItem, ShoppingListType } from './types'
 
 export function ShoppingList() {
-	const data: ShoppingList = useLoaderData() as ShoppingList
+	const data: ShoppingListType = useLoaderData() as ShoppingListType
 	const [hasProducts, setHasProducts] = useState(false)
 	const { setActiveModal } = useModalContext()
 	const { shoppingListId, dashboardId } = useParams()
@@ -81,7 +60,7 @@ export function ShoppingList() {
 			},
 			body: JSON.stringify(data),
 		}
-		const response = await fetchData<ShoppingList>(url, options)
+		const response = await fetchData<ShoppingListType>(url, options)
 
 		if (response.error) {
 			console.error('Failed to update shopping list:', response.status, response.error)
@@ -97,7 +76,7 @@ export function ShoppingList() {
 			method: 'DELETE',
 		}
 
-		const response = await fetchData<ShoppingList>(url, options)
+		const response = await fetchData<ShoppingListType>(url, options)
 
 		if (response.error) {
 			console.error('Failed to delete item:', response.status, response.error)
@@ -114,7 +93,7 @@ export function ShoppingList() {
 
 		return data.list
 			.reduce((acc, currentVal) => {
-				return acc + currentVal.customPrice * currentVal.quantity
+				return acc + Number(currentVal.customPrice) * Number(currentVal.quantity)
 			}, 0)
 			.toFixed(2)
 	}

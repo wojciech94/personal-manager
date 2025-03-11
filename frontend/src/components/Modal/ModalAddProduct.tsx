@@ -5,6 +5,7 @@ import { CATEGORIES } from '../../constants/appConstants'
 import { useApi } from '../../contexts/ApiContext'
 import { useModalContext } from '../../contexts/ModalContext'
 import { useTranslation } from '../../contexts/TranslationContext'
+import { Product } from '../../screens/Shopping/types'
 import { Button } from '../Button/Button'
 import { FormRow } from '../FormRow/FormRow'
 import { DataProps } from './types'
@@ -18,18 +19,14 @@ export function ModalAddProduct({ modalData }: { modalData: DataProps }) {
 	const [isFavouriteValue, setIsFavouriteValue] = useState(false)
 	const { dashboardId } = useParams()
 	const { setActiveModal } = useModalContext()
-	const { accessToken } = useApi()
+	const { fetchData } = useApi()
 	const { t } = useTranslation()
 
 	const addProduct = async () => {
-		if (!accessToken) {
-			console.error('No token found in localStorage')
-		}
-
-		const res = await fetch(`${API_URL}dashboards/${dashboardId}/products`, {
+		const url = `${API_URL}dashboards/${dashboardId}/products`
+		const options = {
 			method: 'POST',
 			headers: {
-				Authorization: `Bearer ${accessToken}`,
 				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify({
@@ -40,21 +37,24 @@ export function ModalAddProduct({ modalData }: { modalData: DataProps }) {
 				tags: tagsValue,
 				isFavourite: isFavouriteValue,
 			}),
-		})
-		if (res.ok) {
-			const data = await res.json()
-			if (data) {
-				if (modalData?.action && modalData.action.length === 0) {
-					const action = modalData.action as () => Promise<void>
-					action()
-				} else {
-					console.error('Unexpected function type: arugments not passed')
-				}
-				setActiveModal(null)
+		}
+
+		const response = await fetchData<Product>(url, options)
+
+		if (response.error) {
+			console.error('Failed to add product:', response.status, response.error)
+			return
+		}
+
+		if (response.data) {
+			const data = response.data
+			if (modalData?.action && modalData.action.length === 0) {
+				const action = modalData.action as () => Promise<void>
+				action()
+			} else {
+				console.error('Unexpected function type: arugments not passed')
 			}
-		} else {
-			const errorData = await res.json()
-			console.error(errorData.message)
+			setActiveModal(null)
 		}
 	}
 

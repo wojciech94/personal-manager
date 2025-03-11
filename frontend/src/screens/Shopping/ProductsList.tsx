@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react'
-import { Product } from './Products'
 import { ProductListItem } from '../../components/ProductListItem/ProductListItem'
 import { useTranslation } from '../../contexts/TranslationContext'
+import { Product } from './types'
 
 export type UpdateProduct = Omit<Product, '_id'>
 
-export function ProductsList({ products }: { products: Product[] }) {
+export function ProductsList({ products, fetchProducts }: { products: Product[]; fetchProducts: () => Promise<void> }) {
 	const [productsData, setProductsData] = useState<Product[]>([])
 	const { t } = useTranslation()
 
@@ -36,7 +36,13 @@ export function ProductsList({ products }: { products: Product[] }) {
 							</thead>
 							<tbody>
 								{productsData.map(p => (
-									<ProductListItem product={p} productsData={productsData} setProductsData={setProductsData} />
+									<ProductListItem
+										key={p._id}
+										product={p}
+										productsData={productsData}
+										setProductsData={setProductsData}
+										fetchProducts={fetchProducts}
+									/>
 								))}
 							</tbody>
 						</table>

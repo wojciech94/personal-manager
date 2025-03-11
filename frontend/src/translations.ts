@@ -26,7 +26,7 @@ export const translations = {
 		name: 'Name',
 		low: 'Low',
 		medium: 'Medium',
-		high: 'Heigh',
+		high: 'High',
 		hours: 'hours',
 		filter: 'Filter',
 		filter_rule: 'Filter rule',
@@ -182,7 +182,8 @@ export const translations = {
 		product_name: 'Product name',
 		weight: 'Weight',
 		create_shopping_list: 'Create shopping list',
-		you_dont_have_products_in_database: "You have no products in the database. Please add some products in the 'Products' section.",
+		you_dont_have_products_in_database:
+			"You have no products in the database. Please add some products in the 'Products' section.",
 		//Community
 		community: 'Community',
 		send: 'Send',
@@ -375,7 +376,8 @@ export const translations = {
 		product_name: 'Nazwa produktu',
 		weight: 'Waga',
 		create_shopping_list: 'Stwórz listę zakupów',
-		you_dont_have_products_in_database: "Nie masz żadnych produktów w bazie danych. Dodaj produkty w zakładce 'Produkty'.",
+		you_dont_have_products_in_database:
+			"Nie masz żadnych produktów w bazie danych. Dodaj produkty w zakładce 'Produkty'.",
 		// Community
 		community: 'Społeczność',
 		send: 'Wyślij',

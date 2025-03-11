@@ -7,7 +7,7 @@ import { useTranslation } from '../../contexts/TranslationContext'
 import { Button } from '../Button/Button'
 
 import { FormRow } from '../FormRow/FormRow'
-import { TodoGroup } from '../Task/types'
+import { TaskType, TodoGroup } from '../Task/types'
 import { DataProps } from './types'
 
 export function ModalAddTask({ modalData }: { modalData: DataProps }) {
@@ -18,7 +18,7 @@ export function ModalAddTask({ modalData }: { modalData: DataProps }) {
 	const [expiredDate, setExpiredDate] = useState('')
 	const { dashboardId } = useParams()
 	const { setActiveModal } = useModalContext()
-	const { accessToken } = useApi()
+	const { fetchData } = useApi()
 	const { t } = useTranslation()
 
 	useEffect(() => {
@@ -33,10 +33,10 @@ export function ModalAddTask({ modalData }: { modalData: DataProps }) {
 	}, [modalData])
 
 	const handleAddTask = async () => {
-		const res = await fetch(`${API_URL}dashboards/${dashboardId}/add-task`, {
+		const url = `${API_URL}dashboards/${dashboardId}/add-task`
+		const options = {
 			method: 'POST',
 			headers: {
-				Authorization: `Bearer ${accessToken}`,
 				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify({
@@ -45,18 +45,20 @@ export function ModalAddTask({ modalData }: { modalData: DataProps }) {
 				groupId: taskGroup,
 				expirationDate: expiredDate,
 			}),
-		})
-		if (res.ok) {
-			await res.json()
+		}
+		const response = await fetchData<TaskType>(url, options)
+
+		if (response.error) {
+			console.error('Failed to add task:', response.status, response.error)
+		}
+
+		if (response.data) {
 			if (modalData?.action && modalData.action.length === 0) {
 				const action = modalData.action as () => Promise<void>
 				action()
 			} else {
 				console.error('Unexpected function type: arugments not passed')
 			}
-		} else {
-			const errorData = await res.json()
-			console.error(errorData.message)
 		}
 		setActiveModal(null)
 	}

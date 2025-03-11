@@ -5,7 +5,7 @@ import { API_URL } from '../../config'
 import { useApi } from '../../contexts/ApiContext'
 import { useTranslation } from '../../contexts/TranslationContext'
 import { Button } from '../Button/Button'
-import { TaskPriorities, TaskProps } from './types'
+import { TaskPriorities, TaskProps, TaskType } from './types'
 
 export function Task({ task, fetchTasks, tasksSettings }: TaskProps) {
 	const [taskData, setTaskData] = useState(task)
@@ -13,7 +13,7 @@ export function Task({ task, fetchTasks, tasksSettings }: TaskProps) {
 	const [priorityValue, setPriorityValue] = useState(task.priority)
 	const [expirationValue, setExpirationValue] = useState(task.expired_at)
 	const [isEdit, setIsEdit] = useState(false)
-	const { accessToken } = useApi()
+	const { fetchData } = useApi()
 	const { dashboardId } = useParams()
 	const { t } = useTranslation()
 
@@ -51,27 +51,37 @@ export function Task({ task, fetchTasks, tasksSettings }: TaskProps) {
 				break
 			}
 		}
-		const config: RequestInit = {
+		const options: {
+			method: string
+			headers: {
+				'Content-Type': string
+			}
+			body?: string
+		} = {
 			method: action === 'delete' ? 'DELETE' : 'PATCH',
 			headers: {
-				Authorization: `Bearer ${accessToken}`,
 				'Content-Type': 'application/json',
 			},
 		}
 
 		if (action !== 'delete') {
-			config.body = JSON.stringify(updatedTask)
+			options.body = JSON.stringify(updatedTask)
 		}
 
-		const res = await fetch(`${API_URL}dashboards/${dashboardId}/task/${taskData._id}`, config)
-		if (res.ok) {
+		const url = `${API_URL}dashboards/${dashboardId}/task/${taskData._id}`
+
+		const response = await fetchData<TaskType>(url, options)
+
+		if (response.error) {
+			console.error('Failed to update Task:', response.status, response.error)
+			return
+		}
+
+		if (response.data) {
 			if (action === 'delete') {
 				fetchTasks()
 			} else {
-				const data = await res.json()
-				if (data) {
-					setTaskData(data)
-				}
+				setTaskData(response.data)
 			}
 			setIsEdit(false)
 		}

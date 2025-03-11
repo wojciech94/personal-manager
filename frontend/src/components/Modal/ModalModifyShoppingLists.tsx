@@ -5,96 +5,94 @@ import { API_URL } from '../../config'
 import { useApi } from '../../contexts/ApiContext'
 import { useModalContext } from '../../contexts/ModalContext'
 import { Button } from '../Button/Button'
-import { ShoppingLists } from '../../screens/Shopping/ShoppingLists'
 import { DataProps } from './types'
-import { ApiError } from '../../types/global'
+import { ShoppingListsType, ShoppingListType } from '../../screens/Shopping/types'
 
 export function ModalModifyShoppingLists({ modalData }: { modalData: DataProps }) {
-	const [shoppingLists, setShoppingLists] = useState<ShoppingLists>([])
+	const [shoppingLists, setShoppingLists] = useState<ShoppingListsType>([])
 	const [editedListId, setEditedListId] = useState<string | null>(null)
 	const [nameValue, setNameValue] = useState('')
 	const { setActiveModal } = useModalContext()
 	const { dashboardId } = useParams()
 	const navigate = useNavigate()
-	const { accessToken } = useApi()
+	const { fetchData } = useApi()
 
 	useEffect(() => {
 		fetchShoppingLists()
 	}, [])
 
 	const fetchShoppingLists = async () => {
-		if (accessToken) {
-			const res = await fetch(`${API_URL}dashboards/${dashboardId}/shopping-lists`, {
-				headers: {
-					Authorization: `Bearer ${accessToken}`,
-				},
-			})
-			if (res.ok) {
-				const data = await res.json()
-				if (data) {
-					setShoppingLists(data)
-				}
-			}
+		const url = `${API_URL}dashboards/${dashboardId}/shopping-lists`
+		const response = await fetchData<ShoppingListsType>(url)
+
+		if (response.error) {
+			console.error('Failed to fetch shopping lists:', response.status, response.error)
+			return
+		}
+
+		if (response.data) {
+			setShoppingLists(response.data)
 		}
 	}
 
 	const updateShoppingList = async (id: string) => {
-		if (accessToken) {
-			const res = await fetch(`${API_URL}dashboards/${dashboardId}/shopping-lists/${id}`, {
-				method: 'PATCH',
-				headers: {
-					Authorization: `Bearer ${accessToken}`,
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({ name: nameValue }),
-			})
-			if (res.ok) {
-				const data = await res.json()
-				if (data) {
-					setShoppingLists(prevList =>
-						prevList.map(l => {
-							if (l._id === id) {
-								return data
-							} else {
-								return l
-							}
-						})
-					)
-					if (modalData.action && typeof modalData.action === 'function' && modalData.action.length === 0) {
-						const action = modalData.action as () => Promise<void>
-						action()
-					}
-					setActiveModal(null)
-					navigate(`dashboards/${dashboardId}/shopping/list/${id}`, { replace: true })
-				}
-			} else {
-				const errorData: ApiError = await res.json()
-				console.error(errorData.message)
-			}
-			setEditedListId(null)
+		const url = `${API_URL}dashboards/${dashboardId}/shopping-lists/${id}`
+		const options = {
+			method: 'PATCH',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({ name: nameValue }),
 		}
+
+		const response = await fetchData<ShoppingListType>(url, options)
+
+		if (response.error) {
+			console.error('Failed to update shopping list:', response.status, response.error)
+		}
+
+		if (response.data) {
+			const data = response.data
+			setShoppingLists(prevList =>
+				prevList.map(l => {
+					if (l._id === id) {
+						return data
+					} else {
+						return l
+					}
+				})
+			)
+			if (modalData.action && typeof modalData.action === 'function' && modalData.action.length === 0) {
+				const action = modalData.action as () => Promise<void>
+				action()
+			}
+			setActiveModal(null)
+			navigate(`dashboards/${dashboardId}/shopping/list/${id}`, { replace: true })
+		}
+		setEditedListId(null)
 	}
 
 	const deleteShoppingList = async (id: string) => {
-		if (accessToken) {
-			const res = await fetch(`${API_URL}dashboards/${dashboardId}/delete/${id}`, {
-				method: 'DELETE',
-				headers: {
-					Authorization: `Bearer ${accessToken}`,
-				},
-			})
-			if (!res.ok) {
-				const errorData = await res.json()
-				console.error(errorData.message)
-			} else {
-				setShoppingLists(prevList => prevList.filter(l => l._id !== id))
-				if (modalData.action && typeof modalData.action === 'function' && modalData.action.length === 0) {
-					const action = modalData.action as () => Promise<void>
-					action()
-				}
-			}
-			setActiveModal(null)
+		const url = `${API_URL}dashboards/${dashboardId}/delete/${id}`
+		const options = {
+			method: 'DELETE',
 		}
+
+		const response = await fetchData<ShoppingListsType>(url, options)
+
+		if (response.error) {
+			console.error('Failed to delete shopping list:', response.status, response.error)
+			return
+		}
+
+		if (response.data) {
+			setShoppingLists(prevList => prevList.filter(l => l._id !== id))
+			if (modalData.action && typeof modalData.action === 'function' && modalData.action.length === 0) {
+				const action = modalData.action as () => Promise<void>
+				action()
+			}
+		}
+		setActiveModal(null)
 	}
 
 	const setEditedList = (id: string) => {

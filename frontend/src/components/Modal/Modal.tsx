@@ -8,7 +8,6 @@ import { ModalAddCategoryContent } from './ModalAddCategoryContent'
 import { ModalModifyTodoGroup } from './ModalModifyTodoGroup'
 import { ModalAddTask } from './ModalAddTask'
 import { ModalTasksSettingsContent } from './ModalTasksSettingsContent'
-import { ModalAddListItem } from './ModalAddListItem'
 import { ModalAddProduct } from './ModalAddProduct'
 import { ModalCreateShoppingList } from './ModalCreateShoppingList'
 import { ModalModifyShoppingLists } from './ModalModifyShoppingLists'
@@ -46,9 +45,6 @@ export const Modal: React.FC<ModalDataProps> = ({ name, title, data }): JSX.Elem
 			break
 		case 'tasksSettings':
 			if (data) modalContent = <ModalTasksSettingsContent modalData={data} />
-			break
-		case 'addListItem':
-			modalContent = <ModalAddListItem />
 			break
 		case 'createShoppingList':
 			if (data) modalContent = <ModalCreateShoppingList modalData={data} />

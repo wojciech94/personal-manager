@@ -1,5 +1,6 @@
 export type NoteType = {
 	_id: string
+	folder_id: string
 	title: string
 	category: string
 	is_favourite: boolean

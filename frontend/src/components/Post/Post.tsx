@@ -27,57 +27,55 @@ export function Post({
 	const [commentValue, setCommentValue] = useState('')
 	const [postInput, setPostInput] = useState(post.content)
 	const [editedComments, setEditedComments] = useState<{ [key: string]: string }>({})
-	const { accessToken } = useApi()
+	const { fetchData } = useApi()
 	const { dashboardId } = useParams()
 	const userName = useMemo(() => sessionStorage.getItem('name'), [])
 	const { t } = useTranslation()
 
 	const handleAddComment = async () => {
-		if (!accessToken) {
-			console.error('Access token not available')
-			return
-		}
-		const res = await fetch(`${API_URL}dashboards/${dashboardId}/posts/${post._id}/comments`, {
+		const url = `${API_URL}dashboards/${dashboardId}/posts/${post._id}/comments`
+		const options = {
 			method: 'POST',
 			headers: {
-				Authorization: `Bearer ${accessToken}`,
 				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify({ content: commentValue }),
-		})
-
-		if (!res.ok) {
-			const errorData: ApiError = await res.json()
-			console.error(errorData.message)
-			return
 		}
 
-		const data: Comment = await res.json()
-		if (data) {
+		const response = await fetchData<Comment>(url, options)
+
+		if (response.error) {
+			console.error('Failed to add comment:', response.status, response.error)
+		}
+
+		if (response.data) {
+			const data = response.data
 			setComments(prev => [{ ...data, isEdit: false }, ...prev])
 		}
+
 		setCommentValue('')
 	}
 
 	const handleRemoveComment = async (commentId: string) => {
-		if (!accessToken) {
-			console.error('Access token not available')
-			return
-		}
-		const res = await fetch(`${API_URL}dashboards/${dashboardId}/posts/${post._id}/comments`, {
+		const url = `${API_URL}dashboards/${dashboardId}/posts/${post._id}/comments`
+		const options = {
 			method: 'DELETE',
 			headers: {
-				Authorization: `Bearer ${accessToken}`,
 				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify({ id: commentId }),
-		})
-		if (!res.ok) {
-			const errorData: ApiError = await res.json()
-			console.error(errorData.message)
+		}
+
+		const response = await fetchData<Comment>(url, options)
+
+		if (response.error) {
+			console.error('Failed to remove comment:', response.status, response.error)
 			return
 		}
-		setComments(prevC => prevC.filter(c => c._id !== commentId))
+
+		if (response.data) {
+			setComments(prevC => prevC.filter(c => c._id !== commentId))
+		}
 	}
 
 	const handleIsEditComment = (id: string) => {
@@ -112,33 +110,31 @@ export function Post({
 	}
 
 	const handleSaveComment = async (id: string, like?: string) => {
-		if (!accessToken) {
-			console.error('Access token is not available')
-			return
+		const url = `${API_URL}dashboards/${dashboardId}/comments`
+		const options = {
+			method: 'PATCH',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({ id: id, content: editedComments[id], like: like }),
 		}
+
+		const response = await fetchData<Comment>(url, options)
+
 		if (editedComments[id] !== undefined || like) {
-			const res = await fetch(`${API_URL}dashboards/${dashboardId}/comments`, {
-				method: 'PATCH',
-				headers: {
-					Authorization: `Bearer ${accessToken}`,
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({ id: id, content: editedComments[id], like: like }),
-			})
-			if (!res.ok) {
-				const errorData: ApiError = await res.json()
-				console.error(errorData.message)
+			if (response.error) {
+				console.error('Failed to update comment:', response.status, response.error)
 				return
 			}
 
-			const data: Comment = await res.json()
-			if (data) {
+			if (response.data) {
+				const data = response.data
 				data.isEdit = false
 				setComments(prev => prev.map(c => (c._id === id ? data : c)))
+				const newEditedComments = { ...editedComments }
+				delete newEditedComments[id]
+				setEditedComments(newEditedComments)
 			}
-			const newEditedComments = { ...editedComments }
-			delete newEditedComments[id]
-			setEditedComments(newEditedComments)
 		} else {
 			console.error('Id not found in editedComments object')
 		}

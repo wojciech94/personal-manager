@@ -7,13 +7,11 @@ import { useModalContext } from '../../contexts/ModalContext'
 import { Alert } from '../../components/Alert/Alert'
 import { Button } from '../../components/Button/Button'
 import { ExpandableMenu } from '../../components/ExpandableMenu/ExpandableMenu'
-import { ShoppingList } from './ShoppingList'
 import { useTranslation } from '../../contexts/TranslationContext'
-
-export type ShoppingLists = ShoppingList[]
+import { ShoppingListsType } from './types'
 
 export function ShoppingLists() {
-	const [shoppingLists, setShoppingLists] = useState<ShoppingLists>([])
+	const [shoppingLists, setShoppingLists] = useState<ShoppingListsType>([])
 	const isExactMatch = useMatch('/dashboards/:dashboardId/shopping/list')
 	const { dashboardId } = useParams()
 	const { setActiveModal } = useModalContext()
@@ -27,7 +25,7 @@ export function ShoppingLists() {
 
 	const fetchShoppingLists = async () => {
 		const url = `${API_URL}dashboards/${dashboardId}/shopping-lists`
-		const response = await fetchData<ShoppingLists>(url)
+		const response = await fetchData<ShoppingListsType>(url)
 
 		if (response.error) {
 			console.error('Failed to fetch shopping lists:', response.status, response.error)
@@ -35,7 +33,7 @@ export function ShoppingLists() {
 		}
 
 		if (response.data) {
-			const data: ShoppingLists = response.data
+			const data: ShoppingListsType = response.data
 			setShoppingLists(data)
 			if (isExactMatch && data.length > 0) {
 				navigate(`/dashboards/${dashboardId}/shopping/list/${data[0]._id}`)

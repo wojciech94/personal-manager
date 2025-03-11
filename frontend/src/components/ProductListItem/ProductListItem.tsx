@@ -5,26 +5,28 @@ import { API_URL } from '../../config'
 import { CATEGORIES } from '../../constants/appConstants'
 import { useApi } from '../../contexts/ApiContext'
 import { useTranslation } from '../../contexts/TranslationContext'
-import { Product } from '../../screens/Shopping/Products'
 import { UpdateProduct } from '../../screens/Shopping/ProductsList'
+import { Product } from '../../screens/Shopping/types'
 import { Button } from '../Button/Button'
 
 export const ProductListItem = ({
 	product,
 	productsData,
 	setProductsData,
+	fetchProducts,
 }: {
 	product: Product
 	productsData: Product[]
 	setProductsData: React.Dispatch<React.SetStateAction<Product[]>>
+	fetchProducts: () => Promise<void>
 }) => {
 	const [editedProduct, setEditedProduct] = useState('')
 	const [nameValue, setNameValue] = useState('')
 	const [categoryValue, setCategoryValue] = useState('')
 	const [unitValue, setUnitValue] = useState('')
-	const [priceValue, setPriceValue] = useState(0)
+	const [priceValue, setPriceValue] = useState('0')
 	const [tagsValue, setTagsValue] = useState('')
-	const { accessToken } = useApi()
+	const { fetchData } = useApi()
 	const { dashboardId } = useParams()
 	const productData = { name: nameValue, category: categoryValue, unit: unitValue, price: priceValue, tags: tagsValue }
 	const { t } = useTranslation()
@@ -48,51 +50,51 @@ export const ProductListItem = ({
 	}
 
 	const handleUpdate = async (id: string, data: UpdateProduct | { isFavourite: boolean }) => {
-		if (!accessToken) {
-			console.error('No token found in local storage.')
-		}
-
-		const res = await fetch(`${API_URL}dashboards/${dashboardId}/products/${id}`, {
+		const url = `${API_URL}dashboards/${dashboardId}/products/${id}`
+		const options = {
 			method: 'PATCH',
 			headers: {
-				Authorization: `Bearer ${accessToken}`,
 				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify(data),
-		})
-		if (res.ok) {
-			const result: Product = await res.json()
+		}
+
+		const response = await fetchData<Product>(url, options)
+
+		if (response.error) {
+			console.error('Faileds to update product:', response.status, response.error)
+		}
+
+		if (response.data) {
+			const data = response.data
 			setProductsData((prevData: Product[]) =>
 				prevData.map((p: Product) => {
 					if (p._id === id) {
-						return result
+						return data
 					}
 					return p
 				})
 			)
-		} else {
-			const errorData = await res.json()
-			console.error(errorData.message)
 		}
+
 		setEditedProduct('')
 	}
 
 	const handleDelete = async (id: string) => {
-		if (!accessToken) {
+		const url = `${API_URL}dashboards/${dashboardId}/products/${id}`
+		const options = {
+			method: 'DELETE',
+		}
+
+		const response = await fetchData<Product>(url, options)
+
+		if (response.error) {
+			console.error('Failed to delete product:', response.status, response.error)
 			return
 		}
 
-		const res = await fetch(`${API_URL}dashboards/${dashboardId}/products/${id}`, {
-			method: 'DELETE',
-			headers: {
-				Authorization: `Bearer ${accessToken}`,
-			},
-		})
-		if (res.ok) {
-			setProductsData(prevData => prevData.filter(d => d._id !== id))
-		} else {
-			const errorData = await res.json()
-			console.error(errorData.message)
+		if (response.data) {
+			fetchProducts()
 		}
 	}
 
@@ -139,7 +141,7 @@ export const ProductListItem = ({
 							type='number'
 							value={priceValue}
 							placeholder={t('type_price')}
-							onChange={e => setPriceValue(Number(e.target.value))}
+							onChange={e => setPriceValue(e.target.value)}
 						/>
 					</td>
 					<td>

@@ -15,7 +15,7 @@ export function ModalFolderContent({ modalData }: { modalData: DataProps }) {
 	const [addInputValue, setAddInputValue] = useState('')
 	const { dashboardId } = useParams()
 	const { setActiveModal } = useModalContext()
-	const { accessToken } = useApi()
+	const { fetchData } = useApi()
 	const { t } = useTranslation()
 
 	useEffect(() => {
@@ -23,14 +23,17 @@ export function ModalFolderContent({ modalData }: { modalData: DataProps }) {
 	}, [])
 
 	const fetchFolders = async () => {
-		const res = await fetch(`${API_URL}dashboards/${dashboardId}/folders`, {
-			headers: {
-				Authorization: `Bearer ${accessToken}`,
-			},
-		})
+		const url = `${API_URL}dashboards/${dashboardId}/folders`
 
-		if (res.ok) {
-			const data = await res.json()
+		const response = await fetchData<Folder[]>(url)
+
+		if (response.error) {
+			console.error('Failed to fetch folders:', response.status, response.error)
+			return
+		}
+
+		if (response.data) {
+			const data = response.data
 			setFolders(data)
 		}
 	}
@@ -91,37 +94,48 @@ type FolderRowProps = {
 function FolderRow({ folder, action, dashboardId }: FolderRowProps) {
 	const [isEdit, setIsEdit] = useState(false)
 	const [inputValue, setInputValue] = useState(folder.name)
-	const { accessToken } = useApi()
+	const { fetchData } = useApi()
 	const { t } = useTranslation()
 
 	const handleSave = async () => {
-		const res = await fetch(`${API_URL}dashboards/${dashboardId}/folders/${folder._id}`, {
+		const url = `${API_URL}dashboards/${dashboardId}/folders/${folder._id}`
+		const options = {
 			method: 'PATCH',
 			headers: {
 				'Content-Type': 'application/json',
-				Authorization: `Bearer ${accessToken}`,
 			},
 			body: JSON.stringify({ name: inputValue }),
-		})
+		}
 
-		if (res.ok) {
-			const data = await res.json()
+		const response = await fetchData<Folder>(url, options)
+
+		if (response.error) {
+			console.error('Failed to update folder:', response.status, response.error)
+			return
+		}
+
+		if (response.data) {
 			action()
 		}
 	}
 
 	const handleRemove = async () => {
 		const url = `${API_URL}dashboards/${dashboardId}/folders/${folder._id}`
-		const res = await fetch(url, {
+		const options = {
 			method: 'DELETE',
 			headers: {
 				'Content-Type': 'application/json',
-				Authorization: `Bearer ${accessToken}`,
 			},
-		})
+		}
 
-		if (res.ok) {
-			const data = await res.json()
+		const response = await fetchData<Folder>(url, options)
+
+		if (response.error) {
+			console.error('Failed to remove folder:', response.status, response.error)
+			return
+		}
+
+		if (response.data) {
 			action()
 		}
 	}

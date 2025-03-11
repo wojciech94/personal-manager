@@ -1,10 +1,8 @@
 import { useEffect } from 'react'
 import { useState } from 'react'
 import { Check, Edit, Trash2 } from 'react-feather'
+import { Product, ShoppingProductProps } from '../../screens/Shopping/types'
 import { Button } from '../Button/Button'
-import { Product } from '../../screens/Shopping/Products'
-import { ShoppingProductProps } from './types'
-import { useTranslation } from '../../contexts/TranslationContext'
 
 export function ShoppingProduct({ data, onListItemUpdate, onListItemDelete }: ShoppingProductProps) {
 	const [product, setProduct] = useState<Product>(data.productId)
@@ -67,7 +65,7 @@ export function ShoppingProduct({ data, onListItemUpdate, onListItemDelete }: Sh
 					<td>
 						{editedId && editedId === data._id ? (
 							<div className='d-flex gap-1'>
-								<input type='text' value={quantityValue} onChange={e => setQuantityValue(Number(e.target.value))} />
+								<input type='text' value={quantityValue} onChange={e => setQuantityValue(e.target.value)} />
 								<input type='text' value={unitValue} onChange={e => setUnitValue(e.target.value)} />
 							</div>
 						) : (
@@ -76,7 +74,7 @@ export function ShoppingProduct({ data, onListItemUpdate, onListItemDelete }: Sh
 					</td>
 					<td>
 						{editedId && editedId === data._id ? (
-							<input type='text' value={priceValue} onChange={e => setPriceValue(Number(e.target.value))}></input>
+							<input type='text' value={priceValue} onChange={e => setPriceValue(e.target.value)}></input>
 						) : (
 							data.customPrice
 						)}

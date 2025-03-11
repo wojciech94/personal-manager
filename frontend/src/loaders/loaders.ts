@@ -1,8 +1,8 @@
-import { ShoppingList } from './../screens/Shopping/ShoppingList'
 import { API_URL } from './../config'
 import { LoaderFunctionArgs } from 'react-router-dom'
 import { ApiError } from '../types/global'
 import { NoteType } from '../components/Note/types'
+import { ShoppingListType } from '../screens/Shopping/types'
 
 export const fetchFolders = async ({ params }: LoaderFunctionArgs, accessToken: string | null) => {
 	const { dashboardId } = params
@@ -37,7 +37,7 @@ export const fetchShoppingList = async ({ params }: LoaderFunctionArgs, accessTo
 		const ErrorMessage: ApiError = await response.json()
 		throw new Error(ErrorMessage.message)
 	}
-	const data: ShoppingList = await response.json()
+	const data: ShoppingListType = await response.json()
 	return data
 }
 

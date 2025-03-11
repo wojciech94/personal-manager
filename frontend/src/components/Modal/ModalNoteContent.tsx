@@ -6,6 +6,7 @@ import { useTranslation } from '../../contexts/TranslationContext'
 import { Folder } from '../../screens/Notes/types'
 import { Button } from '../Button/Button'
 import { FormRow } from '../FormRow/FormRow'
+import { NoteProps, NoteType } from '../Note/types'
 import { DataProps } from './types'
 
 export const ModalNoteContent = ({ modalData }: { modalData: DataProps }) => {
@@ -19,7 +20,7 @@ export const ModalNoteContent = ({ modalData }: { modalData: DataProps }) => {
 	const [expiredDate, setExpiredDate] = useState('')
 	const [noteTags, setNoteTags] = useState('')
 	const { dashboardId } = useParams()
-	const { accessToken } = useApi()
+	const { fetchData } = useApi()
 	const { t } = useTranslation()
 
 	useEffect(() => {
@@ -34,16 +35,16 @@ export const ModalNoteContent = ({ modalData }: { modalData: DataProps }) => {
 		const noteId = modalData.id
 		if (noteId) {
 			const fetchNoteData = async () => {
-				const response = await fetch(`${API_URL}notes/${noteId}`, {
-					method: 'GET',
-					headers: {
-						Authorization: `Bearer ${accessToken}`,
-						'Content-Type': 'application/json',
-					},
-				})
-				if (response.ok) {
-					const note = await response.json()
-					const { title, content, category, tags, folder_id, is_favourite, expired_at } = note
+				const url = `${API_URL}notes/${noteId}`
+				const response = await fetchData<NoteType>(url)
+
+				if (response.error) {
+					console.error('Failed to fetch note:', response.status, response.error)
+					return
+				}
+
+				if (response.data) {
+					const { title, content, category, tags, folder_id, is_favourite, expired_at } = response.data
 					setNoteName(title)
 					setNoteContent(content)
 					setSelectedCategory(category)
@@ -51,9 +52,6 @@ export const ModalNoteContent = ({ modalData }: { modalData: DataProps }) => {
 					setSelectedFolder(folder_id)
 					setIsFavourite(is_favourite)
 					setExpiredDate(expired_at?.split('T')[0] || '')
-				} else {
-					const errorStatus = response.status
-					console.error('Failed to fetch note data', errorStatus)
 				}
 			}
 			fetchNoteData()
@@ -61,34 +59,30 @@ export const ModalNoteContent = ({ modalData }: { modalData: DataProps }) => {
 	}, [])
 
 	async function fetchNotesCategories() {
-		const response = await fetch(`${API_URL}dashboards/${dashboardId}/note-categories`, {
-			method: 'GET',
-			headers: {
-				Authorization: `Bearer ${accessToken}`,
-			},
-		})
+		const url = `${API_URL}dashboards/${dashboardId}/note-categories`
+		const response = await fetchData<string[]>(url)
 
-		if (response.ok) {
-			const categoryNames = await response.json()
-			setCategoryNames(categoryNames)
-		} else {
-			console.error('Failed to fetch category names', response.status)
+		if (response.error) {
+			console.error('Failed to fetch note categories:', response.status, response.error)
+			return
+		}
+
+		if (response.data) {
+			setCategoryNames(response.data)
 		}
 	}
 
 	async function fetchFolders() {
-		const response = await fetch(`${API_URL}dashboards/${dashboardId}/folders`, {
-			method: 'GET',
-			headers: {
-				Authorization: `Bearer ${accessToken}`,
-			},
-		})
+		const url = `${API_URL}dashboards/${dashboardId}/folders`
+		const response = await fetchData<Folder[]>(url)
 
-		if (response.ok) {
-			const folderNames = await response.json()
-			setFolderNames(folderNames)
-		} else {
-			console.error('Failed to fetch folders', response.status)
+		if (response.error) {
+			console.error('Failed to fetch folders:', response.status, response.error)
+			return
+		}
+
+		if (response.data) {
+			setFolderNames(response.data)
 		}
 	}
 

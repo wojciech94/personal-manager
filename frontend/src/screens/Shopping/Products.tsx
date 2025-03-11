@@ -11,16 +11,7 @@ import { Alert } from '../../components/Alert/Alert'
 import { Button } from '../../components/Button/Button'
 import { useApi } from '../../contexts/ApiContext'
 import { useTranslation } from '../../contexts/TranslationContext'
-
-export type Product = {
-	_id: string
-	name: string
-	category: string
-	unit: string
-	price: number
-	tags: string
-	isFavourite?: boolean
-}
+import { Product } from './types'
 
 export function Products() {
 	const [products, setProducts] = useState<Product[]>([])
@@ -164,7 +155,7 @@ export function Products() {
 			</div>
 			{products && currentItems && currentItems.length > 0 ? (
 				<div className='mx-n4 mb-n4'>
-					<ProductsList products={currentItems} />
+					<ProductsList products={currentItems} fetchProducts={fetchProducts} />
 					<Pagination
 						currentPage={currentPage}
 						totalPages={totalPages}

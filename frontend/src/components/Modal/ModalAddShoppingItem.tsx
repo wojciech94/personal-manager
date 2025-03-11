@@ -4,6 +4,7 @@ import { API_URL } from '../../config'
 import { useApi } from '../../contexts/ApiContext'
 import { useModalContext } from '../../contexts/ModalContext'
 import { useTranslation } from '../../contexts/TranslationContext'
+import { Product, ShoppingItem } from '../../screens/Shopping/types'
 import { Button } from '../Button/Button'
 
 export function ModalAddShoppingItem(): JSX.Element {
@@ -11,67 +12,59 @@ export function ModalAddShoppingItem(): JSX.Element {
 	const [activeProductId, setActiveProductId] = useState<Product | null>(null)
 	const { dashboardId, shoppingListId } = useParams()
 	const [unitValue, setUnitValue] = useState<string>('')
-	const [priceValue, setPriceValue] = useState<number>(0)
-	const [quantityValue, setQuantityValue] = useState<number | null>(1)
+	const [priceValue, setPriceValue] = useState<string>('0')
+	const [quantityValue, setQuantityValue] = useState<string>('1')
 	const [notesValue, setNotesValue] = useState<string>('')
 	const { setActiveModal } = useModalContext()
 	const navigate = useNavigate()
-	const { accessToken } = useApi()
+	const { fetchData } = useApi()
 	const { t } = useTranslation()
 
-	type Product = {
-		_id: string
-		unit: string
-		price: number
-		name: string
-	}
-
 	const fetchProducts = async (): Promise<void> => {
-		if (accessToken) {
-			const res = await fetch(`${API_URL}dashboards/${dashboardId}/products?sort_by=name&direction=asc`, {
-				headers: {
-					Authorization: `Bearer ${accessToken}`,
-				},
-			})
-			if (res.ok) {
-				const data = await res.json()
-				setProducts(data)
-				setActiveProductId(data[0]._id || null)
-				setUnitValue(data[0].unit || '')
-				setPriceValue(data[0].price || 0)
-			} else {
-				const errorData = await res.json()
-				console.error(errorData.message)
-			}
+		const url = `${API_URL}dashboards/${dashboardId}/products?sort_by=name&direction=asc`
+
+		const response = await fetchData<Product[]>(url)
+
+		if (response.error) {
+			console.error('Failed to fetch products:', response.status, response.error)
+			return
+		}
+
+		if (response.data) {
+			const data = response.data
+			setProducts(data)
+			setActiveProductId(data[0] || null)
+			setUnitValue(data[0].unit || '')
+			setPriceValue(data[0].price.toString() || '0')
 		}
 	}
 
 	const addShoppingItem = async (): Promise<void> => {
-		if (accessToken) {
-			const res = await fetch(`${API_URL}dashboards/${dashboardId}/shoppingLists/${shoppingListId}/shopping-items`, {
-				method: 'POST',
-				headers: {
-					Authorization: `Bearer ${accessToken}`,
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({
-					productId: activeProductId,
-					quantity: quantityValue,
-					notes: notesValue,
-					customUnit: unitValue,
-					customPrice: priceValue,
-				}),
-			})
-			if (res.ok) {
-				const data = await res.json()
-				if (data) {
-					setActiveModal(null)
-					navigate(window.location.pathname, { replace: true })
-				}
-			} else {
-				const errorData = await res.json()
-				console.error(errorData.message)
-			}
+		const url = `${API_URL}dashboards/${dashboardId}/shoppingLists/${shoppingListId}/shopping-items`
+		const options = {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				productId: activeProductId,
+				quantity: quantityValue,
+				notes: notesValue,
+				customUnit: unitValue,
+				customPrice: priceValue,
+			}),
+		}
+
+		const response = await fetchData<ShoppingItem>(url, options)
+
+		if (response.error) {
+			console.error('Failed to add shopping item:', response.status, response.error)
+			return
+		}
+
+		if (response.data) {
+			setActiveModal(null)
+			navigate(window.location.pathname, { replace: true })
 		}
 	}
 
@@ -79,7 +72,7 @@ export function ModalAddShoppingItem(): JSX.Element {
 		const activeProduct = products.find(p => p._id === id)
 		setActiveProductId(activeProduct || null)
 		setUnitValue(activeProduct?.unit || '')
-		setPriceValue(activeProduct?.price || 0)
+		setPriceValue(activeProduct?.price || '0')
 	}
 
 	useEffect(() => {
@@ -109,10 +102,14 @@ export function ModalAddShoppingItem(): JSX.Element {
 					<div className='d-flex flex-column gap-1'>
 						<div>{t('quantity')}</div>
 						<input
-							value={quantityValue === null ? '' : quantityValue}
+							value={quantityValue}
 							onChange={e => {
-								const value = e.target.value === '' ? null : Number(e.target.value)
-								setQuantityValue(value)
+								const inputValue = e.target.value
+								console.log(inputValue)
+								if (inputValue === '' || /^\d*\.?\d*$/.test(inputValue)) {
+									setQuantityValue(inputValue)
+									console.log('valid')
+								}
 							}}
 						/>
 					</div>
@@ -122,7 +119,7 @@ export function ModalAddShoppingItem(): JSX.Element {
 					</div>
 					<div className='d-flex flex-column gap-1'>
 						<div>{t('price')}</div>
-						<input type='number' value={priceValue} onChange={e => setPriceValue(Number(e.target.value))} />
+						<input value={priceValue} onChange={e => setPriceValue(e.target.value)} />
 					</div>
 					<div className='d-flex flex-column flex-1 gap-1 w-100'>
 						<div>{t('notes')}</div>

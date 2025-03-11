@@ -9,29 +9,30 @@ import { FormRow } from '../FormRow/FormRow'
 export const ModalAddCategoryContent = () => {
 	const [nameValue, setNameValue] = useState('')
 	const { setActiveModal } = useModalContext()
-	const { accessToken } = useApi()
-	const {t} = useTranslation()
+	const { fetchData } = useApi()
+	const { t } = useTranslation()
 
+	//ToDo: Można aktualizować kategorie po dodaniu
 	const addCategory = async () => {
-		if (accessToken) {
-			const res = await fetch(`${API_URL}notes/add-category`, {
-				method: 'POST',
-				headers: {
-					Authorization: `Bearer ${accessToken}`,
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({ name: nameValue }),
-			})
-			if (res.ok) {
-				const data = await res.json()
-				setActiveModal(null)
-			} else {
-				const data = await res.json()
-				console.error(`Server error: ${data.message}`)
-				setNameValue('')
-			}
+		const url = `${API_URL}notes/add-category`
+		const options = {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({ name: nameValue }),
 		}
+
+		const response = await fetchData<void>(url, options)
+
+		if (response.error) {
+			console.error('Failed to add category:', response.status, response.error)
+		}
+
+		setActiveModal(null)
 	}
+
+	//ToDo: Update i delete dla kategorii
 
 	return (
 		<>

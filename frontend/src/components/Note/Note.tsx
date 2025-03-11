@@ -6,34 +6,36 @@ import { useModalContext } from '../../contexts/ModalContext'
 import { useTranslation } from '../../contexts/TranslationContext'
 import { getLocaleDateTime } from '../../utils/helpers'
 import { Button } from '../Button/Button'
-import { NoteProps } from './types'
+import { NoteProps, NoteType } from './types'
 
 export const Note: React.FC<NoteProps> = ({ note, updateNote, fetchNotes }): JSX.Element => {
 	const { setActiveModal } = useModalContext()
 	const { dashboardId } = useParams()
-	const { accessToken } = useApi()
+	const { fetchData } = useApi()
 	const { t } = useTranslation()
 
 	const removeNote = async (id: string): Promise<void> => {
 		if (id) {
-			const response = await fetch(`${API_URL}dashboards/${dashboardId}/notes/remove`, {
+			const url = `${API_URL}dashboards/${dashboardId}/notes/remove`
+			const options = {
 				method: 'DELETE',
 				headers: {
 					'Content-Type': 'application/json',
-					Authorization: `Bearer ${accessToken}`,
 				},
 				body: JSON.stringify({ id }),
-			})
+			}
+			const response = await fetchData<NoteType>(url, options)
 
-			if (response.ok) {
-				const data = await response.json()
+			if (response.error) {
+				console.error('Failed to remove note:', response.status, response.error)
+				return
+			}
+
+			if (response.data) {
 				fetchNotes()
-			} else {
-				const errorData = await response.json()
-				console.error('Note removal failed:', errorData.message)
 			}
 		} else {
-			console.error('Id not provided')
+			console.error('Cannot remove note: Missing or invalid Id')
 		}
 	}
 
