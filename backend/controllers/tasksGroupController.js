@@ -2,6 +2,7 @@ const TaskGroup = require('../models/TaskGroup')
 const Dashboard = require('../models/Dashboard')
 const mongoose = require('mongoose')
 const { addLog } = require('./logsController')
+const Task = require('../models/Task')
 
 exports.addTasksGroup = async (req, res) => {
 	try {
@@ -128,12 +129,17 @@ exports.deleteTasksGroup = async (req, res) => {
 			return res.status(404).json({ message: 'Task group not found' })
 		}
 
+		const taskIds = todoGroup.tasks
+		if (taskIds && taskIds.length > 0) {
+			await Task.deleteMany({ _id: { $in: taskIds } })
+		}
+
 		dashboard.todoGroupIds = dashboard.todoGroupIds.filter(g => g.toString() !== id)
 		await dashboard.save()
 
 		await dashboard.populate('todoGroupIds')
 
-		const message = `Removed task group (${todoGroup.name})`
+		const message = `Removed tasks group (${todoGroup.name}) and associated tasks`
 		await addLog(dashboard.logsId, userId, message)
 
 		res.status(200).json(dashboard.todoGroupIds)

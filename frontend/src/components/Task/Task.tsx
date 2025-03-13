@@ -7,11 +7,11 @@ import { useTranslation } from '../../contexts/TranslationContext'
 import { Button } from '../Button/Button'
 import { TaskPriorities, TaskProps, TaskType } from './types'
 
-export function Task({ task, fetchTasks, tasksSettings }: TaskProps) {
+export function Task({ task, fetchTasks, tasksSettings, isArchive }: TaskProps) {
 	const [taskData, setTaskData] = useState(task)
-	const [contentValue, setContentValue] = useState(task.content)
-	const [priorityValue, setPriorityValue] = useState(task.priority)
-	const [expirationValue, setExpirationValue] = useState(task.expired_at)
+	const [contentValue, setContentValue] = useState(task.content || '')
+	const [priorityValue, setPriorityValue] = useState(task.priority || '')
+	const [expirationValue, setExpirationValue] = useState(task.expired_at || '')
 	const [isEdit, setIsEdit] = useState(false)
 	const { fetchData } = useApi()
 	const { dashboardId } = useParams()
@@ -140,11 +140,12 @@ export function Task({ task, fetchTasks, tasksSettings }: TaskProps) {
 				</div>
 			)}
 			<div className='d-flex gap-2 align-center'>
-				{isEdit ? (
+				{isEdit && (
 					<Button variant='success' onlyIcon={true} onClick={() => updateTask('update')}>
 						<Check size={16} />
 					</Button>
-				) : (
+				)}
+				{!isEdit && !isArchive && (
 					<Button onlyIcon={true} onClick={() => setIsEdit(true)}>
 						<Edit size={16} />
 					</Button>

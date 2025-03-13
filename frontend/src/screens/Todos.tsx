@@ -78,11 +78,13 @@ export const Todos = () => {
 
 		if (response.error) {
 			console.error('Failed to fetch tasks', response.status, response.error)
+			setTasks([])
+			setArchivedTasks([])
 			return
 		}
 
 		if (response.data) {
-			const data: TodoGroup = response.data
+			const data = response.data
 			const now = new Date()
 			const activeTasks = data.tasks.filter(t => !t.archived_at || new Date(t.archived_at) > now)
 			const archiveTasks = data.tasks.filter(t => t.archived_at && new Date(t.archived_at) <= now)
@@ -137,12 +139,16 @@ export const Todos = () => {
 	}
 
 	const handleModifyTodoGroupCategory = () => {
+		const fetchTasksAndTodos = async () => {
+			await fetchTodoGroups()
+			await fetchTasks('')
+		}
 		const modifyTodoGroupCategoryModal = {
 			name: 'modifyTodoGroup',
 			data: {
 				action: addGroup,
 				actionName: t('add_group'),
-				fetchAction: fetchTodoGroups,
+				fetchAction: fetchTasksAndTodos,
 				groups: todoGroups,
 			},
 			title: t('modify_todo_groups'),
@@ -232,7 +238,13 @@ export const Todos = () => {
 					<div className='task-container rounded-bottom-4 overflow-hidden'>
 						{tasksSettings &&
 							visibleTasks.map(t => (
-								<Task key={t._id} task={t} fetchTasks={() => fetchTasks(activeGroup)} tasksSettings={tasksSettings} />
+								<Task
+									key={t._id}
+									task={t}
+									fetchTasks={() => fetchTasks(activeGroup)}
+									tasksSettings={tasksSettings}
+									isArchive={showArchive}
+								/>
 							))}
 					</div>
 				</>

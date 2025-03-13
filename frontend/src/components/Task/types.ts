@@ -14,6 +14,7 @@ export type TaskProps = {
 	task: TaskType
 	fetchTasks: () => void
 	tasksSettings: TasksSettings
+	isArchive: boolean
 }
 
 export type TaskType = {

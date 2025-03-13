@@ -16,6 +16,10 @@ interface ApiProviderProps {
 	children: ReactNode
 }
 
+interface FetchError extends Error {
+	status?: number
+}
+
 const ApiContext = createContext<ApiContextType | undefined>(undefined)
 
 export const ApiProvider: React.FC<ApiProviderProps> = ({ children }) => {
@@ -126,8 +130,8 @@ export const ApiProvider: React.FC<ApiProviderProps> = ({ children }) => {
 
 				if (!retryResponse.ok) {
 					const responseError = await retryResponse.json()
-					const error = new Error(responseError?.message || 'Undefined error after token refresh')
-					;(error as any).status = 401
+					const error: FetchError = new Error(responseError?.message || 'Undefined error after token refresh')
+					error.status = retryResponse.status
 					throw error
 				}
 
@@ -137,16 +141,20 @@ export const ApiProvider: React.FC<ApiProviderProps> = ({ children }) => {
 
 			if (!response.ok) {
 				const responseError = await response.json()
-				const error = new Error(responseError?.message || 'Undefined error')
-				;(error as any).status = 401
+				const error: FetchError = new Error(responseError?.message || 'Undefined error')
+				error.status = response.status
 				throw error
 			}
 
 			const data = await response.json()
 			return { data, error: null, status: response.status }
 		} catch (error) {
-			const errorObj = error instanceof Error ? error : new Error('Undefined error')
-			return { data: null, error: errorObj, status: null }
+			const errorObj: FetchError = error instanceof Error ? error : new Error('Undefined error')
+			return {
+				data: null,
+				error: errorObj,
+				status: errorObj.status || null,
+			}
 		}
 	}
 

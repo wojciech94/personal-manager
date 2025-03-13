@@ -124,7 +124,7 @@ export function Products() {
 								CATEGORIES.length > 0 &&
 								CATEGORIES.map(c => (
 									<option key={c.value} value={c.value}>
-										{c.name}
+										{t(c.value)}
 									</option>
 								))}
 						</select>

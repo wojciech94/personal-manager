@@ -101,6 +101,7 @@ export function ModalModifyTodoGroup({ modalData }: { modalData: DataProps }) {
 
 			const response = await fetchData<TodoGroup[]>(url, options)
 
+			setActiveModal(null)
 			if (response.error) {
 				console.error('Failed to update todo group:', response.status, response.error)
 				return

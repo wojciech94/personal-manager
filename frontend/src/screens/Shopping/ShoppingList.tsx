@@ -13,6 +13,7 @@ import { IsShoppingPurchased, Product, ShoppingItem, ShoppingListType } from './
 
 export function ShoppingList() {
 	const data: ShoppingListType = useLoaderData() as ShoppingListType
+	const [shoppingList, setShoppingList] = useState<ShoppingListType | null>(null)
 	const [hasProducts, setHasProducts] = useState(false)
 	const { setActiveModal } = useModalContext()
 	const { shoppingListId, dashboardId } = useParams()
@@ -42,6 +43,13 @@ export function ShoppingList() {
 
 		getProductsCount()
 	}, [])
+
+	useEffect(() => {
+		const sortedList = [...data.list].sort((a, b) => {
+			return Number(a.isPurchased) - Number(b.isPurchased)
+		})
+		setShoppingList({ ...data, list: sortedList })
+	}, [data])
 
 	const openAddItemModal = () => {
 		const modalData = {
@@ -130,7 +138,7 @@ export function ShoppingList() {
 					{t('add_item')}
 				</Button>
 			</div>
-			{data.list && data.list.length > 0 ? (
+			{shoppingList && shoppingList.list && shoppingList.list.length > 0 ? (
 				<div className='mx-n4 mb-n4'>
 					<table cellSpacing={0} className='overflow-hidden rounded-bottom-3'>
 						<thead className='bg-lighter'>
@@ -144,7 +152,7 @@ export function ShoppingList() {
 							</tr>
 						</thead>
 						<tbody>
-							{data.list.map(p => (
+							{shoppingList.list.map(p => (
 								<ShoppingProduct
 									key={p._id}
 									data={p}

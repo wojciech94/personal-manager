@@ -8,6 +8,7 @@ import { useTranslation } from '../../contexts/TranslationContext'
 import { UpdateProduct } from '../../screens/Shopping/ProductsList'
 import { Product } from '../../screens/Shopping/types'
 import { Button } from '../Button/Button'
+import { TranslationKey } from '../../translations'
 
 export const ProductListItem = ({
 	product,
@@ -22,7 +23,7 @@ export const ProductListItem = ({
 }) => {
 	const [editedProduct, setEditedProduct] = useState('')
 	const [nameValue, setNameValue] = useState('')
-	const [categoryValue, setCategoryValue] = useState('')
+	const [categoryValue, setCategoryValue] = useState<TranslationKey>('other')
 	const [unitValue, setUnitValue] = useState('')
 	const [priceValue, setPriceValue] = useState('0')
 	const [tagsValue, setTagsValue] = useState('')
@@ -40,7 +41,7 @@ export const ProductListItem = ({
 			}
 			setEditedProduct(id)
 			setNameValue(product.name)
-			setCategoryValue(product.category)
+			setCategoryValue(product.category as TranslationKey)
 			setUnitValue(product.unit)
 			setPriceValue(product.price)
 			setTagsValue(product.tags)
@@ -120,10 +121,10 @@ export const ProductListItem = ({
 							name='categorySelect'
 							id='categorySelect'
 							value={categoryValue}
-							onChange={e => setCategoryValue(e.target.value)}>
+							onChange={e => setCategoryValue(e.target.value as TranslationKey)}>
 							{CATEGORIES.map(c => (
 								<option key={c.value} value={c.value}>
-									{c.name}
+									{t(c.value)}
 								</option>
 							))}
 						</select>
@@ -156,7 +157,7 @@ export const ProductListItem = ({
 			) : (
 				<>
 					<td>{product.name}</td>
-					<td>{product.category}</td>
+					<td>{t(product.category as TranslationKey)}</td>
 					<td>{product.unit}</td>
 					<td>{product.price}</td>
 					<td className='d-none d-table-cell-sm'>{product.tags}</td>
