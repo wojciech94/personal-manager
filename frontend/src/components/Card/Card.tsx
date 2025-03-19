@@ -5,7 +5,7 @@ export const Card: React.FC<CardProps> = ({ title, footer, children, headerCompo
 	return (
 		<div className={`card ${className ? className : ''}`}>
 			{headerComponent && headerComponent}
-			{title && <div className='card-title'>{title}</div>}
+			{title && <div className='font-semibold text-lg'>{title}</div>}
 			{children && <div className={`card-content ${contentClass ? contentClass : ''}`}>{children}</div>}
 			{footer && <div className='card-footer'>{footer}</div>}
 		</div>
@@ -15,7 +15,7 @@ export const Card: React.FC<CardProps> = ({ title, footer, children, headerCompo
 export const CardHeader: React.FC<HeaderProps> = ({ title, data, className }) => {
 	return (
 		<div className={`card-header ${className ? className : ''}`}>
-			<div className='card-title flex-1'>{title}</div>
+			<div className='font-semibold text-lg flex-1'>{title}</div>
 			{data && data.length > 0 && (
 				<div className='d-flex gap-2 align-center flex-wrap'>
 					{data.map(d => (

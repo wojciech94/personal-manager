@@ -130,7 +130,7 @@ export const Home = () => {
 	return (
 		<ModalContext.Provider value={{ activeModal, setActiveModal }}>
 			<FetchDashboardsContext.Provider value={{ fetchUserDashboards }}>
-				<div className='d-flex flex-column'>
+				<div className='d-flex flex-column flex-1'>
 					<header className='topbar'>
 						<Link to={'/'}>
 							<img src='/logo.png' width={40} alt='' />
@@ -144,7 +144,7 @@ export const Home = () => {
 						</Button>
 						<Dropdown items={dropdownItems} hasNotifications={hasNotifications}></Dropdown>
 					</header>
-					<main className='flex-1'>
+					<main className='flex flex-1'>
 						{isExactMatch ? (
 							<WelcomeScreen isNew={dashboards.length === 0} createDashboardModal={openModal} />
 						) : (

@@ -76,7 +76,7 @@ export function ShoppingLists() {
 	return (
 		<>
 			<div className='d-flex gap-3 justify-between align-center'>
-				<div className='card-title'>{t('shopping_list')}</div>
+				<div className='font-semibold text-lg'>{t('shopping_list')}</div>
 				<div className='d-flex gap-2 align-center'>
 					<Button className={`text-nowrap btn-mobile-icon`} onClick={openCreateShoppingListModal}>
 						<Plus size={16} />

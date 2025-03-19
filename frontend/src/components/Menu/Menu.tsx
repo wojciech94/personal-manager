@@ -8,34 +8,34 @@ export const Menu = () => {
 	return (
 		<div className='menu'>
 			<NavLink
-				className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}
+				className={({ isActive }) => `menu-item ${isActive ? 'active font-semibold' : ''}`}
 				to={`/dashboards/${dashboardId}`}
 				end>
 				{t('details')}
 			</NavLink>
 			<NavLink
-				className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}
+				className={({ isActive }) => `menu-item ${isActive ? 'active font-semibold' : ''}`}
 				to={`/dashboards/${dashboardId}/calendar`}
 				end>
 				{t('calendar')}
 			</NavLink>
 			<NavLink
-				className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}
+				className={({ isActive }) => `menu-item ${isActive ? 'active font-semibold' : ''}`}
 				to={`/dashboards/${dashboardId}/todo`}>
 				{t('todo_list')}
 			</NavLink>
 			<NavLink
-				className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}
+				className={({ isActive }) => `menu-item ${isActive ? 'active font-semibold' : ''}`}
 				to={`/dashboards/${dashboardId}/folders/notes`}>
 				{t('notes')}
 			</NavLink>
 			<NavLink
-				className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}
+				className={({ isActive }) => `menu-item ${isActive ? 'active font-semibold' : ''}`}
 				to={`/dashboards/${dashboardId}/shopping`}>
 				{t('shopping')}
 			</NavLink>
 			<NavLink
-				className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}
+				className={({ isActive }) => `menu-item ${isActive ? 'active font-semibold' : ''}`}
 				to={`/dashboards/${dashboardId}/posts`}>
 				{t('community')}
 			</NavLink>

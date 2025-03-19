@@ -101,7 +101,7 @@ export function Products() {
 		<>
 			<div className='d-flex flex-wrap justify-between align-center gap-3'>
 				<div className='d-flex gap-4 align-center'>
-					<div className='card-title'>{t('products')}</div>
+					<div className='font-semibold text-lg'>{t('products')}</div>
 				</div>
 				<div className='d-flex gap-2 align-center'>
 					<Button className='text-nowrap' onClick={() => setActiveModal(modalData)}>

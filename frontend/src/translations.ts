@@ -58,6 +58,9 @@ export const translations = {
 		import: 'import',
 		default_data: 'default data.',
 		calendar: 'Calendar',
+		month: 'Month',
+		week: 'Week',
+		day: 'Day',
 		//Login
 		login: 'Login',
 		sign_in: 'Sign in',
@@ -116,6 +119,8 @@ export const translations = {
 		dashboard_details: 'Dashboard details',
 		owner: 'Owner',
 		dashboard_name: 'Dashboard name',
+		//Calendar
+		add_event: 'Add event',
 		//ToDo
 		todo_list: 'To do list',
 		tasks_todo: 'Tasks to do',
@@ -253,6 +258,9 @@ export const translations = {
 		import: 'importuj',
 		default_data: 'dane domyślne.',
 		calendar: 'Kalendarz',
+		month: 'Miesiąc',
+		week: 'Tydzień',
+		day: 'Dzień',
 		//Login
 		login: 'Logowanie',
 		sign_in: 'Zaloguj',
@@ -311,6 +319,8 @@ export const translations = {
 		dashboard_details: 'Szczegóły dashboarda',
 		owner: 'Właściciel',
 		dashboard_name: 'Nazwa dashboarda',
+		//Calendar
+		add_event: 'Dodaj wydarzenie',
 		//ToDo
 		todo_list: 'Lista zadań',
 		tasks_todo: 'Zadania do zrobienia',
