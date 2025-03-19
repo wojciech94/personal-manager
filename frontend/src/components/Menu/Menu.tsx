@@ -15,6 +15,12 @@ export const Menu = () => {
 			</NavLink>
 			<NavLink
 				className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}
+				to={`/dashboards/${dashboardId}/calendar`}
+				end>
+				{t('calendar')}
+			</NavLink>
+			<NavLink
+				className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}
 				to={`/dashboards/${dashboardId}/todo`}>
 				{t('todo_list')}
 			</NavLink>

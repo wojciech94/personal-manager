@@ -57,6 +57,7 @@ export const translations = {
 		all_categories: 'All categories',
 		import: 'import',
 		default_data: 'default data.',
+		calendar: 'Calendar',
 		//Login
 		login: 'Login',
 		sign_in: 'Sign in',
@@ -251,6 +252,7 @@ export const translations = {
 		all_categories: 'Wszystkie kategorie',
 		import: 'importuj',
 		default_data: 'dane domyślne.',
+		calendar: 'Kalendarz',
 		//Login
 		login: 'Logowanie',
 		sign_in: 'Zaloguj',

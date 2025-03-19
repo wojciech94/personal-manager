@@ -18,6 +18,7 @@ import { Posts } from './screens/Posts'
 import { Dashboard } from './screens/Dashboard'
 import { fetchFolders, fetchNotes, fetchShoppingList } from './loaders/loaders'
 import { TranslationProvider } from './contexts/TranslationContext'
+import { Calendar } from './screens/Calendar'
 
 const Main = () => {
 	const { accessToken } = useApi()
@@ -36,7 +37,7 @@ const Main = () => {
 						},
 						{
 							path: 'calendar',
-							element: <>Calendar content work in progress</>,
+							element: <Calendar />,
 						},
 						{
 							path: 'todo',
