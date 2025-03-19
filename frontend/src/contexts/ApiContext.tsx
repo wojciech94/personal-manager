@@ -1,4 +1,5 @@
 import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react'
+import { LoadingAnimation } from '../components/LoadingAnimation/LoadingAnimation'
 import { API_URL } from '../config'
 import { FetchOptions, FetchResult } from '../types/global'
 import { getTokenExpiration } from '../utils/helpers'
@@ -156,6 +157,10 @@ export const ApiProvider: React.FC<ApiProviderProps> = ({ children }) => {
 				status: errorObj.status || null,
 			}
 		}
+	}
+
+	if (isRefreshing) {
+		return <LoadingAnimation />
 	}
 
 	return (
