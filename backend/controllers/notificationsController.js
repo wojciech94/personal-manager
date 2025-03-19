@@ -96,8 +96,6 @@ exports.getNotifications = async (req, res) => {
 
 		const notifications = user.notifications
 
-		console.log(notifications)
-
 		res.status(200).json(notifications)
 	} catch (error) {
 		res.status(500).json({ message: error.message })

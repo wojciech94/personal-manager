@@ -44,7 +44,6 @@ exports.testlogin = async (req, res) => {
 				password: 'test123',
 			})
 			await testUser.save()
-			console.log('Created new test user')
 		}
 
 		const accessToken = jwt.sign({ userId: testUser._id }, JWT_SECRET, { expiresIn: '1h' })

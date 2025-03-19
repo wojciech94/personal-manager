@@ -105,10 +105,8 @@ export function ModalAddShoppingItem(): JSX.Element {
 							value={quantityValue}
 							onChange={e => {
 								const inputValue = e.target.value
-								console.log(inputValue)
 								if (inputValue === '' || /^\d*\.?\d*$/.test(inputValue)) {
 									setQuantityValue(inputValue)
-									console.log('valid')
 								}
 							}}
 						/>

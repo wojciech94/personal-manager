@@ -1,8 +1,9 @@
 import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react'
-import { LoadingAnimation } from '../components/LoadingAnimation/LoadingAnimation'
+import { JsonAnimation } from '../components/JsonAnimation/JsonAnimation'
 import { API_URL } from '../config'
 import { FetchOptions, FetchResult } from '../types/global'
 import { getTokenExpiration } from '../utils/helpers'
+import loadingAnimation from '../assets/mainloading.json'
 
 interface ApiContextType {
 	accessToken: string | null
@@ -160,7 +161,7 @@ export const ApiProvider: React.FC<ApiProviderProps> = ({ children }) => {
 	}
 
 	if (isRefreshing) {
-		return <LoadingAnimation />
+		return <JsonAnimation data={loadingAnimation} />
 	}
 
 	return (
