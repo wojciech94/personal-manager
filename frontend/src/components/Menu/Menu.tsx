@@ -15,8 +15,7 @@ export const Menu = () => {
 			</NavLink>
 			<NavLink
 				className={({ isActive }) => `menu-item ${isActive ? 'active font-semibold' : ''}`}
-				to={`/dashboards/${dashboardId}/calendar`}
-				end>
+				to={`/dashboards/${dashboardId}/calendar`}>
 				{t('calendar')}
 			</NavLink>
 			<NavLink

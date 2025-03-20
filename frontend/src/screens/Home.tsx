@@ -144,7 +144,7 @@ export const Home = () => {
 						</Button>
 						<Dropdown items={dropdownItems} hasNotifications={hasNotifications}></Dropdown>
 					</header>
-					<main className='flex flex-1'>
+					<main className='flex flex-1 justify-center'>
 						{isExactMatch ? (
 							<WelcomeScreen isNew={dashboards.length === 0} createDashboardModal={openModal} />
 						) : (

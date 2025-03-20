@@ -27,6 +27,7 @@ export const translations = {
 		low: 'Low',
 		medium: 'Medium',
 		high: 'High',
+		hour: 'hour',
 		hours: 'hours',
 		filter: 'Filter',
 		filter_rule: 'Filter rule',
@@ -61,6 +62,7 @@ export const translations = {
 		month: 'Month',
 		week: 'Week',
 		day: 'Day',
+		description: 'Description',
 		//Login
 		login: 'Login',
 		sign_in: 'Sign in',
@@ -121,6 +123,7 @@ export const translations = {
 		dashboard_name: 'Dashboard name',
 		//Calendar
 		add_event: 'Add event',
+		date: 'Date',
 		//ToDo
 		todo_list: 'To do list',
 		tasks_todo: 'Tasks to do',
@@ -227,6 +230,7 @@ export const translations = {
 		low: 'Niski',
 		medium: 'Średni',
 		high: 'Wysoki',
+		hour: 'godzina',
 		hours: 'godzin',
 		filter: 'Filtrowanie',
 		filter_rule: 'Zasada filtrowania',
@@ -261,6 +265,7 @@ export const translations = {
 		month: 'Miesiąc',
 		week: 'Tydzień',
 		day: 'Dzień',
+		description: 'Opis',
 		//Login
 		login: 'Logowanie',
 		sign_in: 'Zaloguj',
@@ -321,6 +326,7 @@ export const translations = {
 		dashboard_name: 'Nazwa dashboarda',
 		//Calendar
 		add_event: 'Dodaj wydarzenie',
+		date: 'Data',
 		//ToDo
 		todo_list: 'Lista zadań',
 		tasks_todo: 'Zadania do zrobienia',

@@ -18,6 +18,7 @@ const logsRoutes = require('./routes/logsRoutes')
 const notificationRoutes = require('./routes/notificationRoutes')
 const postRoutes = require('./routes/postRoutes')
 const commentRoutes = require('./routes/commentRoutes')
+const calendarRoutes = require('./routes/calendarRoutes')
 
 const app = express()
 const PORT = process.env.PORT || 5000
@@ -41,8 +42,8 @@ app.use(cookieParser())
 const dbUrl = process.env.DB_URL
 
 if (!dbUrl) {
-  console.error('Błąd: Zmienna DB_URL nie jest zdefiniowana w pliku .env!');
-  process.exit(1);
+	console.error('Błąd: Zmienna DB_URL nie jest zdefiniowana w pliku .env!')
+	process.exit(1)
 }
 
 mongoose
@@ -68,6 +69,7 @@ app.use('/', logsRoutes)
 app.use('/', notificationRoutes)
 app.use('/', postRoutes)
 app.use('/', commentRoutes)
+app.use('/', calendarRoutes)
 
 app.listen(PORT, () => {
 	console.log(`Server running on port ${PORT}`)

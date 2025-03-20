@@ -14,6 +14,7 @@ import { ModalModifyShoppingLists } from './ModalModifyShoppingLists'
 import { ModalAddShoppingItem } from './ModalAddShoppingItem'
 import { ModalDataProps } from './types'
 import { Button } from '../Button/Button'
+import { ModalAddCalendarEvent } from './ModalAddCalendarEvent'
 
 export const Modal: React.FC<ModalDataProps> = ({ name, title, data }): JSX.Element => {
 	const { setActiveModal } = useModalContext()
@@ -29,6 +30,9 @@ export const Modal: React.FC<ModalDataProps> = ({ name, title, data }): JSX.Elem
 			break
 		case 'addNoteCategory':
 			modalContent = <ModalAddCategoryContent />
+			break
+		case 'addCalendarEvent':
+			if (data) modalContent = <ModalAddCalendarEvent modalData={data} />
 			break
 		case 'createNote':
 		case 'editNote':
