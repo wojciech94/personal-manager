@@ -4,7 +4,7 @@ import { API_URL } from '../../config'
 import { useApi } from '../../contexts/ApiContext'
 import { useModalContext } from '../../contexts/ModalContext'
 import { useTranslation } from '../../contexts/TranslationContext'
-import { getLocaleDateTime } from '../../utils/helpers'
+import { getLocaleDateTime } from '../../utils/datetime'
 import { Button } from '../Button/Button'
 import { NoteProps, NoteType } from './types'
 

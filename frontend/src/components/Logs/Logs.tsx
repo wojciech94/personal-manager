@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from '../../contexts/TranslationContext'
 import { usePagination } from '../../hooks/usePagination'
-import { getLocaleDateTime } from '../../utils/helpers'
+import { getLocaleDateTime } from '../../utils/datetime'
 import { Pagination } from '../Pagination/Pagination'
 import { Log } from './types'
 
