@@ -1,15 +1,30 @@
 import { NavLink, Outlet, useParams } from 'react-router-dom'
 import { useTranslation } from '../../contexts/TranslationContext'
+import { getWeekNumber } from '../../utils/datetime'
+
+export interface Event {
+	_id: string
+	title: string
+	description: string
+	startDate: string
+	endDate: string | null
+	location: string | null
+	allDay: boolean
+	tags: string[]
+	createdAt: string
+	updatedAt: string
+}
+
+export interface DateData {
+	date: string
+	day: number
+	isCurrentMonth: boolean
+	events: Event[]
+}
 
 export const Calendar = () => {
 	const { dashboardId, year, month, week, day } = useParams()
 	const { t } = useTranslation()
-
-	const getWeekNumber = (date: Date) => {
-		const startDate = new Date(date.getFullYear(), 0, 1)
-		const days = Math.floor((date.getTime() - startDate.getTime()) / (24 * 60 * 60 * 1000))
-		return Math.ceil((days + 1) / 7)
-	}
 
 	const currentYear = year ? year : new Date().getFullYear()
 	const currentMonth = month ? month : (new Date().getMonth() + 1).toString().padStart(2, '0')
