@@ -39,7 +39,7 @@ export const Calendar = () => {
 	return (
 		<div className='flex flex-1 flex-col gap-4 mb-6'>
 			<div className='flex gap-4'>
-				<div className='d-flex gap-4 align-center scroll-x-auto'>
+				<div className='flex gap-4 items-center scroll-x-auto'>
 					<NavLink className={getNavLinkClass} to={`${basePath}/month/${currentYear}/${currentMonth}`}>
 						{t('month')}
 					</NavLink>

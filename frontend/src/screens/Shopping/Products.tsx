@@ -99,62 +99,75 @@ export function Products() {
 
 	return (
 		<>
-			<div className='d-flex flex-wrap justify-between align-center gap-3'>
-				<div className='d-flex gap-4 align-center'>
+			<div className='flex flex-wrap justify-between items-center gap-3'>
+				<div className='flex gap-4 items-center'>
 					<div className='font-semibold text-lg'>{t('products')}</div>
 				</div>
-				<div className='d-flex gap-2 align-center'>
+				<div className='flex gap-2 items-center'>
 					<Button className='text-nowrap' onClick={() => setActiveModal(modalData)}>
-						<Plus size={16} />
+						<Plus size={18} />
 						{t('add_product')}
 					</Button>
 				</div>
 				<div
-					className='d-flex flex-wrap justify-between justify-start-sm gap-4 pt-2 border-top border-light mx-n4 px-4'
+					className='flex flex-wrap justify-between sm:justify-start gap-4 pt-2 border-t border-gray-300 -mx-4 px-4 text-sm'
 					style={{ width: 'calc(100% + 32px)' }}>
-					<div className='d-flex flex-column gap-1'>
+					<div className='flex flex-col gap-1'>
 						<div className='text-gray'>{t('filter')}</div>
 						<select
+							className='px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
 							name='catSelect'
 							id='catSelect'
 							value={selectedCategory}
 							onChange={e => handleSelectCategory(e.target.value)}>
-							<option value=''>{t('all_categories')}</option>
+							<option value='' className='text-gray-800 bg-white hover:bg-gray-100'>
+								{t('all_categories')}
+							</option>
 							{CATEGORIES &&
 								CATEGORIES.length > 0 &&
 								CATEGORIES.map(c => (
-									<option key={c.value} value={c.value}>
+									<option key={c.value} value={c.value} className='text-gray-800 bg-white hover:bg-gray-100'>
 										{t(c.value)}
 									</option>
 								))}
 						</select>
 					</div>
-					<div className='d-flex flex-column gap-1'>
+					<div className='flex flex-col gap-1'>
 						<div className='text-gray'>{t('sort_by')}</div>
 						<select
 							name='sortby'
 							id='sortby'
+							className='px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
 							value={sortBy}
 							onChange={e => setSortBy(e.target.value as 'name' | 'category')}>
-							<option value='name'>{t('name')}</option>
-							<option value='category'>{t('category')}</option>
+							<option value='name' className='text-gray-800 bg-white hover:bg-gray-100'>
+								{t('name')}
+							</option>
+							<option value='category' className='text-gray-800 bg-white hover:bg-gray-100'>
+								{t('category')}
+							</option>
 						</select>
 					</div>
-					<div className='d-flex flex-column gap-1'>
+					<div className='flex flex-col gap-1'>
 						<div className='text-gray'>{t('sort_direction')}</div>
 						<select
 							name='sortdir'
 							id='sortdir'
+							className='px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
 							value={sortDir}
 							onChange={e => setSortDir(e.target.value as 'asc' | 'desc')}>
-							<option value='asc'>{t('ascending')}</option>
-							<option value='desc'>{t('descending')}</option>
+							<option value='asc' className='text-gray-800 bg-white hover:bg-gray-100'>
+								{t('ascending')}
+							</option>
+							<option value='desc' className='text-gray-800 bg-white hover:bg-gray-100'>
+								{t('descending')}
+							</option>
 						</select>
 					</div>
 				</div>
 			</div>
 			{products && currentItems && currentItems.length > 0 ? (
-				<div className='mx-n4 mb-n4'>
+				<div className='-mx-4 -mb-4'>
 					<ProductsList products={currentItems} fetchProducts={fetchProducts} />
 					<Pagination
 						currentPage={currentPage}
@@ -167,7 +180,7 @@ export function Products() {
 					/>
 				</div>
 			) : (
-				<div className='mx-n4 mt-4 mb-n4 border-top border-light'>
+				<div className='-mx-4 mt-4 -mb-4 border-t border-zinc-300 rounded-b-2xl'>
 					<Alert variant='primary'>
 						<div>
 							{t('add_product_to_your_database_or')}{' '}

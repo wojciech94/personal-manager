@@ -124,8 +124,8 @@ export function ShoppingList() {
 
 	return (
 		<>
-			<div className='mt-4 mb-4 d-flex gap-2 justify-between align-center'>
-				<div className='d-flex flex-column gap-1'>
+			<div className='mt-4 mb-4 flex gap-2 justify-between items-center'>
+				<div className='flex flex-col gap-1'>
 					<div>
 						{t('left_to_buy')} {productsToBuy} {`${productsToBuy === 1 ? t('product') : t('products')}`}
 					</div>
@@ -133,16 +133,16 @@ export function ShoppingList() {
 						{t('last_update')} {getLocaleDateTime(data.updatedAt)}
 					</div>
 				</div>
-				<Button className='btn-mobile-icon text-nowrap' onClick={openAddItemModal}>
+				<Button className='sm:inline-flex p-2 text-nowrap' onClick={openAddItemModal}>
 					<Plus size={16} />
 					{t('add_item')}
 				</Button>
 			</div>
 			{shoppingList && shoppingList.list && shoppingList.list.length > 0 ? (
-				<div className='mx-n4 mb-n4'>
-					<table cellSpacing={0} className='overflow-hidden rounded-bottom-3'>
-						<thead className='bg-lighter'>
-							<tr className='border-top border-bottom border-light'>
+				<div className='-mx-4 -mb-4'>
+					<table cellSpacing={0} className='w-full overflow-hidden rounded-b-lg'>
+						<thead className='bg-slate-100'>
+							<tr className='border-t border-b border-light'>
 								<th style={{ width: '30px' }}></th>
 								<th>{t('name')}</th>
 								<th>{`${t('quantity')} [${t('unit')}]`}</th>
@@ -162,7 +162,7 @@ export function ShoppingList() {
 							))}
 						</tbody>
 						<tfoot>
-							<tr className='bg-lighter border-top border-light text-bold'>
+							<tr className='bg-slate-100 border-t border-light font-semibold'>
 								<td colSpan={2} className='px-2'>
 									{t('summary')}
 								</td>
@@ -173,7 +173,7 @@ export function ShoppingList() {
 					</table>
 				</div>
 			) : (
-				<div className='mx-n4 mb-n4 border-top border-light'>
+				<div className='-mx-4 -mb-4 border-t border-light'>
 					<Alert>
 						<div>{t('your_shopping_list_is_empty_add_item')}</div>
 					</Alert>

@@ -1,4 +1,4 @@
-import { LogsObject } from '../components/Logs/types'
+import { LogsObject } from '../screens/Logs/types'
 
 export type User = {
 	_id: string

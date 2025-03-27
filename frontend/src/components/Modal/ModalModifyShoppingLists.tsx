@@ -106,9 +106,9 @@ export function ModalModifyShoppingLists({ modalData }: { modalData: DataProps }
 	return (
 		<>
 			{shoppingLists && shoppingLists.length > 0 && (
-				<div className='card-content d-flex flex-column gap-2'>
+				<div className='card-content flex flex-col gap-2'>
 					{shoppingLists.map(l => (
-						<div key={l._id} className='d-flex gap-2 justify-between align-center'>
+						<div key={l._id} className='flex gap-2 justify-between items-center'>
 							{editedListId && editedListId === l._id ? (
 								<input
 									type='text'
@@ -117,9 +117,9 @@ export function ModalModifyShoppingLists({ modalData }: { modalData: DataProps }
 									onChange={e => setNameValue(e.target.value)}
 								/>
 							) : (
-								<div className='text-bold'>{l.name}</div>
+								<div className='font-semibold'>{l.name}</div>
 							)}
-							<div className='d-flex gap-2 '>
+							<div className='flex gap-2 '>
 								{editedListId && editedListId === l._id ? (
 									<Button size='sm' onlyIcon={true} variant='success' onClick={() => updateShoppingList(l._id)}>
 										<Check size={16} />

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from '../../contexts/TranslationContext'
 import { usePagination } from '../../hooks/usePagination'
 import { getLocaleDateTime } from '../../utils/datetime'
-import { Pagination } from '../Pagination/Pagination'
+import { Pagination } from '../../components/Pagination/Pagination'
 import { Log } from './types'
 
 export const Logs = ({ logs }: { logs: Log[] }) => {
@@ -18,11 +18,11 @@ export const Logs = ({ logs }: { logs: Log[] }) => {
 	}
 
 	return (
-		<div className='d-flex flex-column gap-2'>
+		<div className='flex flex-col gap-2'>
 			<div className='card-subtitle'>{t('activities')}</div>
-			<table cellSpacing={0} className='w-100 mb-n2'>
+			<table cellSpacing={0} className='w-full -mb-2'>
 				<thead>
-					<tr className='border-bottom'>
+					<tr className='border-b'>
 						<th className='ps-4'>{t('details')}</th>
 						<th className='text-center'>{t('time')}</th>
 						<th className='text-end'>{t('author')}</th>
@@ -30,10 +30,10 @@ export const Logs = ({ logs }: { logs: Log[] }) => {
 				</thead>
 				<tbody className='zebra'>
 					{currentItems.map(log => (
-						<tr key={log._id} className='border-bottom'>
+						<tr key={log._id} className='border-b'>
 							<td className='flex-1'>{log.message}</td>
 							<td className='text-center'>{getLocaleDateTime(log.timestamps)}</td>
-							<td className='text-bold text-end'>{log.initiatorId.name}</td>
+							<td className='font-semibold text-end'>{log.initiatorId.name}</td>
 						</tr>
 					))}
 				</tbody>

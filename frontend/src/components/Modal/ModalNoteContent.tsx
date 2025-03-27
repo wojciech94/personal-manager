@@ -139,7 +139,7 @@ export const ModalNoteContent = ({ modalData }: { modalData: DataProps }) => {
 
 	return (
 		<>
-			<div className='card-content d-flex flex-column gap-3'>
+			<div className='card-content flex flex-col gap-3'>
 				<FormRow label={t('title')}>
 					<input
 						className='w-100'

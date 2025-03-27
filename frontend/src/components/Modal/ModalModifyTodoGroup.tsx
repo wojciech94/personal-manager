@@ -127,12 +127,12 @@ export function ModalModifyTodoGroup({ modalData }: { modalData: DataProps }) {
 
 	return (
 		<>
-			<div className='card-content d-flex flex-column gap-3 pt-0'>
+			<div className='card-content flex flex-col gap-3 pt-0'>
 				{groups && groups.length > 0 && (
 					<>
 						<div className='card-subtitle'>{t('update_groups')}</div>
 						{groups.map(g => (
-							<div key={g._id} className='px-2 d-flex justify-between align-center gap-2'>
+							<div key={g._id} className='px-2 flex justify-between items-center gap-2'>
 								{g.isEdit ? (
 									<input
 										type='text'
@@ -142,7 +142,7 @@ export function ModalModifyTodoGroup({ modalData }: { modalData: DataProps }) {
 								) : (
 									<div>{g.name}</div>
 								)}
-								<div className='d-flex gap-2 align-center'>
+								<div className='flex gap-2 items-center'>
 									{g.isEdit ? (
 										<Button
 											size='sm'

@@ -89,11 +89,11 @@ export function Task({ task, fetchTasks, tasksSettings, isArchive }: TaskProps) 
 
 	return (
 		<div className='task'>
-			<div className='flex-1 d-flex align-center gap-3'>
+			<div className='flex-1 flex items-center gap-3'>
 				<div className={`task-priority ${priorityValue}`}></div>
 				{isEdit ? (
-					<div className='d-flex gap-3 flex-1 align-center'>
-						<div className='d-flex flex-column gap-1 text-gray flex-1'>
+					<div className='flex gap-3 flex-1 items-center'>
+						<div className='flex flex-col gap-1 text-gray flex-1'>
 							<label htmlFor={`contentInput-${task._id}`}>{t('content')}</label>
 							<input
 								id={`contentInput-${task._id}`}
@@ -102,7 +102,7 @@ export function Task({ task, fetchTasks, tasksSettings, isArchive }: TaskProps) 
 								onChange={e => setContentValue(e.target.value)}
 							/>
 						</div>
-						<div className='d-flex flex-column gap-1 text-gray'>
+						<div className='flex flex-col gap-1 text-gray'>
 							<label htmlFor='prioritySelect'>{t('priority')}</label>
 							<select
 								name='prioritySelect'
@@ -114,7 +114,7 @@ export function Task({ task, fetchTasks, tasksSettings, isArchive }: TaskProps) 
 								<option value='high'>{t('high')}</option>
 							</select>
 						</div>
-						<div className='d-flex flex-column gap-1 text-gray'>
+						<div className='flex flex-col gap-1 text-gray'>
 							<label htmlFor='expirationDate'>{t('expire_at')}</label>
 							<input type='date' value={expirationValue} onChange={e => setExpirationValue(e.target.value)} />
 						</div>
@@ -134,12 +134,12 @@ export function Task({ task, fetchTasks, tasksSettings, isArchive }: TaskProps) 
 				)}
 			</div>
 			{tasksSettings && tasksSettings.showDeadline && expirationValue && !isEdit && (
-				<div className='d-flex gap-2 align-center text-gray'>
+				<div className='flex gap-2 items-center text-gray'>
 					<Clock size={16} />
 					{expirationValue}
 				</div>
 			)}
-			<div className='d-flex gap-2 align-center'>
+			<div className='flex gap-2 items-center'>
 				{isEdit && (
 					<Button variant='success' onlyIcon={true} onClick={() => updateTask('update')}>
 						<Check size={16} />

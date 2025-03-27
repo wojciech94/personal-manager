@@ -36,7 +36,7 @@ export function ModalTasksSettingsContent({ modalData }: { modalData: DataProps 
 	return (
 		<>
 			<div className='card-subtitle'>{t('settings')}</div>
-			<div className='p-4 d-flex flex-column gap-2'>
+			<div className='p-4 flex flex-col gap-2'>
 				<FormRow label={t('show_expiration_date')}>
 					<input type='checkbox' checked={showDeadline} onChange={e => setShowDeadline(e.target.checked)} />
 				</FormRow>
@@ -64,7 +64,7 @@ export function ModalTasksSettingsContent({ modalData }: { modalData: DataProps 
 				</FormRow>
 			</div>
 			<div className='card-subtitle'>{t('sorting')}</div>
-			<div className='pt-4 d-flex flex-column gap-2'>
+			<div className='pt-4 flex flex-col gap-2'>
 				<FormRow label={t('sorting_method')}>
 					<select
 						name='sortMethod'

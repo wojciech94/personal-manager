@@ -1,3 +1,4 @@
+import { ButtonSize } from '../components/Button/types'
 import { ScreenSize } from '../types/global'
 
 export function getTokenExpiration(token: string) {
@@ -25,4 +26,21 @@ export function getScreenType() {
 	if (width > 576) return ScreenSize.SMALL
 
 	return ScreenSize.XSMALL
+}
+
+export function BtnSize2PaddingClass(size: ButtonSize) {
+	switch (size) {
+		case 'xs':
+			return 'p-1'
+		case 'sm':
+			return 'p-2'
+		case 'md':
+			return 'px-4 py-2'
+		case 'lg':
+			return 'px-6 py-3'
+		case 'xl':
+			return 'px-8 py-4'
+		default:
+			return 'p-2'
+	}
 }

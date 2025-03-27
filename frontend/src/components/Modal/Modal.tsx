@@ -73,7 +73,7 @@ export const Modal: React.FC<ModalDataProps> = ({ name, title, data }): JSX.Elem
 	return (
 		<div className='modal-backdrop'>
 			<div className='modal'>
-				<div className='d-flex gap-4 justify-end align-center p-4'>
+				<div className='flex gap-4 justify-end items-center p-4'>
 					{title && <div className='flex-1 modal-title'>{title}</div>}
 					<Button variant='text' onClick={() => setActiveModal(null)}>
 						<X size={20} />

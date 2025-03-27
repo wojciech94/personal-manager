@@ -7,7 +7,6 @@ import { Dropdown } from '../components/Dropdown/Dropdown'
 import { ModalContext } from '../contexts/ModalContext'
 import { FetchDashboardsContext } from '../contexts/FetchDashboardsContext'
 import { Plus } from 'react-feather'
-import { WELCOME_SLIDES } from '../constants/appConstants'
 import { ModalDataProps } from '../components/Modal/types'
 import { Button } from '../components/Button/Button'
 import { useApi } from '../contexts/ApiContext'
@@ -130,17 +129,17 @@ export const Home = () => {
 	return (
 		<ModalContext.Provider value={{ activeModal, setActiveModal }}>
 			<FetchDashboardsContext.Provider value={{ fetchUserDashboards }}>
-				<div className='d-flex flex-column flex-1'>
+				<div className='flex flex-col flex-1'>
 					<header className='topbar'>
 						<Link to={'/'}>
 							<img src='/logo.png' width={40} alt='' />
 						</Link>
-						<div className='d-flex flex-1 justify-start align-center gap-4 scroll-x-auto'>
+						<div className='flex flex-1 justify-start items-center gap-4 scroll-x-auto'>
 							<Dashboards dashboards={dashboards}></Dashboards>
 						</div>
-						<Button className='btn-mobile-icon' onClick={openModal}>
+						<Button className='sm:inline-flex p-2' onClick={openModal}>
 							<Plus size={16} />
-							<span className='d-none d-inline-sm'>{t('add_dashboard')}</span>
+							<span className='hidden sm:inline'>{t('add_dashboard')}</span>
 						</Button>
 						<Dropdown items={dropdownItems} hasNotifications={hasNotifications}></Dropdown>
 					</header>

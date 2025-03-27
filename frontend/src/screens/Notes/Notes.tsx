@@ -199,8 +199,8 @@ export const Notes = () => {
 
 	return (
 		<>
-			<div className='w-100 d-flex justify-between align-center'>
-				<div className='d-flex gap-2 flex-1'>
+			<div className='w-100 flex justify-between items-center'>
+				<div className='flex gap-2 flex-1'>
 					<input
 						className='w-50 min-w-125px'
 						type='text'
@@ -209,7 +209,7 @@ export const Notes = () => {
 						onChange={onSearchInputChange}
 					/>
 					<ToggleBox>
-						<div className='d-flex justify-between align-center gap-2'>
+						<div className='flex justify-between items-center gap-2'>
 							<div className='toggle-subtitle'>{t('settings')}</div>
 							<Button variant='success' size='xs' onClick={handleChangeOptions}>
 								{t('save')}
@@ -217,8 +217,8 @@ export const Notes = () => {
 						</div>
 						<div className='toggle-title'>{t('filter')}</div>
 						<div className='toggle-subtitle'>{t('filter_rule')}</div>
-						<div className='d-flex gap-4 align-center'>
-							<div className='d-flex gap-2 align-center'>
+						<div className='flex gap-4 items-center'>
+							<div className='flex gap-2 items-center'>
 								<input
 									checked={filterOrRule}
 									type='radio'
@@ -228,7 +228,7 @@ export const Notes = () => {
 								/>
 								<label htmlFor='filterRuleOr'>{t('or')}</label>
 							</div>
-							<div className='d-flex gap-2 align-center'>
+							<div className='flex gap-2 items-center'>
 								<input
 									checked={!filterOrRule}
 									type='radio'
@@ -256,7 +256,7 @@ export const Notes = () => {
 								))}
 						</select>
 						<div className='toggle-separator'></div>
-						<div className='d-flex gap-2 align-center'>
+						<div className='flex gap-2 items-center'>
 							<input
 								type='checkbox'
 								name='favNote'
@@ -285,7 +285,7 @@ export const Notes = () => {
 						</select>
 					</ToggleBox>
 				</div>
-				<div className='d-flex gap-2 align-center'>
+				<div className='flex gap-2 items-center'>
 					<Button onClick={() => setActiveModal(newNoteModal)}>
 						<Plus size={16} />
 						<span>{t('add_note')}</span>
@@ -305,7 +305,7 @@ export const Notes = () => {
 				</Alert>
 			)}
 			{filteredNotes && filteredNotes.length > 0 ? (
-				<div className='d-flex flex-column gap-4'>
+				<div className='flex flex-col gap-4'>
 					{filteredNotes.map(n => (
 						<Note key={n._id} note={n} updateNote={updateNote} fetchNotes={revalidate} />
 					))}

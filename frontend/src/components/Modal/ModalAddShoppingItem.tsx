@@ -82,9 +82,9 @@ export function ModalAddShoppingItem(): JSX.Element {
 	return (
 		<>
 			<div className='card-content'>
-				<div className='d-flex justify-between gap-4 flex-wrap'>
+				<div className='flex justify-between gap-4 flex-wrap'>
 					{products && products.length > 0 && (
-						<div className='d-flex flex-column gap-1'>
+						<div className='flex flex-col gap-1'>
 							<div>{t('product')}</div>
 							<select
 								name='productsSelect'
@@ -99,7 +99,7 @@ export function ModalAddShoppingItem(): JSX.Element {
 							</select>
 						</div>
 					)}
-					<div className='d-flex flex-column gap-1'>
+					<div className='flex flex-col gap-1'>
 						<div>{t('quantity')}</div>
 						<input
 							value={quantityValue}
@@ -111,15 +111,15 @@ export function ModalAddShoppingItem(): JSX.Element {
 							}}
 						/>
 					</div>
-					<div className='d-flex flex-column gap-1'>
+					<div className='flex flex-col gap-1'>
 						<div>{t('unit')}</div>
 						<input type='text' value={unitValue} onChange={e => setUnitValue(e.target.value)} />
 					</div>
-					<div className='d-flex flex-column gap-1'>
+					<div className='flex flex-col gap-1'>
 						<div>{t('price')}</div>
 						<input value={priceValue} onChange={e => setPriceValue(e.target.value)} />
 					</div>
-					<div className='d-flex flex-column flex-1 gap-1 w-100'>
+					<div className='flex flex-col flex-1 gap-1 w-100'>
 						<div>{t('notes')}</div>
 						<textarea className='max-w-100' value={notesValue} onChange={e => setNotesValue(e.target.value)} />
 					</div>

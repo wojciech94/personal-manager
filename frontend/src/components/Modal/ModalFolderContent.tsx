@@ -55,7 +55,7 @@ export function ModalFolderContent({ modalData }: { modalData: DataProps }) {
 
 	return (
 		<>
-			<div className='card-content d-flex flex-column gap-3 pt-0'>
+			<div className='card-content flex flex-col gap-3 pt-0'>
 				{dashboardId && folders && folders.length > 0 && (
 					<>
 						<div className='card-subtitle'>{t('edit_folders')}</div>
@@ -141,9 +141,9 @@ function FolderRow({ folder, action, dashboardId }: FolderRowProps) {
 	}
 
 	return (
-		<div className='d-flex justify-between align-center gap-2 px-4'>
+		<div className='flex justify-between items-center gap-2 px-4'>
 			{isEdit ? (
-				<div className='d-flex gap-2'>
+				<div className='flex gap-2'>
 					<input type={'text'} value={inputValue} onChange={e => setInputValue(e.target.value)} />
 					<Button size='sm' variant='success' onClick={handleSave}>
 						<Check size={16} />
@@ -152,7 +152,7 @@ function FolderRow({ folder, action, dashboardId }: FolderRowProps) {
 			) : (
 				<div>{folder.name}</div>
 			)}
-			<div className='d-flex gap-2'>
+			<div className='flex gap-2'>
 				<Button size='sm' onClick={() => setIsEdit(prevEdit => !prevEdit)}>
 					<Edit size={16} /> {t('edit')}
 				</Button>

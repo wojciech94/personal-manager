@@ -207,8 +207,8 @@ export const Todos = () => {
 		<Card
 			className='card-p0'
 			headerComponent={<CardHeader title={t('tasks_todo')} data={headerActions()}></CardHeader>}>
-			<div className='card-subtitle border-top-0 flex-wrap'>
-				<div className='d-flex gap-3 scroll-x-auto'>
+			<div className='card-subtitle border-t-0 flex-wrap'>
+				<div className='flex gap-3 scroll-x-auto'>
 					<Button
 						variant='link'
 						onClick={() => fetchTasks('')}
@@ -232,7 +232,7 @@ export const Todos = () => {
 					{t('manage_groups')}
 				</Button>
 			</div>
-			{showArchive && <div className='p-4 text-bold border-bottom border-light'>{t('archived_tasks')}</div>}
+			{showArchive && <div className='p-4 font-semibold border-b border-light'>{t('archived_tasks')}</div>}
 			{visibleTasks && visibleTasks.length > 0 ? (
 				<>
 					<div className='task-container rounded-bottom-4 overflow-hidden'>

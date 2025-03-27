@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { Check, Edit, Star, Trash2 } from 'react-feather'
 import { useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
@@ -100,7 +100,7 @@ export const ProductListItem = ({
 	}
 
 	return (
-		<tr key={product._id} className='product-row'>
+		<tr key={product._id} className='even:bg-zinc-100 border-collapse border-b'>
 			<td>
 				<Button variant='text' onClick={() => handleUpdate(product._id, { isFavourite: !product.isFavourite })}>
 					<Star size={20} color={product.isFavourite ? 'gold' : 'gray'} />
@@ -160,11 +160,11 @@ export const ProductListItem = ({
 					<td>{t(product.category as TranslationKey)}</td>
 					<td>{product.unit}</td>
 					<td>{product.price}</td>
-					<td className='d-none d-table-cell-sm'>{product.tags}</td>
+					<td className='hidden sm:table-cell'>{product.tags}</td>
 				</>
 			)}
 			<td>
-				<div className='d-flex gap-1'>
+				<div className='flex gap-1'>
 					{product._id === editedProduct ? (
 						<Button onlyIcon={true} variant='success' onClick={() => handleUpdate(product._id, productData)}>
 							<Check size={16} />

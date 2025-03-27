@@ -60,7 +60,7 @@ export function ModalAddProduct({ modalData }: { modalData: DataProps }) {
 
 	return (
 		<>
-			<div className='card-content d-flex flex-column gap-2'>
+			<div className='card-content flex flex-col gap-2'>
 				<FormRow label={t('product_name')} required>
 					<input
 						className='flex-1 max-w-200px'

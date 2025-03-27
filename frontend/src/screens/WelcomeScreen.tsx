@@ -31,9 +31,9 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ isNew, createDashb
 	}, [])
 
 	return (
-		<div className='d-flex flex-column gap-4 m-5'>
-			<div className='bg-welcome wrapper rounded-4 overflow-hidden d-flex flex-column flex-center shadow p-8'>
-				<div className='max-w-95 bg-dark-transparent text-white p-8 rounded-4 m-10 fs-xl d-flex flex-column gap-3 align-center'>
+		<div className='flex flex-col gap-4 m-5'>
+			<div className='bg-welcome wrapper rounded-xl overflow-hidden flex flex-col flex-center shadow p-8'>
+				<div className='max-w-95 bg-dark-transparent text-white p-8 rounded-xl m-10 fs-xl flex flex-col gap-3 items-center'>
 					<h1>{t('organize_your_life')}</h1>
 					{isNew && <Button onClick={createDashboardModal}>{t('create_first_dashboard')}</Button>}
 				</div>
@@ -45,8 +45,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ isNew, createDashb
 							slides.length > 0 &&
 							slides.map((s, index) => (
 								<div key={index} className='carousel-item'>
-									<div
-										className={`d-flex flex-column justify-evenly bg-white shadow w-50 rounded-3 p-8 fs-xl ${s.class}`}>
+									<div className={`flex flex-col justify-evenly bg-white shadow w-50 rounded-lg p-8 fs-xl ${s.class}`}>
 										<h2 className='text-center mb-8'>{t(`${s.key}_title`)}</h2>
 										<h3>{t(`${s.key}_subtitle`)}</h3>
 									</div>

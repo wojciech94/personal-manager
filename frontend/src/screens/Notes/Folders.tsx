@@ -53,9 +53,9 @@ export const Folders = () => {
 	}
 
 	return (
-		<div className='d-flex flex-column gap-5'>
-			<div className='d-flex justify-between align-center gap-3'>
-				<div className='d-flex gap-2 align-center scroll-x-auto'>
+		<div className='flex flex-col gap-5'>
+			<div className='flex justify-between items-center gap-3'>
+				<div className='flex gap-2 items-center scroll-x-auto'>
 					<NavLink className='btn link' to={`/dashboards/${dashboardId}/folders/notes`} end>
 						{t('all_notes')}
 					</NavLink>
@@ -69,7 +69,7 @@ export const Folders = () => {
 				</div>
 				<Button
 					variant='light'
-					className='btn-mobile-icon'
+					className='sm:inline-flex p-2'
 					onClick={() =>
 						setActiveModal({
 							name: 'editFolder',
@@ -80,8 +80,8 @@ export const Folders = () => {
 							},
 						})
 					}>
-					<MoreVertical className='d-none-sm' size={16} />
-					<span className='d-mobile-none text-nowrap'>{t('edit_folders')}</span>
+					<MoreVertical className='sm:hidden' size={16} />
+					<span className='sm:hidden text-nowrap'>{t('edit_folders')}</span>
 				</Button>
 			</div>
 			<Outlet />

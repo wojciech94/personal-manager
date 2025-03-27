@@ -50,7 +50,7 @@ export function ShoppingProduct({ data, onListItemUpdate, onListItemDelete }: Sh
 	return (
 		<>
 			{data && (
-				<tr className={`border-bottom border-light ${isPurchasedValue ? 'text-gray' : ''}`}>
+				<tr className={`border-b border-light ${isPurchasedValue ? 'text-gray' : ''}`}>
 					<td className='text-center'>
 						<input
 							type='checkbox'
@@ -64,7 +64,7 @@ export function ShoppingProduct({ data, onListItemUpdate, onListItemDelete }: Sh
 					<td>{<label htmlFor={`isPurchased${data._id}`}>{product.name}</label>}</td>
 					<td>
 						{editedId && editedId === data._id ? (
-							<div className='d-flex gap-1'>
+							<div className='flex gap-1'>
 								<input type='text' value={quantityValue} onChange={e => setQuantityValue(e.target.value)} />
 								<input type='text' value={unitValue} onChange={e => setUnitValue(e.target.value)} />
 							</div>
@@ -87,7 +87,7 @@ export function ShoppingProduct({ data, onListItemUpdate, onListItemDelete }: Sh
 						)}
 					</td>
 					<td>
-						<div className='d-flex gap-2'>
+						<div className='flex gap-2'>
 							{editedId && editedId === data._id ? (
 								<Button onlyIcon={true} variant='success' onClick={handleListItemUpdate}>
 									<Check size={16} />

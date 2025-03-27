@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { API_URL } from '../config'
 import { useApi } from '../contexts/ApiContext'
@@ -143,19 +143,21 @@ export function Posts() {
 	}
 
 	return (
-		<Card className='overflow-hidden' contentClass='p-0' headerComponent={<CardHeader title={t('posts')}></CardHeader>}>
-			<div className='d-flex p-4 border-bottom border-light gap-2'>
+		<Card
+			className='overflow-hidden border rounded-lg shadow-sm'
+			contentClass='!p-0'
+			headerComponent={<CardHeader className='px-4 py-3 border-b' title={t('posts')}></CardHeader>}>
+			<div className='flex p-4 border-b border-slate-200 gap-2'>
 				<textarea
 					value={postInput}
-					className='flex-1 p-4 border-none text-lg bg-lighter rounded-4 resize-vertical'
-					style={{ minHeight: '55px' }}
+					className='flex-1 p-4 text-lg bg-slate-100 rounded-lg resize-y min-h-[55px] focus:outline-none'
 					placeholder={`${t('how_are_you_doing')} ${userName}?`}
 					onChange={e => setPostInput(e.target.value)}></textarea>
-				<Button className='align-self-end' variant='light' onClick={addPost}>
+				<Button className='self-end' variant='light' onClick={addPost}>
 					{t('send')}
 				</Button>
 			</div>
-			<div className='d-flex flex-column'>
+			<div className='flex flex-col'>
 				{posts.map(p => (
 					<Post
 						key={p._id}

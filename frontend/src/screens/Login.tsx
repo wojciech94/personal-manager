@@ -123,10 +123,10 @@ export const Login = () => {
 	}
 
 	return (
-		<div className='d-flex flex-column flex-1 flex-center'>
+		<div className='flex flex-col flex-1 flex-center'>
 			<Card className={'w-300px'}>
-				<div className='d-flex flex-column gap-2'>
-					<div className='position-relative d-flex gap-2 align-center justify-center mb-2'>
+				<div className='flex flex-col gap-2'>
+					<div className='position-relative flex gap-2 items-center justify-center mb-2'>
 						<h3>{mode === 'signIn' ? t('login') : t('sign_up')}</h3>
 						<Button
 							className='position-absolute absolute-right-centered rounded-full overflow-hidden border-2 border-light'
@@ -136,7 +136,7 @@ export const Login = () => {
 							{language === 'en' ? <PL /> : <GB />}
 						</Button>
 					</div>
-					<form className='d-flex flex-column gap-4' onSubmit={handleSubmit}>
+					<form className='flex flex-col gap-4' onSubmit={handleSubmit}>
 						<input
 							type='text'
 							value={username}
@@ -144,7 +144,7 @@ export const Login = () => {
 							placeholder={t('username')}
 							required
 						/>
-						<div className='d-flex position-relative'>
+						<div className='flex position-relative'>
 							<input
 								className='flex-1 pr-4'
 								type={`${showPassword ? 'text' : 'password'}`}
@@ -170,12 +170,12 @@ export const Login = () => {
 						</Button>
 						{message && <div className='text-danger'>{message}</div>}
 						{showLoadingMessage && (
-							<div className='d-flex gap-1 text-danger'>
+							<div className='flex gap-1 text-danger'>
 								<AlertTriangle size={16} className='flex-shrink-0' />
 								<div>{t('backend_in_coldstart')}</div>
 							</div>
 						)}
-						<div className='d-flex gap-2 align-center'>
+						<div className='flex gap-2 items-center'>
 							<span className='text-sm text-gray'>
 								{mode === 'signIn' ? t('dont_have_account') : t('already_have_account')}
 							</span>
