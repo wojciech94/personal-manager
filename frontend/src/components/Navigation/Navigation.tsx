@@ -1,5 +1,6 @@
 import { NavLink } from 'react-router-dom'
 import { NavigationProps } from '../../types/dashboard'
+import React from 'react'
 
 export const Dashboards: React.FC<NavigationProps> = ({ dashboards }) => {
 	return (
@@ -8,7 +9,7 @@ export const Dashboards: React.FC<NavigationProps> = ({ dashboards }) => {
 				dashboards.length > 0 &&
 				dashboards.map(d => (
 					<NavLink
-						className={({ isActive }) => `link font-semibold fs-lg ${isActive ? 'active' : ''}`}
+						className={({ isActive }) => `font-semibold text-lg transition-colors ${isActive ? 'text-blue-500' : ''}`}
 						key={d._id}
 						to={`/dashboards/${d._id}`}>
 						{d.name}

@@ -181,7 +181,7 @@ export function Products() {
 				</div>
 			) : (
 				<div className='-mx-4 mt-4 -mb-4 border-t border-zinc-300 rounded-b-2xl'>
-					<Alert variant='primary'>
+					<Alert>
 						<div>
 							{t('add_product_to_your_database_or')}{' '}
 							<Button variant='link' onClick={importDefaultData}>

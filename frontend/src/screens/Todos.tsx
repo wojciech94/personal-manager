@@ -179,7 +179,7 @@ export const Todos = () => {
 				action: () => setShowArchive(prevState => !prevState),
 				icon: <Repeat size={16} />,
 				label: showArchive ? t('show_active_tasks') : t('show_archive_tasks'),
-				btnVariant: 'light',
+				btnVariant: 'white',
 			},
 		]
 		if (tasksSettings) {
@@ -197,7 +197,7 @@ export const Todos = () => {
 				action: () => setActiveModal(tasksSettingsModal),
 				icon: <Settings size={16} />,
 				label: t('settings'),
-				btnVariant: 'light',
+				btnVariant: 'white',
 			})
 		}
 		return actionsArray
@@ -205,14 +205,16 @@ export const Todos = () => {
 
 	return (
 		<Card
-			className='card-p0'
+			contentClass='!p-0'
 			headerComponent={<CardHeader title={t('tasks_todo')} data={headerActions()}></CardHeader>}>
-			<div className='card-subtitle border-t-0 flex-wrap'>
-				<div className='flex gap-3 scroll-x-auto'>
+			<div className='flex border-t-0 flex-wrap min-h-[60px] items-center justify-between gap-2 bg-zinc-100 py-2 px-4 border-b border-zinc-300'>
+				<div className='flex gap-3 overflow-x-auto'>
 					<Button
-						variant='link'
+						variant='text'
 						onClick={() => fetchTasks('')}
-						className={`text-decoration-none scroll-item ${activeGroup === '' ? 'active' : ''}`}>
+						className={`flex-grow-0 flex-shrink-0 basis-auto !text-blue-500 !p-0 ${
+							activeGroup === '' ? 'font-semibold' : ''
+						}`}>
 						{t('all_tasks')}
 					</Button>
 					{todoGroups &&
@@ -220,8 +222,10 @@ export const Todos = () => {
 						todoGroups.map(tdg => (
 							<Button
 								key={tdg._id}
-								variant='link'
-								className={`text-decoration-none scroll-item ${tdg._id === activeGroup ? 'active' : ''}`}
+								variant='text'
+								className={`flex-grow-0 flex-shrink-0 basis-auto !text-blue-500 !px-0 !py-1 ${
+									activeGroup === tdg._id ? 'font-semibold' : ''
+								}`}
 								onClick={() => fetchTasks(tdg._id)}>
 								{tdg.name}
 							</Button>
@@ -232,10 +236,10 @@ export const Todos = () => {
 					{t('manage_groups')}
 				</Button>
 			</div>
-			{showArchive && <div className='p-4 font-semibold border-b border-light'>{t('archived_tasks')}</div>}
+			{showArchive && <div className='p-4 font-semibold border-b border-zinc-300'>{t('archived_tasks')}</div>}
 			{visibleTasks && visibleTasks.length > 0 ? (
 				<>
-					<div className='task-container rounded-bottom-4 overflow-hidden'>
+					<div className='flex flex-col rounded-b-2xl overflow-hidden'>
 						{tasksSettings &&
 							visibleTasks.map(t => (
 								<Task

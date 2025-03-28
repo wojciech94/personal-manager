@@ -80,16 +80,21 @@ export function ShoppingLists() {
 				<div className='flex gap-2 items-center'>
 					<Button className={`text-nowrap sm:inline-flex p-2`} onClick={openCreateShoppingListModal}>
 						<Plus size={16} />
-						<span className='sm:hidden'>{t('create_shopping_list')}</span>
+						<span className='hidden sm:inline'>{t('create_shopping_list')}</span>
 					</Button>
 					<ExpandableMenu items={menuItems} />
 				</div>
 			</div>
 			{shoppingLists && shoppingLists.length > 0 ? (
 				<>
-					<div className='bg-light flex gap-3 -mx-4 mt-4 border-t border-b px-4 py-2'>
+					<div className='bg-zinc-200 flex gap-3 -mx-4 mt-4 border-zinc-400 border-t border-b px-4 py-2'>
 						{shoppingLists.map(l => (
-							<NavLink key={l._id} to={`${l._id}`} className='btn btn-link link'>
+							<NavLink
+								key={l._id}
+								to={`${l._id}`}
+								className={({ isActive }) =>
+									`font-semibold hover:text-blue-500 focus:outline-none ${isActive ? 'text-blue-500' : 'text-zinc-800'}`
+								}>
 								{l.name}
 							</NavLink>
 						))}

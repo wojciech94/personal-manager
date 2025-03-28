@@ -15,8 +15,9 @@ import { ModalAddShoppingItem } from './ModalAddShoppingItem'
 import { ModalDataProps } from './types'
 import { Button } from '../Button/Button'
 import { ModalAddCalendarEvent } from './ModalAddCalendarEvent'
+import React from 'react'
 
-export const Modal: React.FC<ModalDataProps> = ({ name, title, data }): JSX.Element => {
+export const Modal: React.FC<ModalDataProps> = ({ name, title, data }): React.JSX.Element => {
 	const { setActiveModal } = useModalContext()
 
 	let modalContent = null
@@ -71,10 +72,10 @@ export const Modal: React.FC<ModalDataProps> = ({ name, title, data }): JSX.Elem
 	}
 
 	return (
-		<div className='modal-backdrop'>
-			<div className='modal'>
+		<div className='fixed inset-0 w-full h-screen bg-black bg-opacity-50 backdrop-blur-sm z-[100]'>
+			<div className='fixed top-1/2 left-1/2 w-[90%] max-w-[600px] bg-gray-100 border border-gray-500 -translate-x-1/2 -translate-y-1/2 rounded-2xl'>
 				<div className='flex gap-4 justify-end items-center p-4'>
-					{title && <div className='flex-1 modal-title'>{title}</div>}
+					{title && <div className='flex-1 font-semibold text-lg'>{title}</div>}
 					<Button variant='text' onClick={() => setActiveModal(null)}>
 						<X size={20} />
 					</Button>

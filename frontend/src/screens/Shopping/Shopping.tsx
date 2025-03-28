@@ -14,12 +14,18 @@ export function Shopping() {
 	return (
 		<>
 			<div className='flex gap-3 items-center mb-2 text-lg'>
-				<NavLink to={'list'} className='text-gray-700 font-semibold hover:text-blue-500 focus:outline-none'>
+				<NavLink
+					to={'list'}
+					className={({ isActive }) =>
+						` font-semibold hover:text-blue-500 focus:outline-none ${isActive ? 'text-blue-500' : 'text-gray-700'}`
+					}>
 					{t('lists')}
 				</NavLink>
 				<NavLink
 					to={'products'}
-					className='px-2 py-1 text-gray-600 font-semibold hover:text-blue-500 focus:outline-none'>
+					className={({ isActive }) =>
+						` font-semibold hover:text-blue-500 focus:outline-none ${isActive ? 'text-blue-500' : 'text-gray-700'}`
+					}>
 					{t('products')}
 				</NavLink>
 			</div>

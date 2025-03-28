@@ -42,10 +42,7 @@ export const DropdownItem: React.FC<ItemsProps> = ({ name, action }) => {
 	}
 
 	return (
-		<Button
-			variant='text'
-			className='w-full p-2 transition-colors text-nowrap hover:bg-blue-100'
-			onClick={handleAction}>
+		<Button variant='text' className='w-full p-2 text-nowrap hover:bg-blue-100 !rounded-none' onClick={handleAction}>
 			{name}
 		</Button>
 	)

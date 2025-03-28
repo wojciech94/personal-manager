@@ -150,7 +150,7 @@ export function Posts() {
 			<div className='flex p-4 border-b border-slate-200 gap-2'>
 				<textarea
 					value={postInput}
-					className='flex-1 p-4 text-lg bg-slate-100 rounded-lg resize-y min-h-[55px] focus:outline-none'
+					className='flex-1 p-4 text-lg text-gray-800 placeholder-gray-600 bg-slate-100 rounded-lg resize-y min-h-[55px] focus:outline-none'
 					placeholder={`${t('how_are_you_doing')} ${userName}?`}
 					onChange={e => setPostInput(e.target.value)}></textarea>
 				<Button className='self-end' variant='light' onClick={addPost}>

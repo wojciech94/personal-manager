@@ -127,9 +127,9 @@ export function ShoppingList() {
 			<div className='mt-4 mb-4 flex gap-2 justify-between items-center'>
 				<div className='flex flex-col gap-1'>
 					<div>
-						{t('left_to_buy')} {productsToBuy} {`${productsToBuy === 1 ? t('product') : t('products')}`}
+						{t('left_to_buy')}: {productsToBuy} {`${productsToBuy === 1 ? t('product') : t('products')}`}
 					</div>
-					<div className='text-gray fs-sm'>
+					<div className='text-zinc-600 text-sm'>
 						{t('last_update')} {getLocaleDateTime(data.updatedAt)}
 					</div>
 				</div>

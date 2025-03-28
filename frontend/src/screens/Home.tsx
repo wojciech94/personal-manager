@@ -122,7 +122,7 @@ export const Home = () => {
 
 	const dropdownItems = [
 		{ name: t('notifications'), action: openNotifications },
-		{ name: `${t('language')} (${language.toUpperCase()})`, action: changeLanguage },
+		{ name: `${t('language')} (${language === 'en' ? 'PL' : 'EN'})`, action: changeLanguage },
 		{ name: t('logout'), action: logout },
 	]
 
@@ -130,7 +130,7 @@ export const Home = () => {
 		<ModalContext.Provider value={{ activeModal, setActiveModal }}>
 			<FetchDashboardsContext.Provider value={{ fetchUserDashboards }}>
 				<div className='flex flex-col flex-1'>
-					<header className='topbar'>
+					<header className='flex gap-4 justify-between items-center py-2 px-4 m-4 bg-sky-50 rounded-3xl shadow-xl border border-zinc-200'>
 						<Link to={'/'}>
 							<img src='/logo.png' width={40} alt='' />
 						</Link>
@@ -143,7 +143,7 @@ export const Home = () => {
 						</Button>
 						<Dropdown items={dropdownItems} hasNotifications={hasNotifications}></Dropdown>
 					</header>
-					<main className='flex flex-1 justify-center'>
+					<main className='flex-1'>
 						{isExactMatch ? (
 							<WelcomeScreen isNew={dashboards.length === 0} createDashboardModal={openModal} />
 						) : (

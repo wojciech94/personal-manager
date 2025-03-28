@@ -12,6 +12,7 @@ import { Button } from '../../components/Button/Button'
 import { useApi } from '../../contexts/ApiContext'
 import { NoteType } from '../../components/Note/types'
 import { useTranslation } from '../../contexts/TranslationContext'
+import { SortDirection } from '../../types/global'
 
 export const Notes = () => {
 	const data = useLoaderData() as NoteType[]
@@ -21,7 +22,7 @@ export const Notes = () => {
 	const [filterCategory, setFilterCategory] = useState('')
 	const [isFavourite, setIsFavourite] = useState(false)
 	const [sortBy, setSortBy] = useState('')
-	const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
+	const [sortOrder, setSortOrder] = useState<SortDirection>('asc')
 	const [filterOrRule, setFilterOrRule] = useState(true)
 	const [searchValue, setSearchValue] = useState('')
 	const [showFoldersInfo, setShowFoldersInfo] = useState(true)
@@ -199,10 +200,10 @@ export const Notes = () => {
 
 	return (
 		<>
-			<div className='w-100 flex justify-between items-center'>
+			<div className='w-full flex justify-between items-center'>
 				<div className='flex gap-2 flex-1'>
 					<input
-						className='w-50 min-w-125px'
+						className='w-1/2 min-w-[125px] px-4 py-2 text-gray-800 placeholder-gray-500 bg-slate-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500'
 						type='text'
 						placeholder={t('search_note')}
 						value={searchValue}
@@ -210,13 +211,13 @@ export const Notes = () => {
 					/>
 					<ToggleBox>
 						<div className='flex justify-between items-center gap-2'>
-							<div className='toggle-subtitle'>{t('settings')}</div>
-							<Button variant='success' size='xs' onClick={handleChangeOptions}>
+							<div className='font-semibold'>{t('settings')}</div>
+							<Button variant='success' size='sm' onClick={handleChangeOptions}>
 								{t('save')}
 							</Button>
 						</div>
-						<div className='toggle-title'>{t('filter')}</div>
-						<div className='toggle-subtitle'>{t('filter_rule')}</div>
+						<div className='font-semibold -mx-4 py-1 px-4 bg-zinc-100 border  border-y-zinc-300'>{t('filter')}</div>
+						<div className='font-semibold'>{t('filter_rule')}</div>
 						<div className='flex gap-4 items-center'>
 							<div className='flex gap-2 items-center'>
 								<input
@@ -224,6 +225,7 @@ export const Notes = () => {
 									type='radio'
 									name='filterRadio'
 									id='filterRuleOr'
+									className='w-4 h-4 bg-gray-100 border-gray-300'
 									onChange={() => setFilterOrRule(true)}
 								/>
 								<label htmlFor='filterRuleOr'>{t('or')}</label>
@@ -234,54 +236,75 @@ export const Notes = () => {
 									type='radio'
 									name='filterRadio'
 									id='filterRuleAnd'
+									className='w-4 h-4 bg-gray-100 border-gray-300'
 									onChange={() => setFilterOrRule(false)}
 								/>
 								<label htmlFor='filterRuleAnd'>{t('and')}</label>
 							</div>
 						</div>
-						<div className='toggle-separator'></div>
-						<div className='toggle-subtitle'>{t('category')}</div>
+						<div className='my-1 -mx-4 border-b border-b-zinc-300'></div>
+						<div className='font-semibold'>{t('category')}</div>
 						<select
 							name='filterCategory'
 							id='filterCategory'
 							value={filterCategory}
+							className='px-3 py-1 border text-sm border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
 							onChange={e => setFilterCategory(e.target.value)}>
 							<option value=''>{t('choose_category')}</option>
 							{categoryNames &&
 								categoryNames.length > 0 &&
 								categoryNames.map(cat => (
-									<option key={cat} value={cat}>
+									<option className='text-gray-800 bg-white hover:bg-gray-100' key={cat} value={cat}>
 										{cat}
 									</option>
 								))}
 						</select>
-						<div className='toggle-separator'></div>
+						<div className='my-1 -mx-4 border-b border-b-zinc-300'></div>
 						<div className='flex gap-2 items-center'>
 							<input
 								type='checkbox'
 								name='favNote'
 								id='isFav'
+								className='w-4 h-4 bg-gray-100 border-gray-300'
 								checked={isFavourite}
 								onChange={() => setIsFavourite(prevState => !prevState)}
 							/>
 							<label htmlFor='isFav'>{t('is_favourite')}</label>
 						</div>
-						<div className='toggle-title'>{t('sorting')}</div>
-						<div className='toggle-subtitle'>{t('sort_by')}</div>
-						<select name='sortBy' id='sortBy' value={sortBy} onChange={e => setSortBy(e.target.value)}>
-							<option value=''>{t('sort_by')}</option>
-							<option value='creationate'>{t('creation_date')}</option>
-							<option value='updateDate'>{t('update_date')}</option>
-							<option value='deadlineDate'>{t('deadline_date')}</option>
+						<div className='font-semibold -mx-4 py-1 px-4 bg-zinc-100 border  border-y-zinc-300'>{t('sorting')}</div>
+						<div className='font-semibold'>{t('sort_by')}</div>
+						<select
+							name='sortBy'
+							id='sortBy'
+							className='px-3 py-1 border text-sm border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+							value={sortBy}
+							onChange={e => setSortBy(e.target.value)}>
+							<option className='text-gray-800 bg-white hover:bg-gray-100' value=''>
+								{t('sort_by')}
+							</option>
+							<option className='text-gray-800 bg-white hover:bg-gray-100' value='creationate'>
+								{t('creation_date')}
+							</option>
+							<option className='text-gray-800 bg-white hover:bg-gray-100' value='updateDate'>
+								{t('update_date')}
+							</option>
+							<option className='text-gray-800 bg-white hover:bg-gray-100' value='deadlineDate'>
+								{t('deadline_date')}
+							</option>
 						</select>
-						<div className='toggle-subtitle'>{t('sorting_order')}</div>
+						<div className='font-semibold'>{t('sorting_order')}</div>
 						<select
 							name='sortOrder'
 							id='sortOrder'
 							value={sortOrder}
-							onChange={e => setSortOrder(e.target.value as 'asc' | 'desc')}>
-							<option value='asc'>{t('ascending')}</option>
-							<option value='desc'>{t('descending')}</option>
+							className='px-3 py-1 border text-sm border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+							onChange={e => setSortOrder(e.target.value as SortDirection)}>
+							<option className='text-gray-800 bg-white hover:bg-gray-100' value='asc'>
+								{t('ascending')}
+							</option>
+							<option className='text-gray-800 bg-white hover:bg-gray-100' value='desc'>
+								{t('descending')}
+							</option>
 						</select>
 					</ToggleBox>
 				</div>
@@ -300,7 +323,7 @@ export const Notes = () => {
 				</div>
 			</div>
 			{showFoldersInfo && (
-				<Alert variant='primary' className='m-0' onHideAction={handleHideFoldersInfo}>
+				<Alert className='!m-0' onHideAction={handleHideFoldersInfo}>
 					{t('add_folders_info')}
 				</Alert>
 			)}
@@ -311,9 +334,7 @@ export const Notes = () => {
 					))}
 				</div>
 			) : (
-				<Alert className='m-0' variant='primary'>{`${t('you_dont_have_any_notes')} ${
-					folderId ? t('in_this_folder') : ''
-				}.`}</Alert>
+				<Alert className='!m-0'>{`${t('you_dont_have_any_notes')} ${folderId ? t('in_this_folder') : ''}.`}</Alert>
 			)}
 		</>
 	)

@@ -154,7 +154,7 @@ export function Post({
 				<>
 					{post.isEdit ? (
 						<textarea
-							className='flex-1 p-2 border border-slate-300 rounded resize-y focus:outline-none focus:ring-2 focus:ring-blue-500'
+							className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded resize-y focus:outline-none focus:ring-2 focus:ring-blue-500'
 							value={postInput}
 							onChange={e => setPostInput(e.target.value)}></textarea>
 					) : (
@@ -183,14 +183,14 @@ export function Post({
 			<div className='flex items-center bg-slate-100 px-4 py-2 -mx-4 border-t border-slate-200'>
 				<Button
 					variant='text'
-					className='rounded-full hover:bg-purple-300 size-24px !p-0'
+					className='!rounded-full hover:bg-purple-300 !p-1'
 					onClick={() => setShowComments(prev => !prev)}>
 					<FileText size={14} color='purple' />
 				</Button>
 				<span className='mr-4 px-1'>{comments.length}</span>
 				<Button
 					variant='text'
-					className='rounded-full hover:bg-rose-300 size-24px !p-0'
+					className='!rounded-full hover:bg-rose-300 !p-1'
 					onClick={() => setLikes(post._id, true)}>
 					<Heart size={14} className='text-red-500' />
 				</Button>
@@ -207,7 +207,7 @@ export function Post({
 						<div className='flex gap-2 pt-3 mb-2 border-t border-dashed border-slate-200'>
 							<textarea
 								value={commentValue}
-								className='resize-y flex-1 p-2 border border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
+								className='resize-y flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 ml-[2px]'
 								placeholder={t('type_your_comment')}
 								onChange={e => setCommentValue(e.target.value)}></textarea>
 							<Button className='self-end' variant='white' onClick={handleAddComment}>
@@ -228,7 +228,7 @@ export function Post({
 												<span>{c.content}</span>
 											) : (
 												<textarea
-													className='flex-1 p-2 border border-slate-300 rounded resize-y focus:outline-none focus:ring-2 focus:ring-blue-500'
+													className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded resize-y focus:outline-none focus:ring-2 focus:ring-blue-500 ml-[2px]'
 													value={editedComments[c._id]}
 													onChange={e => handleUpdateComment(c._id, e.target.value)}></textarea>
 											)}
