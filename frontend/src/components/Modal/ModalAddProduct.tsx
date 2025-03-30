@@ -60,10 +60,10 @@ export function ModalAddProduct({ modalData }: { modalData: DataProps }) {
 
 	return (
 		<>
-			<div className='card-content flex flex-col gap-2'>
+			<div className='p-4 flex flex-col gap-2 border-t border-zinc-300'>
 				<FormRow label={t('product_name')} required>
 					<input
-						className='flex-1 max-w-200px'
+						className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
 						type='text'
 						value={nameValue}
 						onChange={e => setNameValue(e.target.value)}
@@ -71,13 +71,13 @@ export function ModalAddProduct({ modalData }: { modalData: DataProps }) {
 				</FormRow>
 				<FormRow label={t('category')}>
 					<select
-						className='flex-1 max-w-200px'
+						className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
 						name='categorySelect'
 						id='categorySelect'
 						value={categoryValue}
 						onChange={e => setCategoryValue(e.target.value)}>
 						{CATEGORIES.map((c, index) => (
-							<option key={index} value={c.value}>
+							<option className='text-gray-800 bg-white hover:bg-gray-100' key={index} value={c.value}>
 								{t(c.value)}
 							</option>
 						))}
@@ -85,7 +85,7 @@ export function ModalAddProduct({ modalData }: { modalData: DataProps }) {
 				</FormRow>
 				<FormRow label={t('unit')}>
 					<input
-						className='flex-1 max-w-200px'
+						className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
 						type='text'
 						value={unitValue}
 						onChange={e => setUnitValue(e.target.value)}
@@ -93,7 +93,7 @@ export function ModalAddProduct({ modalData }: { modalData: DataProps }) {
 				</FormRow>
 				<FormRow label={t('price')}>
 					<input
-						className='flex-1 max-w-200px'
+						className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
 						type='number'
 						value={priceValue}
 						onChange={e => setPriceValue(e.target.value)}
@@ -101,18 +101,23 @@ export function ModalAddProduct({ modalData }: { modalData: DataProps }) {
 				</FormRow>
 				<FormRow label={t('tags')}>
 					<input
-						className='flex-1 max-w-200px'
+						className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
 						type='text'
 						value={tagsValue}
 						onChange={e => setTagsValue(e.target.value)}
 					/>
 				</FormRow>
 				<FormRow label={t('is_favourite')}>
-					<input type='checkbox' checked={isFavouriteValue} onChange={e => setIsFavouriteValue(e.target.checked)} />
+					<input
+						type='checkbox'
+						className='w-4 h-4 bg-gray-100 border-gray-300'
+						checked={isFavouriteValue}
+						onChange={e => setIsFavouriteValue(e.target.checked)}
+					/>
 				</FormRow>
 			</div>
-			<div className='card-footer'>
-				<Button variant='success' className='w-100' onClick={addProduct}>
+			<div className='py-4 px-6 border-t border-slate-300 bg-zinc-200 rounded-b-2xl'>
+				<Button variant='success' className='w-full' onClick={addProduct}>
 					{t('add_product')}
 				</Button>
 			</div>

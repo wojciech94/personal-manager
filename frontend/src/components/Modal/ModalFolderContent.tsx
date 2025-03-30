@@ -55,10 +55,12 @@ export function ModalFolderContent({ modalData }: { modalData: DataProps }) {
 
 	return (
 		<>
-			<div className='card-content flex flex-col gap-3 pt-0'>
+			<div className='px-4 pb-4 flex flex-col gap-2'>
 				{dashboardId && folders && folders.length > 0 && (
 					<>
-						<div className='card-subtitle'>{t('edit_folders')}</div>
+						<div className='-mx-4 min-h-[60px] flex items-center justify-between gap-4 font-semibold bg-zinc-200 py-2 px-4  border-zinc-300 border-y'>
+							{t('edit_folders')}
+						</div>
 						{folders.map(f => (
 							<FolderRow key={f.name} folder={f} action={modalAction} dashboardId={dashboardId} />
 						))}
@@ -66,16 +68,23 @@ export function ModalFolderContent({ modalData }: { modalData: DataProps }) {
 				)}
 				{modalData?.addAction && (
 					<>
-						<div className='card-subtitle'>{t('add_folder')}</div>
+						<div className='-mx-4 min-h-[60px] flex items-center justify-between gap-4 font-semibold bg-zinc-200 py-2 px-4  border-zinc-300 border-y'>
+							{t('add_folder')}
+						</div>
 						<FormRow label={t('folder_name')}>
-							<input type='text' value={addInputValue} onChange={e => setAddInputValue(e.target.value)} />
+							<input
+								className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
+								type='text'
+								value={addInputValue}
+								onChange={e => setAddInputValue(e.target.value)}
+							/>
 						</FormRow>
 					</>
 				)}
 			</div>
 			{modalData?.addAction && (
-				<div className='card-footer border-light'>
-					<Button variant='success' className='w-100' onClick={handleAddFolderAction}>
+				<div className='py-4 px-6 border-t border-slate-300 bg-zinc-200 rounded-b-2xl'>
+					<Button variant='success' className='w-full' onClick={handleAddFolderAction}>
 						{t('add_folder')}
 					</Button>
 				</div>
@@ -143,19 +152,26 @@ function FolderRow({ folder, action, dashboardId }: FolderRowProps) {
 	return (
 		<div className='flex justify-between items-center gap-2 px-4'>
 			{isEdit ? (
-				<div className='flex gap-2'>
-					<input type={'text'} value={inputValue} onChange={e => setInputValue(e.target.value)} />
-					<Button size='sm' variant='success' onClick={handleSave}>
+				<div className='flex gap-2 items-center h-11'>
+					<input
+						className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
+						type={'text'}
+						value={inputValue}
+						onChange={e => setInputValue(e.target.value)}
+					/>
+					<Button onlyIcon={true} variant='success' onClick={handleSave}>
 						<Check size={16} />
 					</Button>
 				</div>
 			) : (
-				<div>{folder.name}</div>
+				<div className='flex items-center h-11'>{folder.name}</div>
 			)}
 			<div className='flex gap-2'>
-				<Button size='sm' onClick={() => setIsEdit(prevEdit => !prevEdit)}>
-					<Edit size={16} /> {t('edit')}
-				</Button>
+				{!isEdit && (
+					<Button size='sm' onClick={() => setIsEdit(prevEdit => !prevEdit)}>
+						<Edit size={16} /> {t('edit')}
+					</Button>
+				)}
 				<Button size='sm' variant='danger' onClick={handleRemove}>
 					<X size={16} /> {t('remove')}
 				</Button>

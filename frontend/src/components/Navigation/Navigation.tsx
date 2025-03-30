@@ -9,7 +9,9 @@ export const Dashboards: React.FC<NavigationProps> = ({ dashboards }) => {
 				dashboards.length > 0 &&
 				dashboards.map(d => (
 					<NavLink
-						className={({ isActive }) => `font-semibold text-lg transition-colors ${isActive ? 'text-blue-500' : ''}`}
+						className={({ isActive }) =>
+							`font-semibold text-lg transition-colors hover:text-blue-500 ${isActive ? 'text-blue-500' : ''}`
+						}
 						key={d._id}
 						to={`/dashboards/${d._id}`}>
 						{d.name}

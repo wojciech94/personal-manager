@@ -81,7 +81,7 @@ export function ShoppingProduct({ data, onListItemUpdate, onListItemDelete }: Sh
 					</td>
 					<td>
 						{editedId && editedId === data._id ? (
-							<textarea className='w-100' value={notesValue} onChange={e => setNotesValue(e.target.value)}></textarea>
+							<textarea className='w-full' value={notesValue} onChange={e => setNotesValue(e.target.value)}></textarea>
 						) : (
 							data.notes
 						)}

@@ -80,10 +80,10 @@ export const Notifications = () => {
 	}
 
 	return (
-		<div className='content-container'>
+		<div className='w-[calc(100%-(200px+1.25rem))] max-w-[1200px] mx-auto'>
 			<Card headerComponent={<CardHeader title={t('notifications')} />} contentClass='!p-0'>
 				{notifications && notifications.length > 0 ? (
-					<ul className='zebra rounded-lg overflow-hidden'>
+					<ul className='rounded-lg overflow-hidden'>
 						{notifications.map(n => (
 							<li key={n._id} className='flex justify-between items-center px-4 py-2'>
 								<div>{n.content}</div>

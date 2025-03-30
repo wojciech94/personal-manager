@@ -34,16 +34,23 @@ export function ModalTasksSettingsContent({ modalData }: { modalData: DataProps 
 	}
 
 	return (
-		<>
-			<div className='card-subtitle'>{t('settings')}</div>
+		<div className='px-4 flex flex-col gap-2'>
+			<div className='-mx-4 min-h-[60px] flex items-center justify-between gap-4 font-semibold bg-zinc-200 py-2 px-4 border-zinc-300 border-y'>
+				{t('settings')}
+			</div>
 			<div className='p-4 flex flex-col gap-2'>
 				<FormRow label={t('show_expiration_date')}>
-					<input type='checkbox' checked={showDeadline} onChange={e => setShowDeadline(e.target.checked)} />
+					<input
+						className='w-4 h-4 bg-gray-100 border-gray-300'
+						type='checkbox'
+						checked={showDeadline}
+						onChange={e => setShowDeadline(e.target.checked)}
+					/>
 				</FormRow>
 				<FormRow label={t('archivization_time')}>
-					<div className='text-normal'>
+					<div className='text-normal flex gap-2 items-center'>
 						<input
-							className='w-75px'
+							className='w-75px flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
 							type='number'
 							value={archivizationTime}
 							onChange={e => setArchivizationTime(Number(e.target.value))}
@@ -52,9 +59,9 @@ export function ModalTasksSettingsContent({ modalData }: { modalData: DataProps 
 					</div>
 				</FormRow>
 				<FormRow label={t('remove_time')}>
-					<div className='text-normal'>
+					<div className='text-normal flex gap-2 items-center'>
 						<input
-							className='w-75px'
+							className='w-75px flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
 							type='number'
 							value={removeTime}
 							onChange={e => setRemoveTime(Number(e.target.value))}
@@ -63,37 +70,51 @@ export function ModalTasksSettingsContent({ modalData }: { modalData: DataProps 
 					</div>
 				</FormRow>
 			</div>
-			<div className='card-subtitle'>{t('sorting')}</div>
+			<div className='-mx-4 min-h-[60px] flex items-center justify-between gap-4 font-semibold bg-zinc-200 py-2 px-4 border-zinc-300 border-y'>
+				{t('sorting')}
+			</div>
 			<div className='pt-4 flex flex-col gap-2'>
 				<FormRow label={t('sorting_method')}>
 					<select
 						name='sortMethod'
+						className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
 						value={sortMethod}
 						id='sortMethod'
 						onChange={e => setSortMethod(e.target.value as SortMethods)}>
-						<option value='created_at'>{t('creation_date')}</option>
-						<option value='expired_at'>{t('expiration_date')}</option>
-						<option value='priority'>{t('priority')}</option>
+						<option className='text-gray-800 bg-white hover:bg-gray-100' value='created_at'>
+							{t('creation_date')}
+						</option>
+						<option className='text-gray-800 bg-white hover:bg-gray-100' value='expired_at'>
+							{t('expiration_date')}
+						</option>
+						<option className='text-gray-800 bg-white hover:bg-gray-100' value='priority'>
+							{t('priority')}
+						</option>
 					</select>
 				</FormRow>
 				<FormRow label='Sorting order'>
 					<select
+						className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
 						name='sortDirection'
 						value={sortDirection}
 						id='sortDirection'
 						onChange={e => setSortDirection(e.target.value as 'asc' | 'desc')}>
-						<option value='asc'>{t('ascending')}</option>
-						<option value='desc'>{t('descending')}</option>
+						<option className='text-gray-800 bg-white hover:bg-gray-100' value='asc'>
+							{t('ascending')}
+						</option>
+						<option className='text-gray-800 bg-white hover:bg-gray-100' value='desc'>
+							{t('descending')}
+						</option>
 					</select>
 				</FormRow>
 			</div>
 			{modalData.actionName && (
-				<div className='card-footer mt-4'>
-					<Button variant='success' className='w-100' onClick={handleSetTasksSettings}>
+				<div className='-mx-4 mt-4 py-4 px-6 border-t border-slate-300 bg-zinc-200 rounded-b-2xl'>
+					<Button variant='success' className='w-full' onClick={handleSetTasksSettings}>
 						{modalData.actionName}
 					</Button>
 				</div>
 			)}
-		</>
+		</div>
 	)
 }

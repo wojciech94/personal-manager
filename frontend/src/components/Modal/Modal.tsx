@@ -76,7 +76,7 @@ export const Modal: React.FC<ModalDataProps> = ({ name, title, data }): React.JS
 			<div className='fixed top-1/2 left-1/2 w-[90%] max-w-[600px] bg-gray-100 border border-gray-500 -translate-x-1/2 -translate-y-1/2 rounded-2xl'>
 				<div className='flex gap-4 justify-end items-center p-4'>
 					{title && <div className='flex-1 font-semibold text-lg'>{title}</div>}
-					<Button variant='text' onClick={() => setActiveModal(null)}>
+					<Button variant='text' className='hover:!text-zinc-500' onClick={() => setActiveModal(null)}>
 						<X size={20} />
 					</Button>
 				</div>

@@ -34,7 +34,7 @@ export const ModalAddCalendarEvent = ({ modalData }: { modalData: DataProps }) =
 		}
 
 		setActiveModal(null)
-		const response = await fetchData<any>(url, options)
+		const response = await fetchData<[]>(url, options)
 		if (response.error) {
 			console.error('Failed to create event:', response.status, response.error)
 			return
@@ -48,26 +48,36 @@ export const ModalAddCalendarEvent = ({ modalData }: { modalData: DataProps }) =
 
 	return (
 		<>
-			<div className='card-content flex flex-col gap-2'>
+			<div className='p-4 flex flex-col gap-2 border-t border-zinc-300'>
 				<FormRow label={t('title')} required>
-					<input className='flex-1 max-w-200px' type='text' value={title} onChange={e => setTitle(e.target.value)} />
+					<input
+						className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
+						type='text'
+						value={title}
+						onChange={e => setTitle(e.target.value)}
+					/>
 				</FormRow>
 				<FormRow label={t('date')}>
 					<div className='font-medium'>{modalData.dateData?.date}</div>
 				</FormRow>
 				<FormRow label={t('hour')}>
-					<input className='flex-1 max-w-200px' type='text' value={hour} onChange={e => setHour(e.target.value)} />
+					<input
+						className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
+						type='text'
+						value={hour}
+						onChange={e => setHour(e.target.value)}
+					/>
 				</FormRow>
-				<FormRow className='items-start!' label={t('description')}>
+				<FormRow className='!items-start' label={t('description')}>
 					<textarea
-						className='flex-1 px-1 py-0.5 border border-gray-400 rounded-md focus:outline-none max-h-100'
+						className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y'
 						value={description}
 						onChange={e => setDescription(e.target.value)}
 					/>
 				</FormRow>
 			</div>
-			<div className='card-footer'>
-				<Button variant='success' className='w-100' onClick={addEvent}>
+			<div className='py-4 px-6 border-t border-slate-300 bg-zinc-200 rounded-b-2xl'>
+				<Button variant='success' className='w-full' onClick={addEvent}>
 					{t('add_event')}
 				</Button>
 			</div>
