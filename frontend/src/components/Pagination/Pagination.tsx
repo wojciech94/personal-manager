@@ -20,7 +20,7 @@ export function Pagination({
 
 	return (
 		<>
-			<div className='flex gap-2 justify-between items-center border-t border-zinc-300 px-4 pt-4 bg-zinc-200 pb-4 rounded-b-2xl'>
+			<div className='flex gap-2 justify-between items-center border-t border-zinc-300 px-4 pt-4 bg-slate-200 pb-4 rounded-b-2xl'>
 				<div>
 					{t('page')} <span className='text-nowrap'>{`${currentPage} ${t('of')} ${totalPages}`}</span>
 				</div>

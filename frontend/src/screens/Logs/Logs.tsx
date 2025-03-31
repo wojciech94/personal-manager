@@ -18,22 +18,24 @@ export const Logs = ({ logs }: { logs: Log[] }) => {
 	}
 
 	return (
-		<div className='flex flex-col gap-2'>
-			<div className='card-subtitle'>{t('activities')}</div>
+		<div className='-mx-4 flex flex-col gap-2 overflow-x-auto'>
+			<div className='min-h-[60px] flex items-center justify-between gap-4 font-semibold bg-zinc-200 py-2 px-4 border-zinc-300 border-y'>
+				{t('activities')}
+			</div>
 			<table cellSpacing={0} className='w-full -mb-2'>
 				<thead>
 					<tr className='border-b'>
-						<th className='ps-4'>{t('details')}</th>
-						<th className='text-center'>{t('time')}</th>
-						<th className='text-end'>{t('author')}</th>
+						<th className='table-cell text-start'>{t('details')}</th>
+						<th className='table-cell text-center'>{t('time')}</th>
+						<th className='table-cell text-end'>{t('author')}</th>
 					</tr>
 				</thead>
-				<tbody className='zebra'>
+				<tbody>
 					{currentItems.map(log => (
-						<tr key={log._id} className='border-b'>
-							<td className='flex-1'>{log.message}</td>
-							<td className='text-center'>{getLocaleDateTime(log.timestamps)}</td>
-							<td className='font-semibold text-end'>{log.initiatorId.name}</td>
+						<tr key={log._id} className='border-b odd:bg-zinc-100'>
+							<td className='flex-1 table-cell'>{log.message}</td>
+							<td className='text-center table-cell'>{getLocaleDateTime(log.timestamps)}</td>
+							<td className='font-semibold text-end table-cell'>{log.initiatorId.name}</td>
 						</tr>
 					))}
 				</tbody>

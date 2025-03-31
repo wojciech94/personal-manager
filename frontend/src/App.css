@@ -8,60 +8,10 @@
 	padding: 0;
 }
 
-#root {
-	min-height: 100vh;
-	display: flex;
-	flex-direction: column;
-}
-
 html {
 	font-family: 'Poppins', 'Trebuchet MS', 'Helvetica', sans-serif;
 }
 
-.bg-welcome {
-	background-image: url('../public/personal-manager-welcome-v2.jpg');
-	background-position: center;
-	background-size: cover;
-}
-
-.form-row {
-	display: flex;
-	flex-wrap: wrap;
-	align-items: center;
-}
-
-.form-row-label {
-	width: calc(4 / 12 * 100%);
-	padding: 0.25rem 0.5rem;
-	text-align: end;
-}
-
-.form-row-content {
-	width: calc(8 / 12 * 100%);
-	display: flex;
-	flex-wrap: wrap;
-	gap: 0.5rem;
-	align-items: flex-start;
-	padding: 0 0.5rem;
-	font-weight: bold;
-}
-
-.gradient-0 {
-	background: linear-gradient(125deg, #efa8a888, #ebbea688);
-}
-
-.gradient-1 {
-	background: linear-gradient(125deg, #a8efa888, #beeba688);
-}
-
-.gradient-2 {
-	background: linear-gradient(125deg, #a8a8ef88, #bea6eb88);
-}
-
-.gradient-3 {
-	background: linear-gradient(125deg, #ebbea688, #a6ebbe88);
-}
-
-.gradient-4 {
-	background: linear-gradient(125deg, #bea6eb88, #a6beeb88);
+.table-cell {
+	@apply px-2 py-1 first:pl-4 last:pr-4;
 }

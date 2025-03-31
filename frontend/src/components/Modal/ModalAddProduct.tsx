@@ -47,7 +47,6 @@ export function ModalAddProduct({ modalData }: { modalData: DataProps }) {
 		}
 
 		if (response.data) {
-			const data = response.data
 			if (modalData?.action && modalData.action.length === 0) {
 				const action = modalData.action as () => Promise<void>
 				action()

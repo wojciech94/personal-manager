@@ -139,16 +139,16 @@ export function ShoppingList() {
 				</Button>
 			</div>
 			{shoppingList && shoppingList.list && shoppingList.list.length > 0 ? (
-				<div className='-mx-4 -mb-4'>
-					<table cellSpacing={0} className='w-full overflow-hidden rounded-b-lg'>
-						<thead className='bg-slate-100'>
-							<tr className='border-t border-b border-light'>
-								<th style={{ width: '30px' }}></th>
-								<th>{t('name')}</th>
-								<th>{`${t('quantity')} [${t('unit')}]`}</th>
-								<th>{t('price_per_unit')}</th>
-								<th>{t('notes')}</th>
-								<th style={{ width: '85px' }}></th>
+				<div className='-mx-4 -mb-4 overflow-x-auto'>
+					<table cellSpacing={0} className='w-full overflow-hidden rounded-b-2xl border-collapse'>
+						<thead>
+							<tr className='border-t border-b bg-slate-200 border-zinc-300'>
+								<th className='table-cell' style={{ width: '30px' }}></th>
+								<th className='table-cell text-start'>{t('name')}</th>
+								<th className='table-cell'>{`${t('quantity')} [${t('unit')}]`}</th>
+								<th className='table-cell'>{t('price_per_unit')}</th>
+								<th className='table-cell min-w-[125px]'>{t('notes')}</th>
+								<th className='table-cell w-[85px]'></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -163,11 +163,13 @@ export function ShoppingList() {
 						</tbody>
 						<tfoot>
 							<tr className='bg-slate-100 border-t border-light font-semibold'>
-								<td colSpan={2} className='px-2'>
+								<td className='table-cell' colSpan={2}>
 									{t('summary')}
 								</td>
-								<td className='text-end'>{t('products_value')}</td>
-								<td colSpan={3}>{calculateSum()}</td>
+								<td className='text-end table-cell'>{t('products_value')}</td>
+								<td className='table-cell' colSpan={3}>
+									{calculateSum()}
+								</td>
 							</tr>
 						</tfoot>
 					</table>

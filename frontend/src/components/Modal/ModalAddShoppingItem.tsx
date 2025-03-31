@@ -84,7 +84,7 @@ export function ModalAddShoppingItem(): React.JSX.Element {
 			<div className='p-4 flex flex-col gap-2 border-t border-zinc-300'>
 				<div className='flex justify-between gap-4 flex-wrap'>
 					{products && products.length > 0 && (
-						<div className='flex flex-col gap-1'>
+						<div className='flex flex-col gap-1 flex-grow'>
 							<div>{t('product')}</div>
 							<select
 								className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
@@ -100,7 +100,7 @@ export function ModalAddShoppingItem(): React.JSX.Element {
 							</select>
 						</div>
 					)}
-					<div className='flex flex-col gap-1'>
+					<div className='flex flex-col gap-1 flex-grow'>
 						<div>{t('quantity')}</div>
 						<input
 							className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
@@ -113,7 +113,7 @@ export function ModalAddShoppingItem(): React.JSX.Element {
 							}}
 						/>
 					</div>
-					<div className='flex flex-col gap-1'>
+					<div className='flex flex-col gap-1 flex-grow'>
 						<div>{t('unit')}</div>
 						<input
 							className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
@@ -122,7 +122,7 @@ export function ModalAddShoppingItem(): React.JSX.Element {
 							onChange={e => setUnitValue(e.target.value)}
 						/>
 					</div>
-					<div className='flex flex-col gap-1'>
+					<div className='flex flex-col gap-1 flex-grow'>
 						<div>{t('price')}</div>
 						<input
 							className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
@@ -130,7 +130,7 @@ export function ModalAddShoppingItem(): React.JSX.Element {
 							onChange={e => setPriceValue(e.target.value)}
 						/>
 					</div>
-					<div className='flex flex-col flex-1 gap-1 w-100'>
+					<div className='flex flex-col gap-1 flex-grow'>
 						<div>{t('notes')}</div>
 						<textarea
 							className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 max-w-full'

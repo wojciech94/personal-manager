@@ -167,6 +167,7 @@ export const Dashboard: React.FC = () => {
 		<select
 			name='ownerSelect'
 			id='ownerSelectId'
+			className='p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
 			value={selectedOwner}
 			onChange={e => setSelectedOwner(e.target.value)}>
 			{dashboard.userIds.map(u => (
@@ -214,16 +215,18 @@ export const Dashboard: React.FC = () => {
 	return (
 		<>
 			{dashboard && (
-				<Card headerComponent={<CardHeader title={t('dashboard_details')} data={headerActions()} />}>
+				<Card
+					contentClass='!pb-0'
+					headerComponent={<CardHeader title={t('dashboard_details')} data={headerActions()} />}>
 					<div className='flex flex-col gap-2 pt-4'>
 						<FormRow label={t('name')} content={nameContent} />
 						<FormRow label={t('owner')} content={ownerContent} />
 						<FormRow className='mb-2' label={t('creation_date')} content={dashboard?.created_at?.split('T')[0]} />
 						{dashboard.userIds && dashboard.userIds.length > 0 && (
 							<div className='flex flex-col gap-2'>
-								<div className='card-subtitle'>
+								<div className='-mx-4 min-h-[60px] flex items-center justify-between gap-4 font-semibold bg-zinc-200 py-2 px-4 border-zinc-300 border-y'>
 									{t('users')}
-									<div className='flex gap-2'>
+									<div className='flex gap-2 font-normal'>
 										{dashboard.isOwner && (
 											<Button onClick={() => setActiveModal(addUserModalData)}>
 												<Plus size={16} /> {t('invite_user')}
@@ -233,7 +236,7 @@ export const Dashboard: React.FC = () => {
 								</div>
 								<div className='flex gap-2 py-2 px-4'>
 									{dashboard.userIds.map(u => (
-										<Card key={u._id} contentClass='border-none'>
+										<Card key={u._id} contentClass='border-none !py-3'>
 											<div className='flex items-center gap-2'>
 												<User size={16} /> {u.name}
 												{dashboard.isOwner && editMode && (
@@ -248,7 +251,7 @@ export const Dashboard: React.FC = () => {
 							</div>
 						)}
 						{editMode && (
-							<div className='flex justify-center border-t border-light pt-4 pb-2'>
+							<div className='-mx-4 flex justify-center border-t border-light pt-4 pb-2'>
 								<Button variant='success' onClick={updateDashboard}>
 									<Check size={16} /> {t('save_dashboard')}
 								</Button>

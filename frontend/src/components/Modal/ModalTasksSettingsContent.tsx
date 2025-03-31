@@ -92,7 +92,7 @@ export function ModalTasksSettingsContent({ modalData }: { modalData: DataProps 
 						</option>
 					</select>
 				</FormRow>
-				<FormRow label='Sorting order'>
+				<FormRow label={t('sorting_order')}>
 					<select
 						className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
 						name='sortDirection'
