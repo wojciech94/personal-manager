@@ -122,6 +122,7 @@ export const CalendarMonth = () => {
 	)
 
 	const weeksInMonth = useMemo(() => getWeeksArrayForMonth(Number(year), Number(month)), [year, month])
+	const weeksRowClass = weeksInMonth.length === 5 ? 'grid-rows-5' : 'grid-rows-6'
 
 	return (
 		<div className='flex flex-col flex-1 bg-white border border-slate-500 px-6 py-4 rounded-lg'>
@@ -154,7 +155,7 @@ export const CalendarMonth = () => {
 					{weeksInMonth &&
 						weeksInMonth.length > 0 &&
 						weeksInMonth.map(w => (
-							<div key={w} className='flex align-center justify-center'>
+							<div key={w} className='flex flex-col align-center justify-center'>
 								<Link
 									className={`text-center hover:bg-purple-300 duration-100 rounded-full w-6 h-6 font-medium transition-colors ${
 										w === currentWeek ? 'bg-violet-200' : ''
@@ -165,14 +166,14 @@ export const CalendarMonth = () => {
 							</div>
 						))}
 				</div>
-				<div className='grid grid-cols-7 gap-1 flex-1 py-4'>
+				<div className={`grid grid-cols-7 ${weeksRowClass} gap-1 flex-1 py-4`}>
 					{days.map((d, index) => {
 						const tempDate = new Date(d.date)
 						const isCurrentDay = dateWithoutHours(tempDate) === dateWithoutHours(currentDate)
 						return (
 							<div
 								key={index}
-								className='group flex flex-col justify-start border border-gray-400 rounded-md p-1 min-h-[87px] max-h-[135px] overflow-hidden'>
+								className='group flex flex-col justify-start border border-gray-400 rounded-md p-1  overflow-hidden'>
 								<div
 									className={`flex items-center justify-center w-6 h-6 text-sm rounded-full self-center cursor-pointer duration-100 hover:bg-purple-300 transition-colors ${
 										isCurrentDay ? 'bg-violet-200 font-medium' : ''
@@ -202,7 +203,7 @@ export const CalendarMonth = () => {
 									className='mt-1 opacity-0 group-hover:opacity-100 transition-all! duration-300 px-1 group-hover:cursor-pointer'
 									onClick={() => handleSetModal(d)}>
 									<Plus size={14} />
-									{t('add_event')}
+									{t('event')}
 								</Button>
 							</div>
 						)

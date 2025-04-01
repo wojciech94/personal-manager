@@ -24,7 +24,7 @@ export const Logs = ({ logs }: { logs: Log[] }) => {
 			</div>
 			<table cellSpacing={0} className='w-full -mb-2'>
 				<thead>
-					<tr className='border-b'>
+					<tr className='border-b border-zinc-300'>
 						<th className='table-cell text-start'>{t('details')}</th>
 						<th className='table-cell text-center'>{t('time')}</th>
 						<th className='table-cell text-end'>{t('author')}</th>
@@ -32,7 +32,7 @@ export const Logs = ({ logs }: { logs: Log[] }) => {
 				</thead>
 				<tbody>
 					{currentItems.map(log => (
-						<tr key={log._id} className='border-b odd:bg-zinc-100'>
+						<tr key={log._id} className='border-b border-zinc-300 odd:bg-slate-200'>
 							<td className='flex-1 table-cell'>{log.message}</td>
 							<td className='text-center table-cell'>{getLocaleDateTime(log.timestamps)}</td>
 							<td className='font-semibold text-end table-cell'>{log.initiatorId.name}</td>

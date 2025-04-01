@@ -50,7 +50,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ isNew, createDashb
 							slides.map((s, index) => (
 								<div key={index} className='min-w-full flex justify-center'>
 									<div
-										className={`flex flex-col justify-evenly bg-white shadow w-[55%] rounded-lg p-8 ${s.class}`}
+										className={`flex flex-col justify-evenly bg-white shadow w-[85%] max-w-[650px] rounded-lg p-8 ${s.class}`}
 										style={{ background: s.background }}>
 										<h2 className='text-center mb-8 text-3xl font-semibold'>{t(`${s.key}_title`)}</h2>
 										<h3 className='text-2xl font-medium'>{t(`${s.key}_subtitle`)}</h3>

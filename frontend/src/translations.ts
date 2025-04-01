@@ -123,6 +123,7 @@ export const translations = {
 		dashboard_name: 'Dashboard name',
 		//Calendar
 		add_event: 'Add event',
+		event: 'Event',
 		date: 'Date',
 		//ToDo
 		todo_list: 'To do list',
@@ -326,6 +327,7 @@ export const translations = {
 		dashboard_name: 'Nazwa dashboarda',
 		//Calendar
 		add_event: 'Dodaj wydarzenie',
+		event: 'Wydarzenie',
 		date: 'Data',
 		//ToDo
 		todo_list: 'Lista zadań',

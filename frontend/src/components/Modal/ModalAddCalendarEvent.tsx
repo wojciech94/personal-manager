@@ -7,6 +7,7 @@ import { API_URL } from '../../config'
 import { useParams } from 'react-router-dom'
 import { useApi } from '../../contexts/ApiContext'
 import { useModalContext } from '../../contexts/ModalContext'
+import { TimePicker } from '../TimePicker/TimePicker'
 
 export const ModalAddCalendarEvent = ({ modalData }: { modalData: DataProps }) => {
 	const [title, setTitle] = useState('')
@@ -16,6 +17,10 @@ export const ModalAddCalendarEvent = ({ modalData }: { modalData: DataProps }) =
 	const { dashboardId } = useParams()
 	const { fetchData } = useApi()
 	const { setActiveModal } = useModalContext()
+
+	const handleTimeChange = (time: string) => {
+		setHour(time)
+	}
 
 	const addEvent = async () => {
 		const url = `${API_URL}dashboards/${dashboardId}/events`
@@ -61,12 +66,13 @@ export const ModalAddCalendarEvent = ({ modalData }: { modalData: DataProps }) =
 					<div className='font-medium'>{modalData.dateData?.date}</div>
 				</FormRow>
 				<FormRow label={t('hour')}>
-					<input
+					{/* <input
 						className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
 						type='text'
 						value={hour}
 						onChange={e => setHour(e.target.value)}
-					/>
+					/> */}
+					<TimePicker onTimeChange={handleTimeChange} />
 				</FormRow>
 				<FormRow className='!items-start' label={t('description')}>
 					<textarea
