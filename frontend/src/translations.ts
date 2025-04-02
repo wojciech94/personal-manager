@@ -125,6 +125,8 @@ export const translations = {
 		add_event: 'Add event',
 		event: 'Event',
 		date: 'Date',
+		add_to_todos: 'Add to todos',
+		add_to_calendar: 'Add to calendar',
 		//ToDo
 		todo_list: 'To do list',
 		tasks_todo: 'Tasks to do',
@@ -329,6 +331,8 @@ export const translations = {
 		add_event: 'Dodaj wydarzenie',
 		event: 'Wydarzenie',
 		date: 'Data',
+		add_to_todos: 'Dodaj do zadań',
+		add_to_calendar: 'Dodaj do kalendarza',
 		//ToDo
 		todo_list: 'Lista zadań',
 		tasks_todo: 'Zadania do zrobienia',
