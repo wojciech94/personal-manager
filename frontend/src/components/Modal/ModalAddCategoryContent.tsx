@@ -40,7 +40,7 @@ export const ModalAddCategoryContent = () => {
 				<FormRow label={t('category_name')}>
 					<input
 						type='text'
-						className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
+						className='flex-1 max-w-full min-w-0 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
 						value={nameValue}
 						onChange={e => setNameValue(e.target.value)}
 					/>

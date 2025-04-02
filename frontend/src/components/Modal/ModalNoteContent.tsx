@@ -142,7 +142,7 @@ export const ModalNoteContent = ({ modalData }: { modalData: DataProps }) => {
 			<div className='p-4 flex flex-col gap-2 border-t border-zinc-300'>
 				<FormRow label={t('title')}>
 					<input
-						className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
+						className='flex-1 max-w-full min-w-0 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
 						type='text'
 						name='noteName'
 						id='noteName'
@@ -152,7 +152,7 @@ export const ModalNoteContent = ({ modalData }: { modalData: DataProps }) => {
 				</FormRow>
 				<FormRow label={t('content')}>
 					<textarea
-						className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y self-start'
+						className='flex-1 max-w-full min-w-0 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y self-start'
 						name='noteContent'
 						id='noteContent'
 						value={noteContent}
@@ -163,7 +163,7 @@ export const ModalNoteContent = ({ modalData }: { modalData: DataProps }) => {
 					<select
 						name='noteCategory'
 						id='noteCategory'
-						className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
+						className='flex-1 max-w-full min-w-0 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
 						value={selectedCategory}
 						onChange={e => handleCategoryChange(e.target.value)}>
 						{categoryNames.map(category => (
@@ -175,7 +175,7 @@ export const ModalNoteContent = ({ modalData }: { modalData: DataProps }) => {
 				</FormRow>
 				<FormRow label={t('tags')}>
 					<input
-						className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
+						className='flex-1 max-w-full min-w-0 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
 						type='text'
 						name='noteTags'
 						id='noteTags'
@@ -187,7 +187,7 @@ export const ModalNoteContent = ({ modalData }: { modalData: DataProps }) => {
 					<select
 						name='noteFolder'
 						id='noteFolder'
-						className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
+						className='flex-1 max-w-full min-w-0 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
 						value={selectedFolder}
 						onChange={e => handleFolderChange(e.target.value)}>
 						<option className='text-gray-800 bg-white hover:bg-gray-100' value=''>
@@ -213,7 +213,7 @@ export const ModalNoteContent = ({ modalData }: { modalData: DataProps }) => {
 				<FormRow label={t('expire_at')}>
 					<input
 						type='date'
-						className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
+						className='flex-1 max-w-full min-w-0 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
 						name='expiredDate'
 						id='expiredDate'
 						value={expiredDate}

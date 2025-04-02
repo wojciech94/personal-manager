@@ -73,7 +73,7 @@ export function ModalFolderContent({ modalData }: { modalData: DataProps }) {
 						</div>
 						<FormRow label={t('folder_name')}>
 							<input
-								className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
+								className='flex-1 max-w-full min-w-0 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
 								type='text'
 								value={addInputValue}
 								onChange={e => setAddInputValue(e.target.value)}
@@ -154,7 +154,7 @@ function FolderRow({ folder, action, dashboardId }: FolderRowProps) {
 			{isEdit ? (
 				<div className='flex gap-2 items-center h-11'>
 					<input
-						className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
+						className='flex-1 max-w-full min-w-0 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
 						type={'text'}
 						value={inputValue}
 						onChange={e => setInputValue(e.target.value)}

@@ -78,9 +78,10 @@ export function ShoppingLists() {
 			<div className='flex gap-3 justify-between items-center'>
 				<div className='font-semibold text-lg'>{t('shopping_list')}</div>
 				<div className='flex gap-2 items-center'>
-					<Button className={`text-nowrap sm:inline-flex p-2`} onClick={openCreateShoppingListModal}>
+					<Button className={`text-nowrap sm:inline-flex !p-2 sm:!px-3`} onClick={openCreateShoppingListModal}>
 						<Plus size={16} />
 						<span className='hidden sm:inline'>{t('create_shopping_list')}</span>
+						<span className='sm:hidden'>{t('list')}</span>
 					</Button>
 					<ExpandableMenu items={menuItems} />
 				</div>

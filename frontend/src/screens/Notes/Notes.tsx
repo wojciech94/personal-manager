@@ -311,7 +311,8 @@ export const Notes = () => {
 				<div className='flex gap-2 items-center'>
 					<Button onClick={() => setActiveModal(newNoteModal)}>
 						<Plus size={16} />
-						<span>{t('add_note')}</span>
+						<div className='hidden sm:block'>{t('add_note')}</div>
+						<div className='sm:hidden'>{t('note')}</div>
 					</Button>
 					<ExpandableMenu
 						items={[

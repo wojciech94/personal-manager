@@ -1,4 +1,6 @@
+import { useTranslation } from '../contexts/TranslationContext'
 import { DateData, Event } from '../screens/Calendar/Calendar'
+import { Language } from '../translations'
 
 export function getLocaleDateTime(date: string) {
 	const newDate = new Date(date)
@@ -8,8 +10,9 @@ export function getLocaleDateTime(date: string) {
 	return dateTime
 }
 
-export const formatMonth = (date: Date) => {
-	return date.toLocaleString('en-EN', { month: 'long', year: 'numeric' })
+export const formatMonth = (date: Date, language?: Language) => {
+	const langCode = language === 'pl' ? 'pl-PL' : 'en-EN'
+	return date.toLocaleString(langCode, { month: 'long', year: 'numeric' })
 }
 
 export const dateWithoutHours = (date: Date) => {

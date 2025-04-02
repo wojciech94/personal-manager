@@ -32,9 +32,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ isNew, createDashb
 
 	return (
 		<div className='flex flex-col gap-4 m-5'>
-			<div
-				className='w-[95%] max-w-[1400px] my-0 mx-auto bg-center bg-cover rounded-xl overflow-hidden flex flex-col justify-center items-center shadow-xl p-8 border border-zinc-300'
-				style={{ backgroundImage: `url('../public/personal-manager-welcome-v2.jpg')` }}>
+			<div className='w-[95%] max-w-[1400px] my-0 mx-auto bg-center bg-cover rounded-xl overflow-hidden flex flex-col justify-center items-center shadow-xl p-8 border border-zinc-300 bg-[url(/personal-manager-welcome-v2.jpg)]'>
 				<div className='max-w-[95%] bg-black bg-opacity-75 text-white p-8 rounded-xl m-10 text-4xl font-semibold flex flex-col gap-3 items-center'>
 					<h1>{t('organize_your_life')}</h1>
 					{isNew && <Button onClick={createDashboardModal}>{t('create_first_dashboard')}</Button>}

@@ -16,6 +16,7 @@ import { ModalDataProps } from './types'
 import { Button } from '../Button/Button'
 import { ModalAddCalendarEvent } from './ModalAddCalendarEvent'
 import React from 'react'
+import { ModalUpdateCalendarEvent } from './ModalUpdateCalendarEvent'
 
 export const Modal: React.FC<ModalDataProps> = ({ name, title, data }): React.JSX.Element => {
 	const { setActiveModal } = useModalContext()
@@ -34,6 +35,9 @@ export const Modal: React.FC<ModalDataProps> = ({ name, title, data }): React.JS
 			break
 		case 'addCalendarEvent':
 			if (data) modalContent = <ModalAddCalendarEvent modalData={data} />
+			break
+		case 'updateCalendarEvent':
+			if (data) modalContent = <ModalUpdateCalendarEvent modalData={data} />
 			break
 		case 'createNote':
 		case 'editNote':

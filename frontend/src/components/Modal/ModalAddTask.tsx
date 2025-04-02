@@ -69,7 +69,7 @@ export function ModalAddTask({ modalData }: { modalData: DataProps }) {
 				<FormRow label={t('content')}>
 					<input
 						required
-						className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
+						className='flex-1 max-w-full min-w-0 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
 						type='text'
 						value={contentValue}
 						onChange={e => setContentValue(e.target.value)}
@@ -77,7 +77,7 @@ export function ModalAddTask({ modalData }: { modalData: DataProps }) {
 				</FormRow>
 				<FormRow label={t('priority')}>
 					<select
-						className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 align-self-start'
+						className='flex-1 max-w-full min-w-0 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 align-self-start'
 						name='prioritySelect'
 						value={priorityValue}
 						id='prioritySelect'
@@ -95,7 +95,7 @@ export function ModalAddTask({ modalData }: { modalData: DataProps }) {
 				</FormRow>
 				<FormRow label={t('group')}>
 					<select
-						className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 align-self-start'
+						className='flex-1 max-w-full min-w-0 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 align-self-start'
 						name='taskSelect'
 						id='taskSelect'
 						value={taskGroup}
@@ -111,7 +111,7 @@ export function ModalAddTask({ modalData }: { modalData: DataProps }) {
 				</FormRow>
 				<FormRow label={t('deadline')} className='mb-2'>
 					<input
-						className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 align-self-start'
+						className='flex-1 max-w-full min-w-0 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 align-self-start'
 						type='date'
 						value={expiredDate}
 						onChange={e => setExpiredDate(e.target.value)}

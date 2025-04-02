@@ -55,10 +55,12 @@ export const Folders = () => {
 	return (
 		<div className='flex flex-col gap-5'>
 			<div className='flex justify-between items-center gap-3'>
-				<div className='flex gap-2 items-center scroll-x-auto'>
+				<div className='flex gap-2 items-center overflow-x-auto'>
 					<NavLink
 						className={({ isActive }) =>
-							` font-semibold hover:text-blue-500 focus:outline-none ${isActive ? 'text-blue-500' : 'text-gray-700'}`
+							` font-semibold hover:text-blue-500 focus:outline-none text-nowrap ${
+								isActive ? 'text-blue-500' : 'text-gray-700'
+							}`
 						}
 						to={`/dashboards/${dashboardId}/folders/notes`}
 						end>
@@ -71,7 +73,7 @@ export const Folders = () => {
 								key={d._id}
 								to={`/dashboards/${dashboardId}/folders/notes/${d._id}`}
 								className={({ isActive }) =>
-									` font-semibold hover:text-blue-500 focus:outline-none ${
+									` font-semibold hover:text-blue-500 focus:outline-none text-nowrap ${
 										isActive ? 'text-blue-500' : 'text-gray-700'
 									}`
 								}>
@@ -81,7 +83,7 @@ export const Folders = () => {
 				</div>
 				<Button
 					variant='light'
-					className='p-2'
+					className='!p-2 sm:!px-3'
 					onClick={() =>
 						setActiveModal({
 							name: 'editFolder',

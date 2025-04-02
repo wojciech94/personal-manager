@@ -1,4 +1,4 @@
-import { DateData } from '../../screens/Calendar/Calendar'
+import { DateData, Event } from '../../screens/Calendar/Calendar'
 import { TodoGroup, TasksSettings } from './../Task/types'
 
 export type DataProps = {
@@ -23,6 +23,7 @@ export type DataProps = {
 	initValue?: string | TasksSettings
 	groups?: TodoGroup[]
 	dateData?: DateData
+	eventData?: Event
 }
 
 export type ModalDataProps = {

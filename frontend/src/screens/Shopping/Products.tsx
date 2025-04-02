@@ -106,7 +106,8 @@ export function Products() {
 				<div className='flex gap-2 items-center'>
 					<Button className='text-nowrap' onClick={() => setActiveModal(modalData)}>
 						<Plus size={18} />
-						{t('add_product')}
+						<div className='hidden sm:block'>{t('add_product')}</div>
+						<div className='sm:hidden'>{t('product')}</div>
 					</Button>
 				</div>
 				<div

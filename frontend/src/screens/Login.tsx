@@ -123,13 +123,13 @@ export const Login = () => {
 	}
 
 	return (
-		<div className='flex flex-col flex-1 flex-center'>
-			<Card className={'w-300px'}>
+		<div className='flex flex-col flex-1 justify-center items-center'>
+			<Card className={'w-[300px]'}>
 				<div className='flex flex-col gap-2'>
-					<div className='position-relative flex gap-2 items-center justify-center mb-2'>
+					<div className='relative flex gap-2 items-center justify-center mb-2'>
 						<h3>{mode === 'signIn' ? t('login') : t('sign_up')}</h3>
 						<Button
-							className='position-absolute absolute-right-centered rounded-full overflow-hidden border-2 border-light'
+							className='absolute right-0 rounded-full overflow-hidden border-2 border-light'
 							variant='text'
 							onlyIcon={true}
 							onClick={handleChangeLanguage}>
@@ -140,13 +140,14 @@ export const Login = () => {
 						<input
 							type='text'
 							value={username}
+							className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
 							onChange={e => setUsername(e.target.value)}
 							placeholder={t('username')}
 							required
 						/>
-						<div className='flex position-relative'>
+						<div className='flex relative'>
 							<input
-								className='flex-1 pr-4'
+								className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
 								type={`${showPassword ? 'text' : 'password'}`}
 								value={password}
 								onChange={e => setPassword(e.target.value)}
@@ -155,11 +156,11 @@ export const Login = () => {
 							/>
 							<Button
 								variant='text'
-								size='xs'
+								size='sm'
 								type='button'
-								className='position-absolute absolute-right-centered mr-2'
+								className='absolute right-0 top-[50%] -translate-y-[50%] mr-2'
 								onClick={() => setShowPassword(prevState => !prevState)}>
-								{showPassword ? <Eye size={12} /> : <EyeOff size={12} />}
+								{showPassword ? <Eye size={14} /> : <EyeOff size={14} />}
 							</Button>
 						</div>
 						<Button isLoading={isLoading} type='submit'>
@@ -168,7 +169,7 @@ export const Login = () => {
 						<Button isLoading={isLoading} type='button' onClick={handleTestLogin}>
 							{t('test_account')}
 						</Button>
-						{message && <div className='text-danger'>{message}</div>}
+						{message && <div className='text-red-500'>{message}</div>}
 						{showLoadingMessage && (
 							<div className='flex gap-1 text-danger'>
 								<AlertTriangle size={16} className='flex-shrink-0' />
@@ -176,13 +177,13 @@ export const Login = () => {
 							</div>
 						)}
 						<div className='flex gap-2 items-center'>
-							<span className='text-sm text-gray'>
+							<span className='text-sm text-zinc-700'>
 								{mode === 'signIn' ? t('dont_have_account') : t('already_have_account')}
 							</span>
 							<Button
 								type='button'
 								variant='text'
-								className='link text-hover-primary'
+								className='hover:!text-blue-600 font-medium'
 								onClick={() => setMode(prevMode => (prevMode === 'signIn' ? 'signUp' : 'signIn'))}>
 								{mode === 'signIn' ? t('sign_up') : t('login')}
 							</Button>

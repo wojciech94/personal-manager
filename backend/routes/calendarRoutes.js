@@ -6,6 +6,7 @@ const authMiddleware = require('../middlewares/authMiddleware')
 router.use(authMiddleware)
 
 router.post('/dashboards/:dashboardId/events', calendarController.addEvent)
+router.post('/dashboards/:dashboardId/events/:eventId', calendarController.updateEvent)
 router.get('/dashboards/:dashboardId/events', calendarController.getEvents)
 router.delete('/dashboards/:dashboardId/events/:eventId', calendarController.deleteEvent)
 

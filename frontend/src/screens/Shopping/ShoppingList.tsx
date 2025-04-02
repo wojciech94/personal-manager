@@ -133,9 +133,10 @@ export function ShoppingList() {
 						{t('last_update')} {getLocaleDateTime(data.updatedAt)}
 					</div>
 				</div>
-				<Button className='sm:inline-flex p-2 text-nowrap' onClick={openAddItemModal}>
+				<Button className='sm:inline-flex !p-2 sm:!px-3 text-nowrap' onClick={openAddItemModal}>
 					<Plus size={16} />
-					{t('add_item')}
+					<div className='hidden sm:block'>{t('add_item')}</div>
+					<div className='sm:hidden'>{t('product')}</div>
 				</Button>
 			</div>
 			{shoppingList && shoppingList.list && shoppingList.list.length > 0 ? (

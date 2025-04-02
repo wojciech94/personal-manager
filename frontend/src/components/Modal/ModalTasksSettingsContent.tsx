@@ -50,7 +50,7 @@ export function ModalTasksSettingsContent({ modalData }: { modalData: DataProps 
 				<FormRow label={t('archivization_time')}>
 					<div className='text-normal flex gap-2 items-center'>
 						<input
-							className='w-75px flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
+							className='w-75px flex-1 max-w-full min-w-0 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
 							type='number'
 							value={archivizationTime}
 							onChange={e => setArchivizationTime(Number(e.target.value))}
@@ -61,7 +61,7 @@ export function ModalTasksSettingsContent({ modalData }: { modalData: DataProps 
 				<FormRow label={t('remove_time')}>
 					<div className='text-normal flex gap-2 items-center'>
 						<input
-							className='w-75px flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
+							className='w-75px flex-1 max-w-full min-w-0 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
 							type='number'
 							value={removeTime}
 							onChange={e => setRemoveTime(Number(e.target.value))}
@@ -77,7 +77,7 @@ export function ModalTasksSettingsContent({ modalData }: { modalData: DataProps 
 				<FormRow label={t('sorting_method')}>
 					<select
 						name='sortMethod'
-						className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
+						className='flex-1 max-w-full min-w-0 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
 						value={sortMethod}
 						id='sortMethod'
 						onChange={e => setSortMethod(e.target.value as SortMethods)}>
@@ -94,7 +94,7 @@ export function ModalTasksSettingsContent({ modalData }: { modalData: DataProps 
 				</FormRow>
 				<FormRow label={t('sorting_order')}>
 					<select
-						className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
+						className='flex-1 max-w-full min-w-0 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
 						name='sortDirection'
 						value={sortDirection}
 						id='sortDirection'

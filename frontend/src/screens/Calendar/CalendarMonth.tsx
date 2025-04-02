@@ -1,13 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link, NavLink, useNavigate, useParams } from 'react-router-dom'
 import { useModalContext } from '../../contexts/ModalContext'
 import { useTranslation } from '../../contexts/TranslationContext'
 import { ModalDataProps, DataProps } from '../../components/Modal/types'
-import { Button } from '../../components/Button/Button'
 import { API_URL } from '../../config'
 import { useApi } from '../../contexts/ApiContext'
-import { ChevronLeft, ChevronRight, Plus, X } from 'react-feather'
+import { ChevronLeft, ChevronRight, X } from 'react-feather'
 import {
 	dateWithoutHours,
 	formatMonth,
@@ -16,18 +15,20 @@ import {
 	getWeeksArrayForMonth,
 } from '../../utils/datetime'
 import { DateData, Event } from './Calendar'
+import { Button } from '../../components/Button/Button'
 
 export const CalendarMonth = () => {
 	const [events, setEvents] = useState<Event[]>([])
 	const { setActiveModal } = useModalContext()
-	const { t } = useTranslation()
+	const { t, language } = useTranslation()
 	const { fetchData } = useApi()
 	const { dashboardId, year, month } = useParams()
 	const navigate = useNavigate()
 	const currentDate = new Date()
 	const currentWeek = getWeekNumber(currentDate)
 
-	const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thurstday', 'Friday', 'Saturday', 'Sunday']
+	const daysOfWeek = [t('monday'), t('tuesday'), t('wednesday'), t('thursday'), t('friday'), t('saturday'), t('sunday')]
+	const shortDaysOfWeek = [t('mo'), t('tu'), t('we'), t('th'), t('fr'), t('sa'), t('su')]
 
 	useEffect(() => {
 		fetchEvents()
@@ -77,13 +78,26 @@ export const CalendarMonth = () => {
 		title: t('add_event'),
 	}
 
-	const handleSetModal = (data: DateData) => {
+	const handleSetAddEventModal = (data: DateData) => {
 		const dataProps: DataProps = {
 			dateData: data,
 			fetchAction: fetchEvents,
 		}
 		addEventModalData.data = dataProps
 		setActiveModal(addEventModalData)
+	}
+
+	const handleSetUpdateEventModal = (e: React.MouseEvent<HTMLButtonElement>, event: Event) => {
+		e.stopPropagation()
+		const updateEventModalData: ModalDataProps = {
+			name: 'updateCalendarEvent',
+			title: t('update_event'),
+			data: {
+				eventData: event,
+				fetchAction: fetchEvents,
+			},
+		}
+		setActiveModal(updateEventModalData)
 	}
 
 	const goToPrevMonth = () => {
@@ -114,7 +128,10 @@ export const CalendarMonth = () => {
 		}
 	}
 
-	const currentMonth = year && month ? formatMonth(new Date(Number(year), Number(month) - 1)) : formatMonth(currentDate)
+	const currentMonth =
+		year && month
+			? formatMonth(new Date(Number(year), Number(month) - 1), language)
+			: formatMonth(currentDate, language)
 
 	const days: DateData[] = useMemo(
 		() => getDaysInMonthWithEvents(Number(year), Number(month), events),
@@ -125,8 +142,8 @@ export const CalendarMonth = () => {
 	const weeksRowClass = weeksInMonth.length === 5 ? 'grid-rows-5' : 'grid-rows-6'
 
 	return (
-		<div className='flex flex-col flex-1 bg-white border border-slate-500 px-6 py-4 rounded-lg'>
-			<div className='flex justify-between items-center mb-4 '>
+		<div className='flex flex-col flex-1 bg-white border border-zinc-400 p-1 sm:px-6 sm:py-4 rounded-lg text-xs sm:text-sm'>
+			<div className='flex justify-between items-center mb-2 sm:mb-4 '>
 				<NavLink
 					to={`/dashboards/${dashboardId}/calendar/month/${goToPrevMonth()}`}
 					className={
@@ -134,7 +151,7 @@ export const CalendarMonth = () => {
 					}>
 					<ChevronLeft size={16} />
 				</NavLink>
-				<div className='font-medium'>{currentMonth}</div>
+				<div className='font-medium text-lg'>{currentMonth}</div>
 				<NavLink
 					to={`/dashboards/${dashboardId}/calendar/month/${goToNextMonth()}`}
 					className={
@@ -143,21 +160,26 @@ export const CalendarMonth = () => {
 					<ChevronRight size={16} />
 				</NavLink>
 			</div>
-			<div className='ml-8 grid grid-cols-7 gap-1'>
+			<div className='ml-6 sm:ml-8 grid grid-cols-7 gap-1'>
 				{daysOfWeek.map(day => (
-					<div key={day} className='bg-gray-100 text-center font-medium text-sm flex items-center justify-center'>
+					<div key={day} className='hidden sm:flex bg-gray-100 text-center font-medium   items-center justify-center'>
+						{day}
+					</div>
+				))}
+				{shortDaysOfWeek.map(day => (
+					<div key={day} className='sm:hidden bg-gray-100 text-center font-medium flex items-center justify-center'>
 						{day}
 					</div>
 				))}
 			</div>
 			<div className='flex flex-1'>
-				<div className='grid grid-cols-1 gap-1 py-4 w-8'>
+				<div className='grid grid-cols-1 gap-[2px] py-2 sm:py-4 w-6 sm:w-8'>
 					{weeksInMonth &&
 						weeksInMonth.length > 0 &&
 						weeksInMonth.map(w => (
 							<div key={w} className='flex flex-col align-center justify-center'>
 								<Link
-									className={`text-center hover:bg-purple-300 duration-100 rounded-full w-6 h-6 font-medium transition-colors ${
+									className={`flex hover:bg-purple-300 duration-100 rounded-full size-5 sm:size-6 font-medium transition-colors items-center justify-center ${
 										w === currentWeek ? 'bg-violet-200' : ''
 									}`}
 									to={`/dashboards/${dashboardId}/calendar/week/${year}/${w}`}>
@@ -166,45 +188,44 @@ export const CalendarMonth = () => {
 							</div>
 						))}
 				</div>
-				<div className={`grid grid-cols-7 ${weeksRowClass} gap-1 flex-1 py-4`}>
+				<div className={`grid grid-cols-7 ${weeksRowClass} gap-[2px] flex-1 py-2 sm:py-4`}>
 					{days.map((d, index) => {
 						const tempDate = new Date(d.date)
 						const isCurrentDay = dateWithoutHours(tempDate) === dateWithoutHours(currentDate)
 						return (
 							<div
 								key={index}
-								className='group flex flex-col justify-start border border-gray-400 rounded-md p-1  overflow-hidden'>
+								className='group flex flex-col justify-start border border-gray-400 rounded-md p-1 overflow-hidden'>
 								<div
-									className={`flex items-center justify-center w-6 h-6 text-sm rounded-full self-center cursor-pointer duration-100 hover:bg-purple-300 transition-colors ${
+									className={`flex items-center justify-center w-6 h-6  rounded-full self-center cursor-pointer duration-100 bg-cyan hover:bg-purple-300 transition-colors ${
 										isCurrentDay ? 'bg-violet-200 font-medium' : ''
 									} ${!d.isCurrentMonth ? 'text-gray-500' : ''} 
               `}
 									onClick={() => handleSetSelectedDay(d.date)}>
 									{d.day}
 								</div>
-								{d.events &&
-									d.events.length > 0 &&
-									d.events.map(e => {
-										return (
-											<div className='flex justify-between items-center gap-1 text-sm' key={e.title}>
-												<div title={e.title} className='overflow-hidden text-ellipsis text-nowrap'>
-													{e.title}
+								<div className='flex-1 flex flex-col hover:cursor-pointer' onClick={() => handleSetAddEventModal(d)}>
+									{d.events &&
+										d.events.length > 0 &&
+										d.events.map(event => {
+											return (
+												<div className='flex justify-between items-center gap-1 ' key={event.title}>
+													<Button
+														variant='text'
+														title={event.title}
+														className='overflow-hidden text-ellipsis text-nowrap !text-xs sm:!text-sm !justify-start !block !p-0'
+														onClick={e => handleSetUpdateEventModal(e, event)}>
+														{event.title}
+													</Button>
+													<X
+														className='hidden sm:block flex-shrink-0 cursor-pointer hover:text-rose-700'
+														size={14}
+														onClick={() => deleteEvent(event._id)}
+													/>
 												</div>
-												<X
-													className='flex-shrink-0 cursor-pointer hover:text-rose-700'
-													size={14}
-													onClick={() => deleteEvent(e._id)}
-												/>
-											</div>
-										)
-									})}
-								<Button
-									size='sm'
-									className='mt-1 opacity-0 group-hover:opacity-100 transition-all! duration-300 px-1 group-hover:cursor-pointer'
-									onClick={() => handleSetModal(d)}>
-									<Plus size={14} />
-									{t('event')}
-								</Button>
+											)
+										})}
+								</div>
 							</div>
 						)
 					})}

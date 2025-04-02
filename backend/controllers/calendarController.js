@@ -45,6 +45,62 @@ exports.addEvent = async (req, res) => {
 	}
 }
 
+exports.updateEvent = async (req, res) => {
+	try {
+		const { dashboardId, eventId } = req.params
+		const { title, description, startDate, endDate, allDay } = req.body
+		const userId = req.user.userId
+
+		if (!mongoose.Types.ObjectId.isValid(dashboardId)) {
+			return res.status(400).json({ message: 'Invalid dashboard ID format' })
+		}
+
+		if (!mongoose.Types.ObjectId.isValid(eventId)) {
+			return res.status(400).json({ message: 'Invalid event ID format' })
+		}
+
+		const dashboard = await Dashboard.findById(dashboardId)
+		if (!dashboard) {
+			return res.status(404).json({ message: 'Dashboard not found' })
+		}
+
+		const event = await Event.findById(eventId)
+		if (!event) {
+			return res.status(404).json({ message: 'Event not found' })
+		}
+
+		if (!dashboard.eventIds.includes(eventId)) {
+			return res.status(403).json({ message: 'Event does not belong to this dashboard' })
+		}
+
+		if (title !== undefined && !title) {
+			return res.status(400).json({ message: 'Title cannot be empty if provided' })
+		}
+
+		if (startDate !== undefined && !startDate) {
+			return res.status(400).json({ message: 'startDate cannot be empty if provided' })
+		}
+
+		if (title !== undefined) event.title = title
+		if (description !== undefined) event.description = description
+		if (startDate !== undefined) event.startDate = startDate
+		if (endDate !== undefined) event.endDate = endDate
+		if (allDay !== undefined) event.allDay = allDay
+
+		const updatedEvent = await event.save()
+		if (!updatedEvent) {
+			return res.status(500).json({ message: 'Failed to update Event' })
+		}
+
+		const message = `Updated event (${title || event.title})`
+		await addLog(dashboard.logsId, userId, message)
+
+		res.status(200).json(updatedEvent)
+	} catch (error) {
+		res.status(500).json({ message: error.message })
+	}
+}
+
 exports.getEvents = async (req, res) => {
 	try {
 		const { dashboardId } = req.params

@@ -101,78 +101,81 @@ export function Task({ task, fetchTasks, tasksSettings, isArchive }: TaskProps) 
 	}
 
 	return (
-		<div className='flex justify-between items-center gap-8 py-2 px-4 border-b border-gray-200'>
-			<div className='flex-1 flex items-center gap-3'>
-				<div className={`w-[5px] h-5 rounded-sm ${priorityClass(priorityValue)}`}></div>
-				{isEdit ? (
-					<div className='flex gap-3 flex-1 items-center'>
-						<div className='flex flex-col gap-1 text-gray flex-1'>
-							<label className='text-zinc-600' htmlFor={`contentInput-${task._id}`}>
-								{t('content')}
-							</label>
+		<div className='flex justify-between items-center gap-8 py-2 px-4 border-b border-gray-200 overflow-x-auto'>
+			<div className='flex-1 flex-wrap sm:flex-nowrap flex items-center gap-1'>
+				<div className='flex-1 flex items-center gap-3'>
+					<div className={`w-[5px] h-5 rounded-sm flex-shrink-0 ${priorityClass(priorityValue)}`}></div>
+					{isEdit ? (
+						<div className='flex gap-3 flex-1 items-center'>
+							<div className='flex flex-col gap-1 text-gray flex-1'>
+								<label className='text-zinc-600' htmlFor={`contentInput-${task._id}`}>
+									{t('content')}
+								</label>
+								<input
+									id={`contentInput-${task._id}`}
+									className='px-3 py-1 border text-sm border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+									type='text'
+									value={contentValue}
+									onChange={e => setContentValue(e.target.value)}
+								/>
+							</div>
+							<div className='flex flex-col gap-1'>
+								<label className='text-zinc-600' htmlFor='prioritySelect'>
+									{t('priority')}
+								</label>
+								<select
+									name='prioritySelect'
+									id='prioritySelect'
+									className='px-3 py-1 border text-sm border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+									value={taskData.priority}
+									onChange={e => setPriorityValue(e.target.value as TaskPriorities)}>
+									<option className='text-gray-800 bg-white hover:bg-gray-100' value='low'>
+										{t('low')}
+									</option>
+									<option className='text-gray-800 bg-white hover:bg-gray-100' value='medium'>
+										{t('medium')}
+									</option>
+									<option className='text-gray-800 bg-white hover:bg-gray-100' value='high'>
+										{t('high')}
+									</option>
+								</select>
+							</div>
+							<div className='flex flex-col gap-1 text-zinc-600'>
+								<label className='text-zinc-600' htmlFor='expirationDate'>
+									{t('expire_at')}
+								</label>
+								<input
+									className='px-3 py-1 border text-sm border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+									type='date'
+									value={expirationValue}
+									onChange={e => setExpirationValue(e.target.value)}
+								/>
+							</div>
+						</div>
+					) : (
+						<>
 							<input
-								id={`contentInput-${task._id}`}
-								className='px-3 py-1 border text-sm border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
-								type='text'
-								value={contentValue}
-								onChange={e => setContentValue(e.target.value)}
+								type='checkbox'
+								id={`task-${taskData._id}`}
+								checked={taskData.is_done}
+								className='w-4 h-4 bg-gray-100 border-gray-300 flex-shrink-0'
+								onChange={() => updateTask('toggle')}
 							/>
-						</div>
-						<div className='flex flex-col gap-1 text-gray'>
-							<label className='text-zinc-600' htmlFor='prioritySelect'>
-								{t('priority')}
+							<label
+								htmlFor={`task-${taskData._id}`}
+								className={`${taskData.is_done ? 'line-through text-zinc-400' : ''}`}>
+								{taskData.content}
 							</label>
-							<select
-								name='prioritySelect'
-								id='prioritySelect'
-								className='px-3 py-1 border text-sm border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
-								value={taskData.priority}
-								onChange={e => setPriorityValue(e.target.value as TaskPriorities)}>
-								<option className='text-gray-800 bg-white hover:bg-gray-100' value='low'>
-									{t('low')}
-								</option>
-								<option className='text-gray-800 bg-white hover:bg-gray-100' value='medium'>
-									{t('medium')}
-								</option>
-								<option className='text-gray-800 bg-white hover:bg-gray-100' value='high'>
-									{t('high')}
-								</option>
-							</select>
-						</div>
-						<div className='flex flex-col gap-1 text-zinc-600'>
-							<label className='text-zinc-600' htmlFor='expirationDate'>
-								{t('expire_at')}
-							</label>
-							<input
-								className='px-3 py-1 border text-sm border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
-								type='date'
-								value={expirationValue}
-								onChange={e => setExpirationValue(e.target.value)}
-							/>
-						</div>
+						</>
+					)}
+				</div>
+				{tasksSettings && tasksSettings.showDeadline && expirationValue && !isEdit && (
+					<div className='flex gap-2 items-center text-zinc-600 flex-shrink-0'>
+						<Clock size={16} />
+						{expirationValue}
 					</div>
-				) : (
-					<>
-						<input
-							type='checkbox'
-							id={`task-${taskData._id}`}
-							checked={taskData.is_done}
-							onChange={() => updateTask('toggle')}
-						/>
-						<label
-							htmlFor={`task-${taskData._id}`}
-							className={`${taskData.is_done ? 'line-through text-zinc-400' : ''}`}>
-							{taskData.content}
-						</label>
-					</>
 				)}
 			</div>
-			{tasksSettings && tasksSettings.showDeadline && expirationValue && !isEdit && (
-				<div className='flex gap-2 items-center text-zinc-600'>
-					<Clock size={16} />
-					{expirationValue}
-				</div>
-			)}
 			<div className='flex gap-2 items-center'>
 				{isEdit && (
 					<Button variant='success' onlyIcon={true} onClick={() => updateTask('update')}>

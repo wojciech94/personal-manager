@@ -3,15 +3,7 @@ import { useTranslation } from '../../contexts/TranslationContext'
 import { Button } from '../Button/Button'
 import { PaginationProps } from './types'
 
-export function Pagination({
-	currentPage,
-	totalPages,
-	itemsPerPage,
-	nextPage,
-	prevPage,
-	goToPage,
-	onSetItemsPerPage,
-}: PaginationProps) {
+export function Pagination({ currentPage, totalPages, itemsPerPage, goToPage, onSetItemsPerPage }: PaginationProps) {
 	const { t } = useTranslation()
 	const prev2Button = currentPage > 2
 	const prevCondition = currentPage > 1
@@ -20,18 +12,15 @@ export function Pagination({
 
 	return (
 		<>
-			<div className='flex gap-2 justify-between items-center border-t border-zinc-300 px-4 pt-4 bg-slate-200 pb-4 rounded-b-2xl'>
-				<div>
+			<div className='flex flex-wrap sm:flex-nowrap gap-2 justify-between items-center border-t border-zinc-300 px-4 pt-4 bg-slate-200 pb-4 rounded-b-2xl'>
+				<div className='order-1'>
 					{t('page')} <span className='text-nowrap'>{`${currentPage} ${t('of')} ${totalPages}`}</span>
 				</div>
-				<div className='flex gap-2 items-center'>
+				<div className='w-full sm:w-auto justify-center order-3 sm:order-2 flex gap-2 items-center'>
 					{prevCondition && (
 						<>
 							<Button variant='white' onlyIcon={true} onClick={() => goToPage(1)}>
 								<ChevronsLeft size={16} />
-							</Button>
-							<Button variant='white' onlyIcon={true} onClick={prevPage}>
-								<ChevronLeft size={16} />
 							</Button>
 							{prev2Button && (
 								<Button
@@ -64,16 +53,13 @@ export function Pagination({
 									{currentPage + 2}
 								</Button>
 							)}
-							<Button variant='white' onlyIcon={true} onClick={nextPage}>
-								<ChevronRight size={16} />
-							</Button>
 							<Button variant='white' onlyIcon={true} onClick={() => goToPage(totalPages)}>
 								<ChevronsRight size={16} />
 							</Button>
 						</>
 					)}
 				</div>
-				<div className='flex flex-col gap-1 items-end'>
+				<div className='order-2 flex flex-col gap-1 items-end'>
 					<div>{t('items_per_page')}</div>
 					<select
 						className='w-16 px-2 py-1 border border-zinc-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'

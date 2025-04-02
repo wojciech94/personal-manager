@@ -112,7 +112,7 @@ export const ModalAddCalendarEvent = ({ modalData }: { modalData: DataProps }) =
 			<div className='p-4 flex flex-col gap-2 border-t border-zinc-300'>
 				<FormRow label={t('title')} required>
 					<input
-						className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
+						className='flex-1 max-w-full min-w-0 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
 						type='text'
 						value={title}
 						onChange={e => setTitle(e.target.value)}
@@ -126,7 +126,7 @@ export const ModalAddCalendarEvent = ({ modalData }: { modalData: DataProps }) =
 				</FormRow>
 				<FormRow className='!items-start' label={t('description')}>
 					<textarea
-						className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y'
+						className='flex-1 max-w-full min-w-0 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y'
 						value={description}
 						onChange={e => setDescription(e.target.value)}
 					/>
@@ -143,7 +143,7 @@ export const ModalAddCalendarEvent = ({ modalData }: { modalData: DataProps }) =
 					<>
 						<FormRow label={t('priority')}>
 							<select
-								className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 align-self-start'
+								className='flex-1 max-w-full min-w-0 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 align-self-start'
 								name='prioritySelect'
 								value={priorityValue}
 								id='prioritySelect'
@@ -161,7 +161,7 @@ export const ModalAddCalendarEvent = ({ modalData }: { modalData: DataProps }) =
 						</FormRow>
 						<FormRow label={t('group')}>
 							<select
-								className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 align-self-start'
+								className='flex-1 max-w-full min-w-0 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 align-self-start'
 								name='taskSelect'
 								id='taskSelect'
 								value={taskGroup}
@@ -177,7 +177,7 @@ export const ModalAddCalendarEvent = ({ modalData }: { modalData: DataProps }) =
 						</FormRow>
 						<FormRow label={t('deadline')} className='mb-2'>
 							<input
-								className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 align-self-start'
+								className='flex-1 max-w-full min-w-0 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 align-self-start'
 								type='date'
 								value={expiredDate}
 								onChange={e => setExpiredDate(e.target.value)}

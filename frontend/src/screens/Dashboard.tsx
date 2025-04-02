@@ -229,7 +229,9 @@ export const Dashboard: React.FC = () => {
 									<div className='flex gap-2 font-normal'>
 										{dashboard.isOwner && (
 											<Button onClick={() => setActiveModal(addUserModalData)}>
-												<Plus size={16} /> {t('invite_user')}
+												<Plus size={16} />
+												<div className='hidden sm:block'>{t('invite_user')}</div>
+												<div className='sm:hidden'>{t('invite')}</div>
 											</Button>
 										)}
 									</div>

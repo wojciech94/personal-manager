@@ -87,7 +87,7 @@ export function ModalAddShoppingItem(): React.JSX.Element {
 						<div className='flex flex-col gap-1 flex-grow'>
 							<div>{t('product')}</div>
 							<select
-								className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
+								className='flex-1 max-w-full min-w-0 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
 								name='productsSelect'
 								id='productsSelect'
 								onChange={e => handleSelectItem(e.target.value)}
@@ -103,7 +103,7 @@ export function ModalAddShoppingItem(): React.JSX.Element {
 					<div className='flex flex-col gap-1 flex-grow'>
 						<div>{t('quantity')}</div>
 						<input
-							className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
+							className='flex-1 max-w-full min-w-0 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
 							value={quantityValue}
 							onChange={e => {
 								const inputValue = e.target.value
@@ -116,7 +116,7 @@ export function ModalAddShoppingItem(): React.JSX.Element {
 					<div className='flex flex-col gap-1 flex-grow'>
 						<div>{t('unit')}</div>
 						<input
-							className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
+							className='flex-1 max-w-full min-w-0 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
 							type='text'
 							value={unitValue}
 							onChange={e => setUnitValue(e.target.value)}
@@ -125,7 +125,7 @@ export function ModalAddShoppingItem(): React.JSX.Element {
 					<div className='flex flex-col gap-1 flex-grow'>
 						<div>{t('price')}</div>
 						<input
-							className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
+							className='flex-1 max-w-full min-w-0 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
 							value={priceValue}
 							onChange={e => setPriceValue(e.target.value)}
 						/>
@@ -133,7 +133,7 @@ export function ModalAddShoppingItem(): React.JSX.Element {
 					<div className='flex flex-col gap-1 flex-grow'>
 						<div>{t('notes')}</div>
 						<textarea
-							className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 max-w-full'
+							className='flex-1 max-w-full min-w-0 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
 							value={notesValue}
 							onChange={e => setNotesValue(e.target.value)}
 						/>

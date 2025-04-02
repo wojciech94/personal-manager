@@ -1,12 +1,20 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 interface TimePickerProps {
 	onTimeChange: (time: string) => void
+	initTime?: string
 }
 
-export const TimePicker = ({ onTimeChange }: TimePickerProps) => {
+export const TimePicker = ({ onTimeChange, initTime }: TimePickerProps) => {
 	const [hours, setHours] = useState('12')
 	const [minutes, setMinutes] = useState('00')
+
+	useEffect(() => {
+		if (initTime) {
+			setHours(initTime.split(':')[0])
+			setMinutes(initTime?.split(':')[1])
+		}
+	}, [initTime])
 
 	const handleHoursChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const value = e.target.value

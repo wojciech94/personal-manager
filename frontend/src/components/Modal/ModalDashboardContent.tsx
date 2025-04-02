@@ -23,7 +23,7 @@ export const ModalDashboardContent = ({ modalData }: { modalData: DataProps }) =
 						type='text'
 						name='dshb'
 						id='dshb'
-						className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
+						className='flex-1 max-w-full min-w-0 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
 						value={dashboardName}
 						onChange={e => setDashboardName(e.target.value)}
 					/>
