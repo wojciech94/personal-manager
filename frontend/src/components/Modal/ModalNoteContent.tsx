@@ -6,7 +6,7 @@ import { useTranslation } from '../../contexts/TranslationContext'
 import { Folder } from '../../screens/Notes/types'
 import { Button } from '../Button/Button'
 import { FormRow } from '../FormRow/FormRow'
-import { NoteProps, NoteType } from '../Note/types'
+import { NoteType } from '../Note/types'
 import { DataProps } from './types'
 
 export const ModalNoteContent = ({ modalData }: { modalData: DataProps }) => {
@@ -139,10 +139,10 @@ export const ModalNoteContent = ({ modalData }: { modalData: DataProps }) => {
 
 	return (
 		<>
-			<div className='card-content d-flex flex-column gap-3'>
+			<div className='p-4 flex flex-col gap-2 border-t border-zinc-300'>
 				<FormRow label={t('title')}>
 					<input
-						className='w-100'
+						className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
 						type='text'
 						name='noteName'
 						id='noteName'
@@ -152,7 +152,7 @@ export const ModalNoteContent = ({ modalData }: { modalData: DataProps }) => {
 				</FormRow>
 				<FormRow label={t('content')}>
 					<textarea
-						className='w-100'
+						className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y self-start'
 						name='noteContent'
 						id='noteContent'
 						value={noteContent}
@@ -163,10 +163,11 @@ export const ModalNoteContent = ({ modalData }: { modalData: DataProps }) => {
 					<select
 						name='noteCategory'
 						id='noteCategory'
+						className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
 						value={selectedCategory}
 						onChange={e => handleCategoryChange(e.target.value)}>
 						{categoryNames.map(category => (
-							<option key={category} value={category}>
+							<option className='text-gray-800 bg-white hover:bg-gray-100' key={category} value={category}>
 								{category}
 							</option>
 						))}
@@ -174,7 +175,7 @@ export const ModalNoteContent = ({ modalData }: { modalData: DataProps }) => {
 				</FormRow>
 				<FormRow label={t('tags')}>
 					<input
-						className='w-100'
+						className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
 						type='text'
 						name='noteTags'
 						id='noteTags'
@@ -186,11 +187,14 @@ export const ModalNoteContent = ({ modalData }: { modalData: DataProps }) => {
 					<select
 						name='noteFolder'
 						id='noteFolder'
+						className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
 						value={selectedFolder}
 						onChange={e => handleFolderChange(e.target.value)}>
-						<option value=''>-</option>
+						<option className='text-gray-800 bg-white hover:bg-gray-100' value=''>
+							-
+						</option>
 						{folderNames.map(folder => (
-							<option key={folder._id} value={folder._id}>
+							<option className='text-gray-800 bg-white hover:bg-gray-100' key={folder._id} value={folder._id}>
 								{folder.name}
 							</option>
 						))}
@@ -200,6 +204,7 @@ export const ModalNoteContent = ({ modalData }: { modalData: DataProps }) => {
 					<input
 						checked={isFavourite}
 						type='checkbox'
+						className='w-4 h-4 bg-gray-100 border-gray-300'
 						name='isFavourite'
 						id='isFavourite'
 						onChange={() => setIsFavourite(prevFav => !prevFav)}
@@ -208,6 +213,7 @@ export const ModalNoteContent = ({ modalData }: { modalData: DataProps }) => {
 				<FormRow label={t('expire_at')}>
 					<input
 						type='date'
+						className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
 						name='expiredDate'
 						id='expiredDate'
 						value={expiredDate}
@@ -215,8 +221,8 @@ export const ModalNoteContent = ({ modalData }: { modalData: DataProps }) => {
 					/>
 				</FormRow>
 			</div>
-			<div className='card-footer'>
-				<Button variant='success' className='w-100' onClick={handleUpdateNote}>
+			<div className='py-4 px-6 border-t border-slate-300 bg-zinc-200 rounded-b-2xl'>
+				<Button variant='success' className='w-full' onClick={handleUpdateNote}>
 					{modalData.actionName}
 				</Button>
 			</div>

@@ -1,5 +1,7 @@
+import React from 'react'
+
 export interface AlertProps {
-	variant?: string
+	variant?: 'primary' | 'success' | 'danger' | 'warning' | 'info'
 	children?: React.ReactNode
 	className?: string
 	onHideAction?: () => void

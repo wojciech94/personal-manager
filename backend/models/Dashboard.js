@@ -51,6 +51,12 @@ const dashboardSchema = new mongoose.Schema({
 			ref: 'Post',
 		},
 	],
+	eventIds: [
+		{
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'Event',
+		},
+	],
 	created_at: {
 		type: Date,
 		default: Date.now(),

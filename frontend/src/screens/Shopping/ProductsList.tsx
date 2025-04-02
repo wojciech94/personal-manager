@@ -18,20 +18,20 @@ export function ProductsList({ products, fetchProducts }: { products: Product[];
 	}
 
 	return (
-		<div className='products-list'>
+		<div className='mt-4 overflow-x-auto'>
 			{productsData && productsData.length > 0 && (
 				<>
-					<div className='w-100 overflow-x-auto'>
-						<table className='min-w-500px' cellSpacing={0}>
+					<div className='w-full overflow-x-auto'>
+						<table className='w-full overflow-hidden rounded-b-2xl border-collapse' cellSpacing={0}>
 							<thead>
-								<tr className='border-top border-bottom border-light bg-lighter text-bold'>
-									<td style={{ width: '40px' }}></td>
-									<td>{t('name').toUpperCase()}</td>
-									<td>{t('category').toUpperCase()}</td>
-									<td>{t('unit').toUpperCase()}</td>
-									<td>{t('price').toUpperCase()}</td>
-									<td className='d-none d-table-cell-sm'>{t('tags').toUpperCase()}</td>
-									<td style={{ width: '85px' }}></td>
+								<tr className='border-t border-b border-zinc-400 bg-slate-200 font-semibold'>
+									<td className='table-cell' style={{ width: '40px' }}></td>
+									<td className='table-cell'>{t('name').toUpperCase()}</td>
+									<td className='table-cell'>{t('category').toUpperCase()}</td>
+									<td className='table-cell text-center'>{t('unit').toUpperCase()}</td>
+									<td className='table-cell text-center'>{t('price').toUpperCase()}</td>
+									<td className='hidden	px-2 py-1 first:pl-4 last:pr-4 sm:table-cell'>{t('tags').toUpperCase()}</td>
+									<td className='table-cell' style={{ width: '85px' }}></td>
 								</tr>
 							</thead>
 							<tbody>

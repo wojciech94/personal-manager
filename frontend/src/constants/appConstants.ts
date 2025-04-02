@@ -66,10 +66,10 @@ export const CATEGORIES = [
 ] as const
 
 export const WELCOME_SLIDES = [
-	{ key: 'saveNotes', class: 'gradient-0' },
-	{ key: 'planTasks', class: 'gradient-1' },
-	{ key: 'createShoppingList', class: 'gradient-2' },
-	{ key: 'shareDashboards', class: 'gradient-4' },
+	{ key: 'saveNotes', class: 'gradient-0', background: 'linear-gradient(125deg, #efa8a8aa, #ebbea6aa)' },
+	{ key: 'planTasks', class: 'gradient-1', background: 'linear-gradient(125deg, #a8efa8aa, #beeba6aa)' },
+	{ key: 'createShoppingList', class: 'gradient-2', background: 'linear-gradient(125deg, #a8a8efaa, #bea6ebaa)' },
+	{ key: 'shareDashboards', class: 'gradient-4', background: 'linear-gradient(125deg, #bea6ebaa, #a6beebaa)' },
 ] as const
 
 export type WelcomeSlideKey = (typeof WELCOME_SLIDES)[number]['key']

@@ -1,3 +1,4 @@
+import { ButtonSize } from '../components/Button/types'
 import { ScreenSize } from '../types/global'
 
 export function getTokenExpiration(token: string) {
@@ -17,14 +18,6 @@ export function debounce<T extends unknown[]>(fun: (...args: T) => void, delay =
 	}
 }
 
-export function getLocaleDateTime(date: string) {
-	const newDate = new Date(date)
-	const hours = newDate.getHours().toString().padStart(2, '0')
-	const minutes = newDate.getMinutes().toString().padStart(2, '0')
-	const dateTime = `${newDate.toLocaleDateString()} ${hours}:${minutes}`
-	return dateTime
-}
-
 export function getScreenType() {
 	const width = window.innerWidth
 	if (width > 1200) return ScreenSize.XLARGE
@@ -33,4 +26,21 @@ export function getScreenType() {
 	if (width > 576) return ScreenSize.SMALL
 
 	return ScreenSize.XSMALL
+}
+
+export function BtnSize2PaddingClass(size: ButtonSize) {
+	switch (size) {
+		case 'xs':
+			return 'p-1'
+		case 'sm':
+			return 'p-2'
+		case 'md':
+			return 'px-4 py-2'
+		case 'lg':
+			return 'px-6 py-3'
+		case 'xl':
+			return 'px-8 py-4'
+		default:
+			return 'p-2'
+	}
 }

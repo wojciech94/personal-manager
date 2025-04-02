@@ -75,28 +75,33 @@ export function ShoppingLists() {
 
 	return (
 		<>
-			<div className='d-flex gap-3 justify-between align-center'>
-				<div className='card-title'>{t('shopping_list')}</div>
-				<div className='d-flex gap-2 align-center'>
-					<Button className={`text-nowrap btn-mobile-icon`} onClick={openCreateShoppingListModal}>
+			<div className='flex gap-3 justify-between items-center'>
+				<div className='font-semibold text-lg'>{t('shopping_list')}</div>
+				<div className='flex gap-2 items-center'>
+					<Button className={`text-nowrap sm:inline-flex p-2`} onClick={openCreateShoppingListModal}>
 						<Plus size={16} />
-						<span className='d-mobile-none'>{t('create_shopping_list')}</span>
+						<span className='hidden sm:inline'>{t('create_shopping_list')}</span>
 					</Button>
 					<ExpandableMenu items={menuItems} />
 				</div>
 			</div>
 			{shoppingLists && shoppingLists.length > 0 ? (
 				<>
-					<div className='bg-light d-flex gap-3 mx-n4 mt-4 border-top border-bottom px-4 py-2'>
+					<div className='bg-zinc-200 flex gap-3 -mx-4 mt-4 border-zinc-400 border-t border-b px-4 py-2'>
 						{shoppingLists.map(l => (
-							<NavLink key={l._id} to={`${l._id}`} className='btn btn-link link'>
+							<NavLink
+								key={l._id}
+								to={`${l._id}`}
+								className={({ isActive }) =>
+									`font-semibold hover:text-blue-500 focus:outline-none ${isActive ? 'text-blue-500' : 'text-zinc-800'}`
+								}>
 								{l.name}
 							</NavLink>
 						))}
 					</div>
 				</>
 			) : (
-				<div className='mt-4 mb-n4 mx-n4 border-top border-light'>
+				<div className='mt-4 -mb-4 -mx-4 border-t border-light'>
 					<Alert variant='primary'>{t('create_your_first_shopping_list')}</Alert>
 				</div>
 			)}

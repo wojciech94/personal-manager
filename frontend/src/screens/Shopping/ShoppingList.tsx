@@ -4,7 +4,7 @@ import { API_URL } from '../../config'
 import { Alert } from '../../components/Alert/Alert'
 import { useModalContext } from '../../contexts/ModalContext'
 import { ShoppingProduct } from '../../components/ShoppingProduct/ShoppingProduct'
-import { getLocaleDateTime } from '../../utils/helpers'
+import { getLocaleDateTime } from '../../utils/datetime'
 import { Button } from '../../components/Button/Button'
 import { useApi } from '../../contexts/ApiContext'
 import { useTranslation } from '../../contexts/TranslationContext'
@@ -124,31 +124,31 @@ export function ShoppingList() {
 
 	return (
 		<>
-			<div className='mt-4 mb-4 d-flex gap-2 justify-between align-center'>
-				<div className='d-flex flex-column gap-1'>
+			<div className='mt-4 mb-4 flex gap-2 justify-between items-center'>
+				<div className='flex flex-col gap-1'>
 					<div>
-						{t('left_to_buy')} {productsToBuy} {`${productsToBuy === 1 ? t('product') : t('products')}`}
+						{t('left_to_buy')}: {productsToBuy} {`${productsToBuy === 1 ? t('product') : t('products')}`}
 					</div>
-					<div className='text-gray fs-sm'>
+					<div className='text-zinc-600 text-sm'>
 						{t('last_update')} {getLocaleDateTime(data.updatedAt)}
 					</div>
 				</div>
-				<Button className='btn-mobile-icon text-nowrap' onClick={openAddItemModal}>
+				<Button className='sm:inline-flex p-2 text-nowrap' onClick={openAddItemModal}>
 					<Plus size={16} />
 					{t('add_item')}
 				</Button>
 			</div>
 			{shoppingList && shoppingList.list && shoppingList.list.length > 0 ? (
-				<div className='mx-n4 mb-n4'>
-					<table cellSpacing={0} className='overflow-hidden rounded-bottom-3'>
-						<thead className='bg-lighter'>
-							<tr className='border-top border-bottom border-light'>
-								<th style={{ width: '30px' }}></th>
-								<th>{t('name')}</th>
-								<th>{`${t('quantity')} [${t('unit')}]`}</th>
-								<th>{t('price_per_unit')}</th>
-								<th>{t('notes')}</th>
-								<th style={{ width: '85px' }}></th>
+				<div className='-mx-4 -mb-4 overflow-x-auto'>
+					<table cellSpacing={0} className='w-full overflow-hidden rounded-b-2xl border-collapse'>
+						<thead>
+							<tr className='border-t border-b bg-slate-200 border-zinc-300'>
+								<th className='table-cell' style={{ width: '30px' }}></th>
+								<th className='table-cell text-start'>{t('name')}</th>
+								<th className='table-cell'>{`${t('quantity')} [${t('unit')}]`}</th>
+								<th className='table-cell'>{t('price_per_unit')}</th>
+								<th className='table-cell min-w-[125px]'>{t('notes')}</th>
+								<th className='table-cell w-[85px]'></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -162,18 +162,20 @@ export function ShoppingList() {
 							))}
 						</tbody>
 						<tfoot>
-							<tr className='bg-lighter border-top border-light text-bold'>
-								<td colSpan={2} className='px-2'>
+							<tr className='bg-slate-100 border-t border-light font-semibold'>
+								<td className='table-cell' colSpan={2}>
 									{t('summary')}
 								</td>
-								<td className='text-end'>{t('products_value')}</td>
-								<td colSpan={3}>{calculateSum()}</td>
+								<td className='text-end table-cell'>{t('products_value')}</td>
+								<td className='table-cell' colSpan={3}>
+									{calculateSum()}
+								</td>
 							</tr>
 						</tfoot>
 					</table>
 				</div>
 			) : (
-				<div className='mx-n4 mb-n4 border-top border-light'>
+				<div className='-mx-4 -mb-4 border-t border-light'>
 					<Alert>
 						<div>{t('your_shopping_list_is_empty_add_item')}</div>
 					</Alert>

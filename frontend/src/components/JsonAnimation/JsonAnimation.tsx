@@ -6,8 +6,8 @@ interface AnimationProps {
 
 export const JsonAnimation = ({ data }: AnimationProps) => {
 	return (
-		<div className='flex justify-center items-center h-screen bg-gray-100'>
-			<Lottie animationData={data} loop={true} className='w-64 h-64' />
+		<div className='flex justify-center items-center'>
+			<Lottie animationData={data} loop={true} />
 		</div>
 	)
 }

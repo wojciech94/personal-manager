@@ -30,3 +30,5 @@ export interface FetchOptions extends RequestInit {
 }
 
 export type FetchFunction<T> = () => Promise<T>
+
+export type SortDirection = 'asc' | 'desc'

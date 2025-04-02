@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { Check, Edit, Star, Trash2 } from 'react-feather'
 import { useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
@@ -100,54 +100,59 @@ export const ProductListItem = ({
 	}
 
 	return (
-		<tr key={product._id} className='product-row'>
-			<td>
+		<tr key={product._id} className='even:bg-zinc-100 border-collapse border-b'>
+			<td className='table-cell'>
 				<Button variant='text' onClick={() => handleUpdate(product._id, { isFavourite: !product.isFavourite })}>
 					<Star size={20} color={product.isFavourite ? 'gold' : 'gray'} />
 				</Button>
 			</td>
 			{product._id === editedProduct ? (
 				<>
-					<td>
+					<td className='table-cell'>
 						<input
 							type='text'
+							className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 w-full max-w-full'
 							value={nameValue}
 							placeholder={t('type_name')}
 							onChange={e => setNameValue(e.target.value)}
 						/>
 					</td>
-					<td>
+					<td className='table-cell'>
 						<select
 							name='categorySelect'
 							id='categorySelect'
+							className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 w-full max-w-full'
 							value={categoryValue}
 							onChange={e => setCategoryValue(e.target.value as TranslationKey)}>
 							{CATEGORIES.map(c => (
-								<option key={c.value} value={c.value}>
+								<option className='text-gray-800 bg-white hover:bg-gray-100' key={c.value} value={c.value}>
 									{t(c.value)}
 								</option>
 							))}
 						</select>
 					</td>
-					<td>
+					<td className='table-cell text-center'>
 						<input
 							type='text'
+							className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 w-full max-w-full'
 							value={unitValue}
 							placeholder={t('type_name')}
 							onChange={e => setUnitValue(e.target.value)}
 						/>
 					</td>
-					<td>
+					<td className='table-cell text-center'>
 						<input
 							type='number'
+							className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 w-full max-w-full'
 							value={priceValue}
 							placeholder={t('type_price')}
 							onChange={e => setPriceValue(e.target.value)}
 						/>
 					</td>
-					<td>
+					<td className='table-cell'>
 						<input
 							type='text'
+							className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 w-full max-w-full min-w-[100px]'
 							value={tagsValue}
 							placeholder={t('type_tags')}
 							onChange={e => setTagsValue(e.target.value)}
@@ -156,15 +161,15 @@ export const ProductListItem = ({
 				</>
 			) : (
 				<>
-					<td>{product.name}</td>
-					<td>{t(product.category as TranslationKey)}</td>
-					<td>{product.unit}</td>
-					<td>{product.price}</td>
-					<td className='d-none d-table-cell-sm'>{product.tags}</td>
+					<td className='table-cell'>{product.name}</td>
+					<td className='table-cell'>{t(product.category as TranslationKey)}</td>
+					<td className='table-cell text-center'>{product.unit}</td>
+					<td className='table-cell text-center'>{product.price}</td>
+					<td className='hidden px-2 py-1 first:pl-4 last:pr-4 sm:table-cell'>{product.tags}</td>
 				</>
 			)}
-			<td>
-				<div className='d-flex gap-1'>
+			<td className='table-cell'>
+				<div className='flex gap-1'>
 					{product._id === editedProduct ? (
 						<Button onlyIcon={true} variant='success' onClick={() => handleUpdate(product._id, productData)}>
 							<Check size={16} />

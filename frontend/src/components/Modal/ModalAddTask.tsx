@@ -65,11 +65,11 @@ export function ModalAddTask({ modalData }: { modalData: DataProps }) {
 
 	return (
 		<>
-			<div className='card-content d-flex flex-column gap-3'>
+			<div className='p-4 flex flex-col gap-2 border-t border-zinc-300 '>
 				<FormRow label={t('content')}>
 					<input
 						required
-						className=''
+						className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
 						type='text'
 						value={contentValue}
 						onChange={e => setContentValue(e.target.value)}
@@ -77,19 +77,25 @@ export function ModalAddTask({ modalData }: { modalData: DataProps }) {
 				</FormRow>
 				<FormRow label={t('priority')}>
 					<select
-						className='align-self-start'
+						className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 align-self-start'
 						name='prioritySelect'
 						value={priorityValue}
 						id='prioritySelect'
 						onChange={e => setPriorityValue(e.target.value)}>
-						<option value='low'>{t('low')}</option>
-						<option value='medium'>{t('medium')}</option>
-						<option value='high'>{t('high')}</option>
+						<option className='text-gray-800 bg-white hover:bg-gray-100' value='low'>
+							{t('low')}
+						</option>
+						<option className='text-gray-800 bg-white hover:bg-gray-100' value='medium'>
+							{t('medium')}
+						</option>
+						<option className='text-gray-800 bg-white hover:bg-gray-100' value='high'>
+							{t('high')}
+						</option>
 					</select>
 				</FormRow>
 				<FormRow label={t('group')}>
 					<select
-						className='align-self-start'
+						className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 align-self-start'
 						name='taskSelect'
 						id='taskSelect'
 						value={taskGroup}
@@ -97,7 +103,7 @@ export function ModalAddTask({ modalData }: { modalData: DataProps }) {
 						{groups &&
 							groups.length > 0 &&
 							groups.map(g => (
-								<option key={g._id} value={g._id}>
+								<option className='text-gray-800 bg-white hover:bg-gray-100' key={g._id} value={g._id}>
 									{g.name}
 								</option>
 							))}
@@ -105,7 +111,7 @@ export function ModalAddTask({ modalData }: { modalData: DataProps }) {
 				</FormRow>
 				<FormRow label={t('deadline')} className='mb-2'>
 					<input
-						className='align-self-start'
+						className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 align-self-start'
 						type='date'
 						value={expiredDate}
 						onChange={e => setExpiredDate(e.target.value)}
@@ -113,8 +119,8 @@ export function ModalAddTask({ modalData }: { modalData: DataProps }) {
 				</FormRow>
 			</div>
 			{modalData?.actionName && (
-				<div className='card-footer'>
-					<Button variant='success' className='w-100' onClick={handleAddTask}>
+				<div className='py-4 px-6 border-t border-slate-300 bg-zinc-200 rounded-b-2xl'>
+					<Button variant='success' className='w-full' onClick={handleAddTask}>
 						{modalData.actionName}
 					</Button>
 				</div>

@@ -1,9 +1,9 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom'
 import ReactDOM from 'react-dom/client'
+import './App.css'
 import { Login } from './screens/Login'
 import { Home } from './screens/Home'
 import { PageWrapper } from './components/PageWrapper/PageWrapper'
-import './App.css'
 import { Notes } from './screens/Notes/Notes'
 import { Folders } from './screens/Notes/Folders'
 import { Todos } from './screens/Todos'
@@ -18,6 +18,10 @@ import { Posts } from './screens/Posts'
 import { Dashboard } from './screens/Dashboard'
 import { fetchFolders, fetchNotes, fetchShoppingList } from './loaders/loaders'
 import { TranslationProvider } from './contexts/TranslationContext'
+import { Calendar } from './screens/Calendar/Calendar'
+import { CalendarMonth } from './screens/Calendar/CalendarMonth'
+import { CalendarWeek } from './screens/Calendar/CalendarWeek'
+import { CalendarDay } from './screens/Calendar/CalendarDay'
 
 const Main = () => {
 	const { accessToken } = useApi()
@@ -36,7 +40,32 @@ const Main = () => {
 						},
 						{
 							path: 'calendar',
-							element: <>Calendar content work in progress</>,
+							element: <Calendar />,
+							children: [
+								{
+									path: '',
+									element: (
+										<Navigate
+											to={`month/${new Date().getFullYear()}/${(new Date().getMonth() + 1)
+												.toString()
+												.padStart(2, '0')}`}
+											replace
+										/>
+									),
+								},
+								{
+									path: 'month/:year/:month',
+									element: <CalendarMonth />,
+								},
+								{
+									path: 'week/:year/:week',
+									element: <CalendarWeek />,
+								},
+								{
+									path: 'day/:year/:month/:day',
+									element: <CalendarDay />,
+								},
+							],
 						},
 						{
 							path: 'todo',

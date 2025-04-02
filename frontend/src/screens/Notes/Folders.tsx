@@ -53,23 +53,35 @@ export const Folders = () => {
 	}
 
 	return (
-		<div className='d-flex flex-column gap-5'>
-			<div className='d-flex justify-between align-center gap-3'>
-				<div className='d-flex gap-2 align-center scroll-x-auto'>
-					<NavLink className='btn link' to={`/dashboards/${dashboardId}/folders/notes`} end>
+		<div className='flex flex-col gap-5'>
+			<div className='flex justify-between items-center gap-3'>
+				<div className='flex gap-2 items-center scroll-x-auto'>
+					<NavLink
+						className={({ isActive }) =>
+							` font-semibold hover:text-blue-500 focus:outline-none ${isActive ? 'text-blue-500' : 'text-gray-700'}`
+						}
+						to={`/dashboards/${dashboardId}/folders/notes`}
+						end>
 						{t('all_notes')}
 					</NavLink>
 					{folders &&
 						folders.length > 0 &&
 						folders.map(d => (
-							<NavLink key={d._id} to={`/dashboards/${dashboardId}/folders/notes/${d._id}`} className='btn link'>
+							<NavLink
+								key={d._id}
+								to={`/dashboards/${dashboardId}/folders/notes/${d._id}`}
+								className={({ isActive }) =>
+									` font-semibold hover:text-blue-500 focus:outline-none ${
+										isActive ? 'text-blue-500' : 'text-gray-700'
+									}`
+								}>
 								{d.name}
 							</NavLink>
 						))}
 				</div>
 				<Button
 					variant='light'
-					className='btn-mobile-icon'
+					className='p-2'
 					onClick={() =>
 						setActiveModal({
 							name: 'editFolder',
@@ -80,8 +92,8 @@ export const Folders = () => {
 							},
 						})
 					}>
-					<MoreVertical className='d-none-sm' size={16} />
-					<span className='d-mobile-none text-nowrap'>{t('edit_folders')}</span>
+					<MoreVertical className='sm:hidden' size={16} />
+					<span className='hidden sm:inline-block text-nowrap'>{t('edit_folders')}</span>
 				</Button>
 			</div>
 			<Outlet />

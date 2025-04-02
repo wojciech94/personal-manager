@@ -127,22 +127,25 @@ export function ModalModifyTodoGroup({ modalData }: { modalData: DataProps }) {
 
 	return (
 		<>
-			<div className='card-content d-flex flex-column gap-3 pt-0'>
+			<div className='px-4 pb-4 flex flex-col gap-2 border-t border-zinc-300'>
 				{groups && groups.length > 0 && (
 					<>
-						<div className='card-subtitle'>{t('update_groups')}</div>
+						<div className='-mx-4 min-h-[60px] flex items-center justify-between gap-4 font-semibold bg-zinc-200 py-2 px-4 border-zinc-300 border-y'>
+							{t('update_groups')}
+						</div>
 						{groups.map(g => (
-							<div key={g._id} className='px-2 d-flex justify-between align-center gap-2'>
+							<div key={g._id} className='px-2 flex justify-between items-center gap-2'>
 								{g.isEdit ? (
 									<input
 										type='text'
+										className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
 										value={inputValues[g._id] || ''}
 										onChange={e => handleInputChange(g._id, e.target.value)}
 									/>
 								) : (
 									<div>{g.name}</div>
 								)}
-								<div className='d-flex gap-2 align-center'>
+								<div className='flex gap-2 items-center'>
 									{g.isEdit ? (
 										<Button
 											size='sm'
@@ -164,18 +167,21 @@ export function ModalModifyTodoGroup({ modalData }: { modalData: DataProps }) {
 						))}
 					</>
 				)}
-				<div className='card-subtitle'>{t('add_new_group')}</div>
-				<div className='px-2'>
+				<div className='-mx-4 min-h-[60px] flex items-center justify-between gap-4 font-semibold bg-zinc-200 py-2 px-4  border-zinc-300 border-y'>
+					{t('add_new_group')}
+				</div>
+				<div className='px-2 pt-2'>
 					<input
 						type='text'
+						className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
 						value={inputVal}
 						placeholder={t('type_group_name')}
 						onChange={e => setInputVal(e.target.value)}
 					/>
 				</div>
 			</div>
-			<div className='card-footer'>
-				<Button variant='success' className='w-100' onClick={addTodoGroup}>
+			<div className='py-4 px-6 border-t border-slate-300 bg-zinc-200 rounded-b-2xl'>
+				<Button variant='success' className='w-full' onClick={addTodoGroup}>
 					{modalData.actionName}
 				</Button>
 			</div>

@@ -20,13 +20,18 @@ export const ModalAddUserContent = ({ modalData }: { modalData: DataProps }) => 
 
 	return (
 		<>
-			<div className='card-content'>
+			<div className='p-4 flex flex-col gap-2 border-t border-zinc-300'>
 				<FormRow label={t('name')}>
-					<input type='text' value={userInput} onChange={e => setUserInput(e.target.value)} />
+					<input
+						className='flex-1 p-2 border text-gray-700 placeholder:text-gray-500 border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
+						type='text'
+						value={userInput}
+						onChange={e => setUserInput(e.target.value)}
+					/>
 				</FormRow>
 			</div>
-			<div className='card-footer'>
-				<Button variant='success' className='w-100' onClick={handleInviteUser}>
+			<div className='py-4 px-6 border-t border-slate-300 bg-zinc-200 rounded-b-2xl'>
+				<Button variant='success' className='w-full' onClick={handleInviteUser}>
 					{t('invite_user_to_dashboard')}
 				</Button>
 			</div>

@@ -7,7 +7,6 @@ import { Dropdown } from '../components/Dropdown/Dropdown'
 import { ModalContext } from '../contexts/ModalContext'
 import { FetchDashboardsContext } from '../contexts/FetchDashboardsContext'
 import { Plus } from 'react-feather'
-import { WELCOME_SLIDES } from '../constants/appConstants'
 import { ModalDataProps } from '../components/Modal/types'
 import { Button } from '../components/Button/Button'
 import { useApi } from '../contexts/ApiContext'
@@ -123,28 +122,28 @@ export const Home = () => {
 
 	const dropdownItems = [
 		{ name: t('notifications'), action: openNotifications },
-		{ name: `${t('language')} (${language.toUpperCase()})`, action: changeLanguage },
+		{ name: `${t('language')} (${language === 'en' ? 'PL' : 'EN'})`, action: changeLanguage },
 		{ name: t('logout'), action: logout },
 	]
 
 	return (
 		<ModalContext.Provider value={{ activeModal, setActiveModal }}>
 			<FetchDashboardsContext.Provider value={{ fetchUserDashboards }}>
-				<div className='d-flex flex-column'>
-					<header className='topbar'>
+				<div className='flex flex-col flex-1'>
+					<header className='flex gap-4 justify-between items-center py-2 px-4 m-4 bg-sky-50 rounded-3xl shadow-xl border border-zinc-200'>
 						<Link to={'/'}>
 							<img src='/logo.png' width={40} alt='' />
 						</Link>
-						<div className='d-flex flex-1 justify-start align-center gap-4 scroll-x-auto'>
+						<div className='flex flex-1 justify-start items-center gap-4 scroll-x-auto'>
 							<Dashboards dashboards={dashboards}></Dashboards>
 						</div>
-						<Button className='btn-mobile-icon' onClick={openModal}>
+						<Button className='sm:inline-flex p-2' onClick={openModal}>
 							<Plus size={16} />
-							<span className='d-none d-inline-sm'>{t('add_dashboard')}</span>
+							<span className='hidden sm:inline'>{t('add_dashboard')}</span>
 						</Button>
 						<Dropdown items={dropdownItems} hasNotifications={hasNotifications}></Dropdown>
 					</header>
-					<main className='flex-1'>
+					<main className='flex flex-1 flex-col'>
 						{isExactMatch ? (
 							<WelcomeScreen isNew={dashboards.length === 0} createDashboardModal={openModal} />
 						) : (

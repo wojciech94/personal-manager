@@ -20,29 +20,29 @@ export function Pagination({
 
 	return (
 		<>
-			<div className='d-flex gap-2 justify-between align-center border-top border-light px-4 pt-4 bg-lighter pb-4 rounded-bottom-3'>
+			<div className='flex gap-2 justify-between items-center border-t border-zinc-300 px-4 pt-4 bg-slate-200 pb-4 rounded-b-2xl'>
 				<div>
 					{t('page')} <span className='text-nowrap'>{`${currentPage} ${t('of')} ${totalPages}`}</span>
 				</div>
-				<div className='d-flex gap-2 align-center'>
+				<div className='flex gap-2 items-center'>
 					{prevCondition && (
 						<>
-							<Button variant='light' onlyIcon={true} onClick={() => goToPage(1)}>
+							<Button variant='white' onlyIcon={true} onClick={() => goToPage(1)}>
 								<ChevronsLeft size={16} />
 							</Button>
-							<Button variant='light' onlyIcon={true} onClick={prevPage}>
+							<Button variant='white' onlyIcon={true} onClick={prevPage}>
 								<ChevronLeft size={16} />
 							</Button>
 							{prev2Button && (
 								<Button
-									className='d-none d-block-sm'
-									variant='light'
+									className='hidden sm:block'
+									variant='white'
 									onlyIcon={true}
 									onClick={() => goToPage(currentPage - 2)}>
 									{currentPage - 2}
 								</Button>
 							)}
-							<Button variant='light' onlyIcon={true} onClick={() => goToPage(currentPage - 1)}>
+							<Button variant='white' onlyIcon={true} onClick={() => goToPage(currentPage - 1)}>
 								{currentPage - 1}
 							</Button>
 						</>
@@ -52,31 +52,31 @@ export function Pagination({
 					</Button>
 					{nextCondition && (
 						<>
-							<Button variant='light' onlyIcon={true} onClick={() => goToPage(currentPage + 1)}>
+							<Button variant='white' onlyIcon={true} onClick={() => goToPage(currentPage + 1)}>
 								{currentPage + 1}
 							</Button>
 							{next2Button && (
 								<Button
-									className='d-none d-block-sm'
-									variant='light'
+									className='hidden sm:block'
+									variant='white'
 									onlyIcon={true}
 									onClick={() => goToPage(currentPage + 2)}>
 									{currentPage + 2}
 								</Button>
 							)}
-							<Button variant='light' onlyIcon={true} onClick={nextPage}>
+							<Button variant='white' onlyIcon={true} onClick={nextPage}>
 								<ChevronRight size={16} />
 							</Button>
-							<Button variant='light' onlyIcon={true} onClick={() => goToPage(totalPages)}>
+							<Button variant='white' onlyIcon={true} onClick={() => goToPage(totalPages)}>
 								<ChevronsRight size={16} />
 							</Button>
 						</>
 					)}
 				</div>
-				<div className='d-flex flex-column gap-1 text-end'>
+				<div className='flex flex-col gap-1 items-end'>
 					<div>{t('items_per_page')}</div>
 					<select
-						className='w-50px'
+						className='w-16 px-2 py-1 border border-zinc-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
 						name='itemsSelect'
 						id='itemsSelect'
 						value={itemsPerPage}
