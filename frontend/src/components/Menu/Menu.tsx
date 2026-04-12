@@ -10,7 +10,7 @@ export const Menu = () => {
 		{ name: 'details', path: `${basePath}` },
 		{ name: 'calendar', path: `${basePath}/calendar` },
 		{ name: 'todo_list', path: `${basePath}/todo` },
-		{ name: 'notes', path: `${basePath}/folders/notes` },
+		{ name: 'notes', path: `${basePath}/folders` },
 		{ name: 'shopping', path: `${basePath}/shopping` },
 		{ name: 'community', path: `${basePath}/posts` },
 	]

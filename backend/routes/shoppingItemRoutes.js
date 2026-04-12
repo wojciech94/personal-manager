@@ -12,6 +12,10 @@ router.patch(
 	shoppingItemController.updateItem
 )
 router.delete(
+	'/dashboards/:dashboardId/shoppingLists/:shoppingListId/shopping-items',
+	shoppingItemController.clearItems
+)
+router.delete(
 	'/dashboards/:dashboardId/shoppingLists/:shoppingListId/shopping-items/:id',
 	shoppingItemController.deleteItem
 )

@@ -7,7 +7,7 @@ router.use(authMiddleware)
 
 router.post('/dashboards/:dashboardId/add-note', noteController.addNote)
 router.post('/notes/add-category', noteController.addNoteCategory)
-router.get('/dashboards/:dashboardId/folders/notes/:folderId?', noteController.getNotes)
+router.get('/dashboards/:dashboardId/folders/:folderId?/notes', noteController.getNotes)
 router.get('/notes/:noteId', noteController.getNote)
 router.get('/dashboards/:dashboardId/note-categories', noteController.getNoteCategories)
 router.patch('/dashboards/:dashboardId/notes/:noteId', noteController.updateNote)

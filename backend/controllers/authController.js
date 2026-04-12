@@ -7,7 +7,11 @@ exports.login = async (req, res) => {
 	try {
 		const { name, password } = req.body
 
-		const user = await User.findOne({ name })
+		if (!name || typeof name !== 'string' || name.trim().length === 0) {
+			return res.status(400).json({ message: 'Invalid name' })
+		}
+
+		const user = await User.findOne({ name: name.trim() })
 		if (!user) {
 			return res.status(400).json({ message: 'Invalid credentials' })
 		}

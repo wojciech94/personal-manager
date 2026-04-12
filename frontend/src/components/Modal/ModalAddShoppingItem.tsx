@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
 import { useApi } from '../../contexts/ApiContext'
 import { useModalContext } from '../../contexts/ModalContext'
@@ -15,8 +15,7 @@ export function ModalAddShoppingItem(): React.JSX.Element {
 	const [priceValue, setPriceValue] = useState<string>('0')
 	const [quantityValue, setQuantityValue] = useState<string>('1')
 	const [notesValue, setNotesValue] = useState<string>('')
-	const { setActiveModal } = useModalContext()
-	const navigate = useNavigate()
+	const { activeModal, setActiveModal } = useModalContext()
 	const { fetchData } = useApi()
 	const { t } = useTranslation()
 
@@ -63,8 +62,16 @@ export function ModalAddShoppingItem(): React.JSX.Element {
 		}
 
 		if (response.data) {
+			if (
+				activeModal?.data?.fetchAction &&
+				typeof activeModal.data.fetchAction === 'function' &&
+				activeModal.data.fetchAction.length === 0
+			) {
+				const action = activeModal.data.fetchAction as () => Promise<void>
+				await action()
+			}
+
 			setActiveModal(null)
-			navigate(window.location.pathname, { replace: true })
 		}
 	}
 

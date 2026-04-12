@@ -156,13 +156,56 @@ exports.deleteItem = async (req, res) => {
 			return res.status(404).json({ message: 'Cannot find shopping item for provided Id' })
 		}
 
-		shoppingList.list = shoppingList.list.filter(el => el._id !== id)
+		shoppingList.list = shoppingList.list.filter(el => el.toString() !== id)
 		await shoppingList.save()
 
 		const message = `Delete shopping item (${shoppingItem.productId.name})`
 		await addLog(dashboard.logsId, userId, message)
 
 		res.status(204).send()
+	} catch (error) {
+		res.status(500).json({ message: error.message })
+	}
+}
+
+exports.clearItems = async (req, res) => {
+	try {
+		const { dashboardId, shoppingListId } = req.params
+		const userId = req.user.userId
+
+		if (!dashboardId || !mongoose.Types.ObjectId.isValid(dashboardId)) {
+			return res.status(400).json({ message: 'Missing or invalid dashboard Id' })
+		}
+
+		if (!shoppingListId || !mongoose.Types.ObjectId.isValid(shoppingListId)) {
+			return res.status(400).json({ message: 'Missing or invalid shopping list Id' })
+		}
+
+		const dashboard = await Dashboard.findById(dashboardId)
+		if (!dashboard) {
+			return res.status(404).json({ message: 'Cannot find dashboard for provided Id' })
+		}
+
+		const shoppingList = await ShoppingList.findById(shoppingListId)
+		if (!shoppingList) {
+			return res.status(404).json({ message: 'Cannot find shopping list for provided Id' })
+		}
+
+		if (!shoppingList.list || shoppingList.list.length === 0) {
+			return res.status(200).json({ ...shoppingList.toObject(), list: [] })
+		}
+
+		const itemIdsToRemove = shoppingList.list.map(itemId => itemId.toString())
+		shoppingList.list = []
+
+		await ShoppingItem.deleteMany({ _id: { $in: itemIdsToRemove } })
+		shoppingList.updatedAt = new Date()
+		await shoppingList.save()
+
+		const message = `Cleared all items from shopping list (${shoppingList.name})`
+		await addLog(dashboard.logsId, userId, message)
+
+		res.status(200).json({ ...shoppingList.toObject(), list: [] })
 	} catch (error) {
 		res.status(500).json({ message: error.message })
 	}

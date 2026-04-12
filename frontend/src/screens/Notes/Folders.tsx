@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { MoreVertical } from 'react-feather'
-import { NavLink, Outlet, useLoaderData, useParams } from 'react-router-dom'
+import { NavLink, Outlet, useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
 import { useApi } from '../../contexts/ApiContext'
 import { useModalContext } from '../../contexts/ModalContext'
@@ -9,12 +9,29 @@ import { Folder } from './types'
 import { useTranslation } from '../../contexts/TranslationContext'
 
 export const Folders = () => {
-	const loaderData = useLoaderData() as Folder[]
-	const [folders, setFolders] = useState<Folder[] | null>(loaderData)
+	const [folders, setFolders] = useState<Folder[] | null>(null)
 	const { setActiveModal } = useModalContext()
 	const { dashboardId } = useParams()
 	const { fetchData } = useApi()
 	const { t } = useTranslation()
+
+	useEffect(() => {
+		const loadFolders = async () => {
+			const url = `${API_URL}dashboards/${dashboardId}/folders`
+			const response = await fetchData<Folder[]>(url)
+
+			if (response.error) {
+				console.error('Failed to fetch folders', response.status, response.error)
+				return
+			}
+
+			if (response.data) {
+				setFolders(response.data)
+			}
+		}
+
+		loadFolders()
+	}, [dashboardId, fetchData])
 
 	const handleAddFolder = async (val: string) => {
 		const url = `${API_URL}dashboards/${dashboardId}/add-folder`
@@ -62,7 +79,7 @@ export const Folders = () => {
 								isActive ? 'text-blue-500' : 'text-gray-700'
 							}`
 						}
-						to={`/dashboards/${dashboardId}/folders/notes`}
+						to='notes'
 						end>
 						{t('all_notes')}
 					</NavLink>
@@ -71,7 +88,7 @@ export const Folders = () => {
 						folders.map(d => (
 							<NavLink
 								key={d._id}
-								to={`/dashboards/${dashboardId}/folders/notes/${d._id}`}
+								to={`/dashboards/${dashboardId}/folders/${d._id}/notes`}
 								className={({ isActive }) =>
 									` font-semibold hover:text-blue-500 focus:outline-none text-nowrap ${
 										isActive ? 'text-blue-500' : 'text-gray-700'

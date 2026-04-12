@@ -16,7 +16,6 @@ import { Notifications } from './components/Notifications/Notifications'
 import { ApiProvider, useApi } from './contexts/ApiContext'
 import { Posts } from './screens/Posts'
 import { Dashboard } from './screens/Dashboard'
-import { fetchFolders, fetchNotes, fetchShoppingList } from './loaders/loaders'
 import { TranslationProvider } from './contexts/TranslationContext'
 import { Calendar } from './screens/Calendar/Calendar'
 import { CalendarMonth } from './screens/Calendar/CalendarMonth'
@@ -74,12 +73,18 @@ const Main = () => {
 						{
 							path: 'folders',
 							element: <Folders />,
-							loader: args => fetchFolders(args, accessToken),
 							children: [
 								{
-									path: 'notes/:folderId?',
+									path: '',
 									element: <Notes />,
-									loader: args => fetchNotes(args, accessToken),
+								},
+								{
+									path: 'notes',
+									element: <Notes />,
+								},
+								{
+									path: ':folderId/notes',
+									element: <Notes />,
 								},
 							],
 						},
@@ -94,7 +99,6 @@ const Main = () => {
 										{
 											path: ':shoppingListId',
 											element: <ShoppingList />,
-											loader: args => fetchShoppingList(args, accessToken),
 										},
 									],
 								},
@@ -132,5 +136,5 @@ ReactDOM.createRoot(rootElement).render(
 		<ApiProvider>
 			<Main />
 		</ApiProvider>
-	</TranslationProvider>
+	</TranslationProvider>,
 )
