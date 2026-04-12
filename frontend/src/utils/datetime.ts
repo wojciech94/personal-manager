@@ -1,4 +1,3 @@
-import { useTranslation } from '../contexts/TranslationContext'
 import { DateData, Event } from '../screens/Calendar/Calendar'
 import { Language } from '../translations'
 
@@ -15,6 +14,14 @@ export const formatMonth = (date: Date, language?: Language) => {
 	return date.toLocaleString(langCode, { month: 'long', year: 'numeric' })
 }
 
+function formatDays(days: Date[]): { day: number; month: number; year: number }[] {
+	return days.map(date => ({
+		day: date.getUTCDate(),
+		month: date.getUTCMonth() + 1,
+		year: date.getUTCFullYear(),
+	}))
+}
+
 export const dateWithoutHours = (date: Date) => {
 	const year = date.getFullYear()
 	const month = (date.getMonth() + 1).toString().padStart(2, '0')
@@ -22,13 +29,35 @@ export const dateWithoutHours = (date: Date) => {
 	return `${year}-${month}-${day}`
 }
 
-export const getWeekNumber = (date: Date): number => {
+/**Calculates the calendar week number for a given date according to the ISO 8601 standard.
+The week starts on Monday, and Week 1 is the week that contains January 4th of the year.*/
+export const getCalendarWeekNumber = (date: Date): number => {
 	const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()))
 	const dayNum = d.getUTCDay() || 7
 	d.setUTCDate(d.getUTCDate() + 4 - dayNum)
 	const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1))
 	const diffInMs = d.getTime() - yearStart.getTime()
 	return Math.ceil((diffInMs / 86400000 + 1) / 7)
+}
+
+/**
+ * Calculates the week number of a given date, counting from the last Monday of the previous year.
+ * Unlike ISO 8601 (where Week 1 contains January 4th), this function defines the first week as * the one starting from the last Monday of the previous year.
+ */
+export const getWeekNumberOfYear = (date: Date): number => {
+	const year = date.getFullYear()
+
+	const lastDayPrevYear = new Date(Date.UTC(year - 1, 11, 31))
+	const dayOfWeek = lastDayPrevYear.getUTCDay() || 7
+	const daysToLastMonday = dayOfWeek === 1 ? 0 : dayOfWeek - 1
+	const lastMondayPrevYear = new Date(lastDayPrevYear)
+	lastMondayPrevYear.setUTCDate(lastDayPrevYear.getUTCDate() - daysToLastMonday)
+
+	const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()))
+	const diffInMs = d.getTime() - lastMondayPrevYear.getTime()
+	const diffInDays = diffInMs / 86400000
+
+	return Math.ceil(diffInDays / 7)
 }
 
 export const getWeeksArrayForMonth = (year: number, month: number): number[] => {
@@ -51,7 +80,7 @@ export const getWeeksArrayForMonth = (year: number, month: number): number[] => 
 	let currentDate = new Date(startDate)
 
 	while (currentDate <= endDate) {
-		const weekNum = getWeekNumber(currentDate)
+		const weekNum = getCalendarWeekNumber(currentDate)
 		const weekStart = new Date(currentDate)
 		const weekEnd = new Date(currentDate)
 		weekEnd.setUTCDate(weekEnd.getUTCDate() + 6)
@@ -69,6 +98,27 @@ export const getWeeksArrayForMonth = (year: number, month: number): number[] => 
 	}
 
 	return weeksArray
+}
+
+export const getDaysArrayForWeek = (year: number, week: number): number[] => {
+	const jan1 = new Date(Date.UTC(year, 0, 1))
+	const jan1Day = jan1.getUTCDay() || 7
+
+	const daysToFirstMonday = jan1Day === 1 ? 0 : 1 - jan1Day
+	const firstMonday = new Date(jan1)
+	firstMonday.setUTCDate(jan1.getUTCDate() + daysToFirstMonday)
+
+	const weekStart = new Date(firstMonday)
+	weekStart.setUTCDate(firstMonday.getUTCDate() + (week - 1) * 7)
+
+	const days: number[] = []
+	for (let i = 0; i < 7; i++) {
+		const day = new Date(weekStart)
+		day.setUTCDate(weekStart.getUTCDate() + i)
+		days.push(day.getUTCDate())
+	}
+
+	return days
 }
 
 export const getDaysInMonthWithEvents = (year: number, month: number, events: Event[] = []): DateData[] => {
@@ -134,4 +184,10 @@ export const getDaysInMonthWithEvents = (year: number, month: number, events: Ev
 	}
 
 	return calendarDays
+}
+
+export const getHoursInWeekWithEvents = (year: number, week: number, events: Event[] = []): DateData[] => {
+	console.log(events)
+
+	return []
 }
