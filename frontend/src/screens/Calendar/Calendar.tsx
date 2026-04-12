@@ -1,6 +1,6 @@
 import { NavLink, Outlet, useParams } from 'react-router-dom'
 import { useTranslation } from '../../contexts/TranslationContext'
-import { getWeekNumber } from '../../utils/datetime'
+import { getCalendarWeekNumber } from '../../utils/datetime'
 
 export interface Event {
 	_id: string
@@ -29,7 +29,7 @@ export const Calendar = () => {
 	const currentYear = year ? year : new Date().getFullYear()
 	const currentMonth = month ? month : (new Date().getMonth() + 1).toString().padStart(2, '0')
 	const currentDay = day ? day : new Date().getDate().toString().padStart(2, '0')
-	const currentWeek = week ? week : getWeekNumber(new Date())
+	const currentWeek = week ? week : getCalendarWeekNumber(new Date())
 
 	const basePath = `/dashboards/${dashboardId}/calendar`
 

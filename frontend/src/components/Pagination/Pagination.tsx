@@ -17,11 +17,11 @@ export function Pagination({ currentPage, totalPages, itemsPerPage, goToPage, on
 					{t('page')} <span className='text-nowrap'>{`${currentPage} ${t('of')} ${totalPages}`}</span>
 				</div>
 				<div className='w-full sm:w-auto justify-center order-3 sm:order-2 flex gap-2 items-center'>
+					<Button disabled={!prevCondition} variant='white' onlyIcon={true} onClick={() => goToPage(1)}>
+						<ChevronsLeft size={16} />
+					</Button>
 					{prevCondition && (
 						<>
-							<Button variant='white' onlyIcon={true} onClick={() => goToPage(1)}>
-								<ChevronsLeft size={16} />
-							</Button>
 							{prev2Button && (
 								<Button
 									className='hidden sm:block'
@@ -53,11 +53,11 @@ export function Pagination({ currentPage, totalPages, itemsPerPage, goToPage, on
 									{currentPage + 2}
 								</Button>
 							)}
-							<Button variant='white' onlyIcon={true} onClick={() => goToPage(totalPages)}>
-								<ChevronsRight size={16} />
-							</Button>
 						</>
 					)}
+					<Button disabled={!nextCondition} variant='white' onlyIcon={true} onClick={() => goToPage(totalPages)}>
+						<ChevronsRight size={16} />
+					</Button>
 				</div>
 				<div className='order-2 flex flex-col gap-1 items-end'>
 					<div>{t('items_per_page')}</div>

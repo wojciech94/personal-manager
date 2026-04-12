@@ -10,7 +10,7 @@ import { ChevronLeft, ChevronRight, X } from 'react-feather'
 import {
 	dateWithoutHours,
 	formatMonth,
-	getWeekNumber,
+	getCalendarWeekNumber,
 	getDaysInMonthWithEvents,
 	getWeeksArrayForMonth,
 } from '../../utils/datetime'
@@ -25,7 +25,7 @@ export const CalendarMonth = () => {
 	const { dashboardId, year, month } = useParams()
 	const navigate = useNavigate()
 	const currentDate = new Date()
-	const currentWeek = getWeekNumber(currentDate)
+	const currentWeek = getCalendarWeekNumber(currentDate)
 
 	const daysOfWeek = [t('monday'), t('tuesday'), t('wednesday'), t('thursday'), t('friday'), t('saturday'), t('sunday')]
 	const shortDaysOfWeek = [t('mo'), t('tu'), t('we'), t('th'), t('fr'), t('sa'), t('su')]
@@ -49,7 +49,8 @@ export const CalendarMonth = () => {
 		}
 	}, [])
 
-	const deleteEvent = async (eventId: string) => {
+	const deleteEvent = async (e: React.MouseEvent<HTMLButtonElement>, eventId: string) => {
+		e.stopPropagation()
 		const url = `${API_URL}dashboards/${dashboardId}/events/${eventId}`
 		const options = {
 			method: 'DELETE',
@@ -217,11 +218,9 @@ export const CalendarMonth = () => {
 														onClick={e => handleSetUpdateEventModal(e, event)}>
 														{event.title}
 													</Button>
-													<X
-														className='hidden sm:block flex-shrink-0 cursor-pointer hover:text-rose-700'
-														size={14}
-														onClick={() => deleteEvent(event._id)}
-													/>
+													<Button variant='text' className='!p-0' onClick={e => deleteEvent(e, event._id)}>
+														<X className='hidden sm:block flex-shrink-0 cursor-pointer hover:text-rose-700' size={14} />
+													</Button>
 												</div>
 											)
 										})}
