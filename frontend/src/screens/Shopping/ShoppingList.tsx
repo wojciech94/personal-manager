@@ -1,5 +1,5 @@
 import { Plus } from 'react-feather'
-import { useLoaderData, useParams, useRevalidator } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { API_URL } from '../../config'
 import { Alert } from '../../components/Alert/Alert'
 import { useModalContext } from '../../contexts/ModalContext'
@@ -12,15 +12,48 @@ import { useEffect, useState } from 'react'
 import { IsShoppingPurchased, Product, ShoppingItem, ShoppingListType } from './types'
 
 export function ShoppingList() {
-	const data: ShoppingListType = useLoaderData() as ShoppingListType
 	const [shoppingList, setShoppingList] = useState<ShoppingListType | null>(null)
 	const [hasProducts, setHasProducts] = useState(false)
 	const { setActiveModal } = useModalContext()
 	const { shoppingListId, dashboardId } = useParams()
-	const { revalidate } = useRevalidator()
 	const { fetchData } = useApi()
 	const { t } = useTranslation()
-	const productsToBuy = data.list.filter(p => p.isPurchased === false).length
+
+	useEffect(() => {
+		const fetchShoppingList = async () => {
+			const url = `${API_URL}shopping-lists/${shoppingListId}`
+			const response = await fetchData<ShoppingListType>(url)
+
+			if (response.error) {
+				console.error('Failed to fetch shopping list:', response.status, response.error)
+				return
+			}
+
+			if (response.data) {
+				const sortedList = [...response.data.list].sort((a, b) => Number(a.isPurchased) - Number(b.isPurchased))
+				setShoppingList({ ...response.data, list: sortedList })
+			}
+		}
+
+		fetchShoppingList()
+	}, [shoppingListId, fetchData])
+
+	const refetchShoppingList = async () => {
+		const url = `${API_URL}shopping-lists/${shoppingListId}`
+		const response = await fetchData<ShoppingListType>(url)
+
+		if (response.error) {
+			console.error('Failed to refetch shopping list:', response.status, response.error)
+			return
+		}
+
+		if (response.data) {
+			const sortedList = [...response.data.list].sort((a, b) => Number(a.isPurchased) - Number(b.isPurchased))
+			setShoppingList({ ...response.data, list: sortedList })
+		}
+	}
+
+	const productsToBuy = shoppingList ? shoppingList.list.filter(p => p.isPurchased === false).length : 0
 
 	useEffect(() => {
 		const getProductsCount = async () => {
@@ -42,19 +75,13 @@ export function ShoppingList() {
 		}
 
 		getProductsCount()
-	}, [])
-
-	useEffect(() => {
-		const sortedList = [...data.list].sort((a, b) => {
-			return Number(a.isPurchased) - Number(b.isPurchased)
-		})
-		setShoppingList({ ...data, list: sortedList })
-	}, [data])
+	}, [dashboardId, fetchData])
 
 	const openAddItemModal = () => {
 		const modalData = {
 			name: 'addShoppingItem',
 			title: t('add_shopping_item'),
+			data: { fetchAction: refetchShoppingList },
 		}
 		setActiveModal(modalData)
 	}
@@ -75,7 +102,7 @@ export function ShoppingList() {
 			return
 		}
 
-		revalidate()
+		refetchShoppingList()
 	}
 
 	const handleDeleteListItem = async (id: string) => {
@@ -91,15 +118,31 @@ export function ShoppingList() {
 			return
 		}
 
-		revalidate()
+		refetchShoppingList()
+	}
+
+	const handleClearItems = async () => {
+		const url = `${API_URL}dashboards/${dashboardId}/shoppingLists/${shoppingListId}/shopping-items`
+		const options = {
+			method: 'DELETE',
+		}
+
+		const response = await fetchData<ShoppingListType>(url, options)
+
+		if (response.error) {
+			console.error('Failed to clear items:', response.status, response.error)
+			return
+		}
+
+		refetchShoppingList()
 	}
 
 	const calculateSum = () => {
-		if (!data || !Array.isArray(data.list)) {
+		if (!shoppingList || !Array.isArray(shoppingList.list)) {
 			return 0
 		}
 
-		return data.list
+		return shoppingList.list
 			.reduce((acc, currentVal) => {
 				return acc + Number(currentVal.customPrice) * Number(currentVal.quantity)
 			}, 0)
@@ -114,7 +157,7 @@ export function ShoppingList() {
 		)
 	}
 
-	if (!data) {
+	if (!shoppingList) {
 		return (
 			<Alert className='mb-0 mx-0'>
 				<div>{t('your_shopping_list_is_empty')}</div>
@@ -130,14 +173,22 @@ export function ShoppingList() {
 						{t('left_to_buy')}: {productsToBuy} {`${productsToBuy === 1 ? t('product') : t('products')}`}
 					</div>
 					<div className='text-zinc-600 text-sm'>
-						{t('last_update')} {getLocaleDateTime(data.updatedAt)}
+						{t('last_update')} {getLocaleDateTime(shoppingList.updatedAt)}
 					</div>
 				</div>
-				<Button className='sm:inline-flex !p-2 sm:!px-3 text-nowrap' onClick={openAddItemModal}>
-					<Plus size={16} />
-					<div className='hidden sm:block'>{t('add_item')}</div>
-					<div className='sm:hidden'>{t('product')}</div>
-				</Button>
+				<div className='flex gap-2'>
+					{shoppingList.list.length > 0 && (
+						<Button variant='danger' className='sm:inline-flex !p-2 sm:!px-3 text-nowrap' onClick={handleClearItems}>
+							<div className='hidden sm:block'>{t('clear_items')}</div>
+							<div className='sm:hidden'>{t('remove')}</div>
+						</Button>
+					)}
+					<Button className='sm:inline-flex !p-2 sm:!px-3 text-nowrap' onClick={openAddItemModal}>
+						<Plus size={16} />
+						<div className='hidden sm:block'>{t('add_item')}</div>
+						<div className='sm:hidden'>{t('product')}</div>
+					</Button>
+				</div>
 			</div>
 			{shoppingList && shoppingList.list && shoppingList.list.length > 0 ? (
 				<div className='-mx-4 -mb-4 overflow-x-auto'>

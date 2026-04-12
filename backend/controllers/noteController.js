@@ -86,7 +86,7 @@ exports.getNotes = async (req, res) => {
 		}
 
 		const query = { _id: { $in: dashboard.notesIds } }
-		if (folderId) {
+		if (folderId && folderId !== 'undefined') {
 			query.folder_id = folderId
 		}
 

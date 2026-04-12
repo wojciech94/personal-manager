@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, ChangeEvent } from 'react'
-import { useLoaderData, useParams, useRevalidator } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { API_URL } from '../../config'
 import { useModalContext } from '../../contexts/ModalContext'
 import { Plus } from 'react-feather'
@@ -15,7 +15,6 @@ import { useTranslation } from '../../contexts/TranslationContext'
 import { SortDirection } from '../../types/global'
 
 export const Notes = () => {
-	const data = useLoaderData() as NoteType[]
 	const [notes, setNotes] = useState<NoteType[]>([])
 	const [filteredNotes, setFilteredNotes] = useState<NoteType[]>([])
 	const [categoryNames, setCategoryNames] = useState<string[]>([])
@@ -28,13 +27,13 @@ export const Notes = () => {
 	const [showFoldersInfo, setShowFoldersInfo] = useState(true)
 	const { setActiveModal } = useModalContext()
 	const { dashboardId, folderId } = useParams()
-	const { revalidate } = useRevalidator()
 	const { fetchData } = useApi()
 	const { t } = useTranslation()
+	const navigate = useNavigate()
 
 	const debouncedSearchFilter = useCallback(
 		debounce((val: string) => searchFilter(val), 500),
-		[notes]
+		[notes],
 	)
 
 	useEffect(() => {
@@ -53,15 +52,32 @@ export const Notes = () => {
 			setShowFoldersInfo(true)
 		}
 
-		fetchNotesCategories()
-	}, [])
-
-	useEffect(() => {
-		if (Array.isArray(data)) {
-			setNotes(data)
-			setFilteredNotes(data)
+		if (folderId === 'undefined') {
+			navigate(`/dashboards/${dashboardId}/folders/notes`, { replace: true })
+			return
 		}
-	}, [data])
+
+		fetchNotesCategories()
+		fetchNotes()
+	}, [dashboardId, folderId, fetchData])
+
+	async function fetchNotes() {
+		const effectiveFolderId = folderId === 'undefined' ? undefined : folderId
+		const url = effectiveFolderId
+			? `${API_URL}dashboards/${dashboardId}/folders/${effectiveFolderId}/notes`
+			: `${API_URL}dashboards/${dashboardId}/folders/notes`
+		const response = await fetchData<NoteType[]>(url)
+
+		if (response.error) {
+			console.error('Failed to fetch notes:', response.status, response.error)
+			return
+		}
+
+		if (response.data) {
+			setNotes(response.data)
+			setFilteredNotes(response.data)
+		}
+	}
 
 	async function fetchNotesCategories() {
 		const url = `${API_URL}dashboards/${dashboardId}/note-categories`
@@ -86,7 +102,7 @@ export const Notes = () => {
 		folder_id: string,
 		is_favourite: boolean,
 		expired_at: string | null,
-		noteId: string | null
+		noteId: string | null,
 	) => {
 		let noteTags
 		if (typeof tags === 'string') {
@@ -111,7 +127,7 @@ export const Notes = () => {
 			return
 		}
 
-		revalidate()
+		fetchNotes()
 		setActiveModal(null)
 	}
 
@@ -331,7 +347,7 @@ export const Notes = () => {
 			{filteredNotes && filteredNotes.length > 0 ? (
 				<div className='flex flex-col gap-4'>
 					{filteredNotes.map(n => (
-						<Note key={n._id} note={n} updateNote={updateNote} fetchNotes={revalidate} />
+						<Note key={n._id} note={n} updateNote={updateNote} fetchNotes={fetchNotes} />
 					))}
 				</div>
 			) : (
